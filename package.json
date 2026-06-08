@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "expo": "^55.0.0",
+    "expo-camera": "~17.0.10",
     "expo-device": "~55.0.17",
     "expo-image-picker": "~55.0.20",
     "expo-secure-store": "~55.0.14",
