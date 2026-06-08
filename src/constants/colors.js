@@ -6,7 +6,7 @@ const COLORS = {
   gray300: "#E9E7E7",
   white: "#FDFDFD",
 
-  placeholderTextColor="rgba(10, 10, 10, 0.5)",
+  placeholderTextColor:"rgba(10, 10, 10, 0.5)",
 };
 
 export default COLORS;
