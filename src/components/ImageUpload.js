@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Alert,
   Image,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -18,6 +17,7 @@ import {
   MOCK_UPLOAD_RESULT,
   USE_MOCK_UPLOAD,
 } from "../constants/config";
+import CameraScreen from "./CameraScreen";
 
 const STATUS = {
   IDLE: "idle",
@@ -60,6 +60,7 @@ const ImageUpload = () => {
   const [image, setImage] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorKind, setErrorKind] = useState(ERROR_KIND.UPLOAD);
+  const [showCamera, setShowCamera] = useState(false);
 
   const requestPermission = async (type) => {
     if (type === "camera") {
@@ -73,8 +74,8 @@ const ImageUpload = () => {
     return permissionStatus === "granted";
   };
 
-  const pickImage = async (source) => {
-    if (source === "camera" && !Device.isDevice) {
+  const openCamera = () => {
+    if (!Device.isDevice) {
       Alert.alert(
         "Camera not available on Simulator",
         "The iOS Simulator does not have a real camera. Use Gallery to pick a test photo, or run the app on a physical iPhone.",
@@ -86,6 +87,16 @@ const ImageUpload = () => {
       return;
     }
 
+    setShowCamera(true);
+  };
+
+  const handleCameraCapture = (asset) => {
+    setImage(asset);
+    setErrorMessage("");
+    setStatus(STATUS.PREVIEW);
+  };
+
+  const pickImage = async (source) => {
     const hasPermission = await requestPermission(source);
 
     if (!hasPermission) {
@@ -95,15 +106,12 @@ const ImageUpload = () => {
 
     const options = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: source === "gallery",
+      allowsEditing: true,
       quality: 0.8,
     };
 
     try {
-      const result =
-        source === "camera"
-          ? await ImagePicker.launchCameraAsync(options)
-          : await ImagePicker.launchImageLibraryAsync(options);
+      const result = await ImagePicker.launchImageLibraryAsync(options);
 
       if (result.canceled || !result.assets?.length) {
         return;
@@ -115,10 +123,8 @@ const ImageUpload = () => {
     } catch (error) {
       console.error("Image picker error:", error);
       Alert.alert(
-        "Could not open camera",
-        Platform.OS === "ios" && !Device.isDevice
-          ? "Use Gallery on the Simulator, or test camera on a real device."
-          : error.message || "Something went wrong. Please try again."
+        "Could not open gallery",
+        error.message || "Something went wrong. Please try again."
       );
     }
   };
@@ -219,7 +225,7 @@ const ImageUpload = () => {
         <Pressable style={styles.button} onPress={() => pickImage("gallery")}>
           <Text style={styles.buttonText}>Gallery</Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={() => pickImage("camera")}>
+        <Pressable style={styles.button} onPress={openCamera}>
           <Text style={styles.buttonText}>Camera</Text>
         </Pressable>
       </View>
@@ -247,6 +253,12 @@ const ImageUpload = () => {
           <Text style={styles.resetButtonText}>Choose another photo</Text>
         </Pressable>
       )}
+
+      <CameraScreen
+        visible={showCamera}
+        onClose={() => setShowCamera(false)}
+        onCapture={handleCameraCapture}
+      />
     </View>
   );
 };

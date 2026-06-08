@@ -33,6 +33,12 @@
           "photosPermission": "Allow FixBee to access your photos.",
           "cameraPermission": "Allow FixBee to take photos for issue reporting."
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow FixBee to take photos for issue reporting."
+        }
       ]
     ]
   }
