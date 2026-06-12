@@ -12,12 +12,14 @@ import * as Device from "expo-device";
 import * as ImagePicker from "expo-image-picker";
 
 import { UploadError, uploadPhoto } from "../api/uploadPhoto";
+import { analyzeImage } from "../api/analyzeImage";
 import {
   AUTH_TOKEN,
   MOCK_UPLOAD_RESULT,
   USE_MOCK_UPLOAD,
 } from "../constants/config";
 import CameraScreen from "./CameraScreen";
+
 
 const STATUS = {
   IDLE: "idle",
@@ -55,7 +57,7 @@ const runMockUpload = async () => {
   return { url: "mock://upload-success", message: "Image uploaded successfully" };
 };
 
-const ImageUpload = () => {
+const ImageUpload = ({ onAnalysisStart, onAnalysisComplete, onAnalysisError }) => {
   const [status, setStatus] = useState(STATUS.IDLE);
   const [image, setImage] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -138,21 +140,41 @@ const ImageUpload = () => {
     setErrorMessage("");
     setErrorKind(ERROR_KIND.UPLOAD);
 
+    if (onAnalysisStart) {
+      onAnalysisStart(image.uri);
+    }
+
     try {
+      let uploadResult;
+
       if (USE_MOCK_UPLOAD) {
-        await runMockUpload();
+        uploadResult = await runMockUpload();
       } else {
-        await uploadPhoto(image, AUTH_TOKEN);
+        uploadResult = await uploadPhoto(image, AUTH_TOKEN);
       }
 
-      setStatus(STATUS.SUCCESS);
+      const photoId = uploadResult.photoId || uploadResult.id;
+
+      const analysisResult = await analyzeImage({
+        photoId,
+        location: "Vancouver, BC",
+      });
+
+      console.log("ANALYSIS RESULT:", analysisResult);
+
+      if (onAnalysisComplete) {
+        onAnalysisComplete(analysisResult);
+      }
     } catch (error) {
       const code = error instanceof UploadError ? error.code : "UPLOAD_FAILED";
+
       setErrorKind(getErrorKind(code));
-      setErrorMessage(
-        error.message || "Upload failed. Please try again."
-      );
+      setErrorMessage(error.message || "Upload failed. Please try again.");
       setStatus(STATUS.ERROR);
+
+      if (onAnalysisError) {
+        onAnalysisError();
+      }
     }
   };
 
