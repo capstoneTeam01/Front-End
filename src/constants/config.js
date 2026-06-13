@@ -1,7 +1,5 @@
 // Use your computer's LAN IP when testing on a physical device (not localhost).
-// export const API_URL = "http://localhost:5001";
-
-export const API_URL = "http://10.0.2.2:5001";
+export const API_URL = "http://localhost:5000";
 
 // Paste a token from POST /api/auth/login while testing before login UI exists.
 // Expires after ~1 hour; re-login if uploads return 401.
