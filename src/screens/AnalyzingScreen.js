@@ -1,40 +1,50 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const analysisSteps = [
-  "Checking uploaded image",
-  "Detecting repair issue",
-  "Estimating urgency",
-  "Preparing recommendation",
+  "Detecting issue...",
+  "Analyzing damage...",
+  "Estimating repair cost...",
+  "Finding repair solutions...",
 ];
 
 const AnalyzingScreen = ({ onCancel }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <View style={styles.imagePlaceholder} />
+      <View style={styles.heroPlaceholder}>
+        <View style={styles.logoBox} />
+      </View>
 
-        <Text style={styles.title}>Analyzing Issue</Text>
+      <Text style={styles.title}>Analyzing Issue</Text>
 
-        <Text style={styles.subtitle}>
-          Please wait while FixBee checks your repair photo.
-        </Text>
+      <Text style={styles.subtitle}>
+        FixBee is identifying the problem and preparing repair guidance.
+      </Text>
 
-        <View style={styles.stepsContainer}>
-          {analysisSteps.map((step, index) => (
+      <View style={styles.stepsCard}>
+        {analysisSteps.map((step, index) => {
+          const isLastStep = index === analysisSteps.length - 1;
+
+          return (
             <View key={step} style={styles.stepRow}>
-              <View style={styles.stepCircle}>
-                <Text style={styles.stepNumber}>{index + 1}</Text>
+              <View style={[styles.stepIcon, isLastStep && styles.activeStepIcon]}>
+                {isLastStep ? (
+                  <ActivityIndicator size="small" color="#333333" />
+                ) : (
+                  <Text style={styles.checkText}>✓</Text>
+                )}
               </View>
 
               <Text style={styles.stepText}>{step}</Text>
             </View>
-          ))}
-        </View>
-
-        <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-          <Text style={styles.cancelButtonText}>Cancel</Text>
-        </TouchableOpacity>
+          );
+        })}
       </View>
+
+      <Text style={styles.helperText}>This may take a few seconds.</Text>
+
+      <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
+        <Text style={styles.cancelButtonText}>Cancel</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -44,81 +54,105 @@ export default AnalyzingScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
-    padding: 20,
+    backgroundColor: "#F7F7F7",
+    paddingHorizontal: 24,
     justifyContent: "center",
   },
 
-  card: {
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#D1D1D1",
-    borderRadius: 4,
-    padding: 20,
-  },
-
-  imagePlaceholder: {
-    height: 140,
-    backgroundColor: "#D9D9D9",
-    borderRadius: 4,
+  heroPlaceholder: {
+    height: 150,
+    backgroundColor: "#EFEFEF",
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 24,
   },
 
+  logoBox: {
+    width: 56,
+    height: 48,
+    borderRadius: 14,
+    backgroundColor: "#D8D8D8",
+  },
+
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#222222",
+    fontSize: 26,
+    fontWeight: "700",
+    color: "#1F1F1F",
     textAlign: "center",
     marginBottom: 8,
   },
 
   subtitle: {
-    fontSize: 16,
-    color: "#555555",
+    fontSize: 15,
+    color: "#666666",
     textAlign: "center",
+    lineHeight: 22,
     marginBottom: 24,
   },
 
-  stepsContainer: {
-    gap: 14,
-    marginBottom: 24,
+  stepsCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: "#E2E2E2",
+    overflow: "hidden",
+    marginBottom: 18,
   },
 
   stepRow: {
     flexDirection: "row",
     alignItems: "center",
+    paddingVertical: 15,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EFEFEF",
   },
 
-  stepCircle: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: "#888888",
+  stepIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    backgroundColor: "#222222",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 12,
+    marginRight: 14,
   },
 
-  stepNumber: {
-    color: "white",
-    fontWeight: "bold",
+  activeStepIcon: {
+    backgroundColor: "#EFEFEF",
+  },
+
+  checkText: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "700",
   },
 
   stepText: {
-    fontSize: 16,
+    fontSize: 15,
     color: "#333333",
+    fontWeight: "500",
+  },
+
+  helperText: {
+    fontSize: 14,
+    color: "#777777",
+    textAlign: "center",
+    marginBottom: 22,
   },
 
   cancelButton: {
-    backgroundColor: "#888888",
-    paddingVertical: 14,
-    borderRadius: 4,
+    height: 52,
+    borderRadius: 14,
+    backgroundColor: "#8B8B8B",
     alignItems: "center",
+    justifyContent: "center",
   },
 
   cancelButtonText: {
-    color: "white",
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
 });
