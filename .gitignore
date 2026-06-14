@@ -40,3 +40,11 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# local env files
+.env
+.env*.local
+
+# local API config with auth token (copy config.example.js locally as config.js)
+src/constants/config.js
+
