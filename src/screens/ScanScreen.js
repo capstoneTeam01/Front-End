@@ -105,7 +105,7 @@ const ScanScreen = ({ navigation, route }) => {
           analysisResult={analysisResult}
           imageUri={imageUri}
           onFindExpertsPress={handleFindExpertsPress}
-          onDiyPress={() => console.log("DIY pressed")}
+          onDiyPress={() => navigation.navigate("DIYSolution")}
         />
       )}
 

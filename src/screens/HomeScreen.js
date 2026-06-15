@@ -163,7 +163,11 @@ const HomeScreen = ({ navigation }) => {
           label="Scan"
           onPress={() => setPopupVisible(true)}
         />
-        <NavItem icon="build-outline" label="Repairs" />
+        <NavItem
+          icon="build-outline"
+          label="Repairs"
+          onPress={() => navigation?.navigate("MyRepairs")}
+          />
         <NavItem icon="person-outline" label="Profile" />
       </View>
 
