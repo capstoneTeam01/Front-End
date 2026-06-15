@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import AppTextField from "../components/AppTextField/AppTextField";
 import ServiceProviderCard from "../components/ServiceProviderCard/ServiceProviderCard";
