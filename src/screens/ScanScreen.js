@@ -4,6 +4,7 @@ import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
 import ImageUpload from "../components/ImageUpload";
 import AnalyzingScreen from "./AnalyzingScreen";
 import RecommendationScreen from "./RecommendationScreen";
+import EmergencyIssueScreen from "./EmergencyIssueScreen";
 import COLORS from "../constants/colors";
 import { SIDE_PADDING } from "../constants/layout";
 
@@ -11,6 +12,25 @@ const STEP = {
   UPLOAD: "upload",
   ANALYZING: "analyzing",
   RECOMMENDATION: "recommendation",
+  EMERGENCY: "emergency",
+};
+
+const isEmergencyIssue = (analysisResult) => {
+  const result = analysisResult?.analysis || analysisResult || {};
+  const urgency = String(result.urgency || "").toLowerCase();
+  const issue = String(result.detectedIssue || "").toLowerCase();
+  const description = String(result.urgencyDescription || "").toLowerCase();
+
+  return (
+    urgency.includes("high") ||
+    urgency.includes("critical") ||
+    urgency.includes("emergency") ||
+    urgency.includes("urgent") ||
+    issue.includes("electrical hazard") ||
+    issue.includes("flood") ||
+    issue.includes("burst") ||
+    description.includes("immediate professional")
+  );
 };
 
 const ScanScreen = ({ navigation, route }) => {
@@ -27,6 +47,12 @@ const ScanScreen = ({ navigation, route }) => {
 
   const handleAnalysisComplete = (result) => {
     setAnalysisResult(result);
+
+    if (isEmergencyIssue(result)) {
+      setStep(STEP.EMERGENCY);
+      return;
+    }
+
     setStep(STEP.RECOMMENDATION);
   };
 
@@ -35,11 +61,20 @@ const ScanScreen = ({ navigation, route }) => {
   };
 
   const handleBack = () => {
-    if (step === STEP.RECOMMENDATION || step === STEP.ANALYZING) {
+    if (
+      step === STEP.RECOMMENDATION ||
+      step === STEP.EMERGENCY ||
+      step === STEP.ANALYZING
+    ) {
       setStep(STEP.UPLOAD);
       return;
     }
+
     navigation?.goBack();
+  };
+
+  const handleFindExpertsPress = () => {
+    console.log("Find Experts pressed");
   };
 
   return (
@@ -69,6 +104,16 @@ const ScanScreen = ({ navigation, route }) => {
         <RecommendationScreen
           analysisResult={analysisResult}
           imageUri={imageUri}
+          onFindExpertsPress={handleFindExpertsPress}
+          onDiyPress={() => console.log("DIY pressed")}
+        />
+      )}
+
+      {step === STEP.EMERGENCY && (
+        <EmergencyIssueScreen
+          analysisResult={analysisResult}
+          imageUri={imageUri}
+          onFindExpertsPress={handleFindExpertsPress}
         />
       )}
     </SafeAreaView>
