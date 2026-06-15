@@ -1,4 +1,5 @@
 import { API_URL, AUTH_TOKEN } from "../constants/config";
+import { resolveApiUrl } from "./resolveApiUrl";
 
 class UploadError extends Error {
   constructor(message, code = "UPLOAD_FAILED") {
@@ -28,7 +29,7 @@ const uploadPhoto = async (imageAsset, token = AUTH_TOKEN) => {
 
   let response;
   try {
-    response = await fetch(`${API_URL}/api/photos/upload`, {
+    response = await fetch(`${resolveApiUrl()}/api/photos/upload`, {
       method: "POST",
       headers: {
         Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}`,
