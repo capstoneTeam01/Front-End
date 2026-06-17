@@ -352,6 +352,17 @@ const styles = StyleSheet.create({
     color: "#0A0A0A",
     fontSize: 13,
   },
+  loadingBox: {
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
+},
+
+loadingText: {
+  marginTop: 12,
+  fontSize: 14,
+  color: "#0A0A0A",
+},
 });
 
 export default styles;

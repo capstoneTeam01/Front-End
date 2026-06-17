@@ -1,40 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   View,
   Text,
   TouchableOpacity,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./DIYSolutionScreenStyle";
+/* Update: we are importing getDiyInstructions API here to fetch the DIY instructions based on the analysis result and
+urgency level passed from the ScanScreen. This will allow us to display relevant instructions and tools for 
+different types of issues and urgency levels, rather than relying on hardcoded data. We can use the analysisResult and 
+urgency parameters to determine which instructions to fetch and display to the user.
+*/
+import { getDiyInstructions } from "../api/getDiyInstructions";
 
 
-//I have hardcoded this information to test with, but ideally this should come from the ScanScreen analysis result. 
+// I have hardcoded this information to test with, but ideally this should come from the ScanScreen analysis result. 
 // The steps and tools may vary based on the specific issue detected in the scan.
-const tools = ["Adjustable Wrench", "Bucket", "Plumber's Tape", "Flashlight"];
+// Todo: clean up the hardcoded data and ensure the DIYSolutionScreen receives the necessary information from the ScanScreen 
+// to display relevant instructions and tools based on the detected issue and its urgency level.
+const tools = ["FAllback -Adjustable Wrench", "Bucket", "Plumber's Tape", "Flashlight"];
 
 const steps = [
   {
-    title: "Shut Off Water Supply",
+    title: "FAllback - Shut Off Water Supply",
     desc: "Turn off the nearby water valve before starting the repair.",
   },
   {
-    title: "Control Water Leakage",
+    title: "FAllback - Control Water Leakage",
     desc: "Place a bucket under the leaking area to catch excess water.",
   },
   {
-    title: "Dry the Pipe Area",
+    title: "FAllback - Dry the Pipe Area",
     desc: "Dry the affected pipe area using a cloth or towel.",
   },
   {
-    title: "Apply Plumber’s Tape",
+    title: "FAllback - Apply Plumber’s Tape",
     desc: "Wrap plumber’s tape tightly around the leaking section.",
   },
   {
-    title: "Monitor the Leak",
+    title: "FAllback - Monitor the Leak",
     desc: "Check the pipe for additional leakage over the next few minutes.",
   },
 ];
@@ -45,17 +54,62 @@ It includes a list of tools that may be needed, detailed repair steps with progr
 Users can mark each step as completed, and once all steps are done, they can confirm the repair is complete. 
 There is also an option to find nearby professionals if users need additional help.
 */
-const DIYSolutionScreen = ({ navigation }) => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [modalVisible, setModalVisible] = useState(false);
+const DIYSolutionScreen = ({ navigation, route}) => {
+  console.log("DIYSolutionScreen received route params:", route?.params);
 
-  const allDone = currentStep >= steps.length;
+   const { analysisResult, urgency } = route?.params || {};
+   console.log("DIYSolutionScreen extracted analysisResult:", analysisResult, "and urgency:", urgency);
+   const [currentStep, setCurrentStep] = useState(0);
+   const [modalVisible, setModalVisible] = useState(false);
+   const [loading, setLoading] = useState(true);
+   const [diyData, setDiyData] = useState(null);
+
+
+
+useEffect(() => {
+  loadDiyInstructions();
+}, []);
+
+const loadDiyInstructions = async () => {
+  console.log("Loading DIY instructions with analysisResult:", analysisResult, "and urgency:", urgency);
+  try {
+    const response = await getDiyInstructions(
+      analysisResult?.analysis || analysisResult,
+      urgency
+    );
+
+    console.log("\n #####################################################DIY Response:", response);
+
+    setDiyData(response.diyInstructions);
+  } catch (error) {
+    console.log("DIY Error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+   
+  const repairSteps = diyData?.repairSteps || steps;
+
+const allDone = currentStep >= repairSteps.length;
 
   const handleStepPress = (index) => {
     if (index === currentStep) {
       setCurrentStep(currentStep + 1);
     }
   };
+
+  if (loading) {
+  return (
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.loadingBox}>
+        <ActivityIndicator size="large" />
+        <Text style={styles.loadingText}>
+          Generating DIY Instructions...
+        </Text>
+      </View>
+    </SafeAreaView>
+  );
+}
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -77,17 +131,19 @@ const DIYSolutionScreen = ({ navigation }) => {
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Fix Instructions</Text>
+        <Text style={styles.title}>
+          {diyData?.title || "Fix Instructions"}
+        </Text>
 
         <Text style={styles.subtitle}>
-          Follow the steps below to temporarily control the leak and prevent
-          further water damage.
-        </Text>
+          {diyData?.summary ||
+          "Follow the steps below to temporarily control the issue."}
+          </Text>
 
         <Text style={styles.sectionTitle}>Tools You May Need</Text>
 
         <View style={styles.toolCard}>
-          {tools.map((item) => (
+         {(diyData?.toolsNeeded || tools).map((item) => (
             <TouchableOpacity key={item} style={styles.toolRow}>
               <View style={styles.hexIcon} />
               <Text style={styles.toolText}>{item}</Text>
@@ -98,7 +154,7 @@ const DIYSolutionScreen = ({ navigation }) => {
         <Text style={styles.sectionTitle}>Repair Steps</Text>
 
         <View style={styles.stepsBox}>
-          {steps.map((item, index) => {
+          {repairSteps.map((item, index) => {
             const completed = index < currentStep;
             const active = index === currentStep;
 
@@ -129,7 +185,7 @@ const DIYSolutionScreen = ({ navigation }) => {
                     )}
                   </View>
 
-                  {index !== steps.length - 1 && (
+                  {index !== repairSteps.length - 1 && (
                     <View
                       style={[
                         styles.stepLine,
@@ -155,7 +211,7 @@ const DIYSolutionScreen = ({ navigation }) => {
                       !active && !completed && styles.inactiveDesc,
                     ]}
                   >
-                    {item.desc}
+                    {item.instruction || item.desc}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -173,15 +229,16 @@ const DIYSolutionScreen = ({ navigation }) => {
           </View>
 
           <Text style={styles.warningText}>
-            Stop immediately if leakage increases or water reaches nearby
-            electrical outlets.
+           {diyData?.safetyWarnings?.join("\n") || 
+           "Stop immediately if leakage increases or water reaches nearby electrical outlets."}
           </Text>
         </View>
 
         <View style={styles.helpBox}>
           <Text style={styles.helpTitle}>Feeling Stuck?</Text>
           <Text style={styles.helpText}>
-            Get help from nearby professionals anytime.
+             {diyData?.professionalAdvice ||
+            "Get help from nearby professionals anytime."}
           </Text>
         </View>
       </ScrollView>
@@ -223,13 +280,20 @@ const DIYSolutionScreen = ({ navigation }) => {
             </Text>
 
             <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.modalDarkButton}>
+              <TouchableOpacity style={styles.modalDarkButton}
+                onPress={() => {
+                  setModalVisible(false);
+                  navigation?.navigate("MyRepairs");
+                  }}>
                 <Text style={styles.modalDarkText}>Recent Scans</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.modalLightButton}
-                onPress={() => navigation?.navigate("Home")}
+                onPress={() => {
+                  setModalVisible(false);
+                  navigation?.navigate("Home");
+                }}
               >
                 <Text style={styles.modalLightText}>Home</Text>
               </TouchableOpacity>

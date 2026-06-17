@@ -100,12 +100,20 @@ const ScanScreen = ({ navigation, route }) => {
         <AnalyzingScreen onCancel={() => setStep(STEP.UPLOAD)} />
       )}
 
+      {/* Clean up the code below by removing console logs and comments, and ensuring onPress handlers are correctly set. */}
       {step === STEP.RECOMMENDATION && (
         <RecommendationScreen
           analysisResult={analysisResult}
           imageUri={imageUri}
           onFindExpertsPress={handleFindExpertsPress}
-          onDiyPress={() => navigation.navigate("DIYSolution")}
+          // Todo: why do we have need low urgency here? Should we pass the urgency level to the DIYSolutionScreen and let it decide what to show based on that?
+          onDiyPress={() => {
+            console.log("DIY pressed, Navigatin to DIYSolutionScreen with analysisResult:", analysisResult, "and urgency:", analysisResult?.analysis?.urgency || "low"  );
+            navigation?.navigate("DIYSolution", {
+              analysisResult,
+              urgency: analysisResult?.analysis?.urgency || "low",
+            });
+          }}
         />
       )}
 
