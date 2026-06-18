@@ -1,4 +1,5 @@
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
 
 const getActionText = (action) => {
   if (typeof action === "string") {
@@ -55,9 +56,8 @@ const RecommendationScreen = ({
             `FixBee identified signs of ${result.detectedObject || "a repair issue"}.`}
         </Text>
 
-        <View style={styles.riskBadge}>
-          <Text style={styles.riskBadgeText}>{result.urgency || "Low"} Risk</Text>
-        </View>
+        <UrgencyBadge urgency={result.urgency} />
+
       </View>
 
       <Text style={styles.estimateSectionTitle}>Repair Estimate</Text>
@@ -177,21 +177,6 @@ const styles = StyleSheet.create({
     color: "#555555",
     lineHeight: 22,
     marginBottom: 14,
-  },
-
-  riskBadge: {
-    alignSelf: "flex-start",
-    backgroundColor: "#EDEDED",
-    borderRadius: 20,
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-  },
-
-  riskBadgeText: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: "#333333",
-    textTransform: "capitalize",
   },
 
   estimateSectionTitle: {
