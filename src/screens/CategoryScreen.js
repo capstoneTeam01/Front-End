@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView, ScrollView, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -6,6 +6,7 @@ import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
 import ScanHexButton from "../components/ScanHexButton/ScanHexButton";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import RepairListItem from "../components/RepairListItem/RepairListItem";
+import CaptureInstructionsPopup from "../components/CaptureInstructionsPopup/CaptureInstructionsPopup";
 
 import { CATEGORY_DETAILS } from "../data/repairData";
 import COLORS from "../constants/colors";
@@ -14,8 +15,26 @@ import styles from "./CategoryScreenStyle";
 const CategoryScreen = ({ navigation, route }) => {
   const categoryId = route?.params?.categoryId || "plumbing";
   const headerTitle = route?.params?.title || "Plumbing";
+  const [capturePopupVisible, setCapturePopupVisible] = useState(false);
+  const [repairId, setRepairId] = useState(null);
 
   const detail = CATEGORY_DETAILS[categoryId] || CATEGORY_DETAILS.plumbing;
+
+  const openCapturePopup = (selectedRepairId = null) => {
+    setRepairId(selectedRepairId);
+    setCapturePopupVisible(true);
+  };
+
+  const handleScanNow = () => {
+    setCapturePopupVisible(false);
+    navigation?.navigate("Scan", {
+      categoryId,
+      repairId,
+      title: "Start New Scan",
+      subtitle: "Capture a repair issue with AI guidance.",
+      openCamera: true,
+    });
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -30,18 +49,13 @@ const CategoryScreen = ({ navigation, route }) => {
           onBellPress={() => navigation?.navigate("Notifications")}
         />
 
-        {/* Banner */}
         <View style={styles.banner}>
           <Text style={styles.bannerTitle}>{detail.title}</Text>
           <Text style={styles.bannerSubtitle}>{detail.description}</Text>
         </View>
 
         <View style={styles.scanWrap}>
-          <ScanHexButton
-            onPress={() =>
-              navigation?.navigate("Scan", { categoryId, title: headerTitle })
-            }
-          />
+          <ScanHexButton onPress={() => openCapturePopup()} />
         </View>
 
         <View style={styles.popularHeader}>
@@ -66,13 +80,17 @@ const CategoryScreen = ({ navigation, route }) => {
                   color={COLORS.textPrimary}
                 />
               }
-              onPress={() =>
-                navigation?.navigate("Scan", { categoryId, repairId: item.id })
-              }
+              onPress={() => openCapturePopup(item.id)}
             />
           ))}
         </View>
       </ScrollView>
+
+      <CaptureInstructionsPopup
+        visible={capturePopupVisible}
+        onClose={() => setCapturePopupVisible(false)}
+        onScanNow={handleScanNow}
+      />
     </SafeAreaView>
   );
 };
