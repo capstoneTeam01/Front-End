@@ -1,16 +1,14 @@
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 
-const FRAME_WIDTH_RATIO = 0.88;
-const FRAME_HEIGHT_RATIO = 0.52;
-const BRACKET_LENGTH = 28;
-const BRACKET_WIDTH = 3;
+const FRAME_SIZE_RATIO = 0.72;
+const BRACKET_LENGTH = 32;
+const BRACKET_WIDTH = 2.5;
 
 const CameraGuidelines = () => {
   const { width, height } = useWindowDimensions();
-  const frameWidth = width * FRAME_WIDTH_RATIO;
-  const frameHeight = height * FRAME_HEIGHT_RATIO;
-  const frameLeft = (width - frameWidth) / 2;
-  const frameTop = height * 0.22;
+  const frameSize = width * FRAME_SIZE_RATIO;
+  const frameLeft = (width - frameSize) / 2;
+  const frameTop = height * 0.2 + (height * 0.42 - frameSize) / 2;
 
   const renderDimRegion = (style) => <View style={[styles.dim, style]} pointerEvents="none" />;
 
@@ -18,22 +16,22 @@ const CameraGuidelines = () => {
     <View style={styles.overlay} pointerEvents="none">
       {renderDimRegion({ top: 0, left: 0, width, height: frameTop })}
       {renderDimRegion({
-        top: frameTop + frameHeight,
+        top: frameTop + frameSize,
         left: 0,
         width,
-        height: height - frameTop - frameHeight,
+        height: height - frameTop - frameSize,
       })}
       {renderDimRegion({
         top: frameTop,
         left: 0,
         width: frameLeft,
-        height: frameHeight,
+        height: frameSize,
       })}
       {renderDimRegion({
         top: frameTop,
-        left: frameLeft + frameWidth,
-        width: width - frameLeft - frameWidth,
-        height: frameHeight,
+        left: frameLeft + frameSize,
+        width: width - frameLeft - frameSize,
+        height: frameSize,
       })}
 
       <View
@@ -42,8 +40,8 @@ const CameraGuidelines = () => {
           {
             top: frameTop,
             left: frameLeft,
-            width: frameWidth,
-            height: frameHeight,
+            width: frameSize,
+            height: frameSize,
           },
         ]}
       >
@@ -52,13 +50,10 @@ const CameraGuidelines = () => {
         <View style={[styles.corner, styles.bottomLeft]} />
         <View style={[styles.corner, styles.bottomRight]} />
 
-        <View style={[styles.thirdLine, { left: frameWidth / 3 }]} />
-        <View style={[styles.thirdLine, { left: (frameWidth * 2) / 3 }]} />
-        <View style={[styles.thirdLineHorizontal, { top: frameHeight / 3 }]} />
-        <View style={[styles.thirdLineHorizontal, { top: (frameHeight * 2) / 3 }]} />
+        <View style={styles.crosshairVertical} />
+        <View style={styles.crosshairHorizontal} />
+        <View style={styles.crosshairDot} />
       </View>
-
-      <Text style={styles.hint}>Align the issue in the frame</Text>
     </View>
   );
 };
@@ -69,69 +64,71 @@ const styles = StyleSheet.create({
   },
   dim: {
     position: "absolute",
-    backgroundColor: "rgba(0, 0, 0, 0.45)",
+    backgroundColor: "rgba(8, 15, 35, 0.55)",
   },
   frame: {
     position: "absolute",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.35)",
   },
   corner: {
     position: "absolute",
     width: BRACKET_LENGTH,
     height: BRACKET_LENGTH,
-    borderColor: "#fff",
+    borderColor: "rgba(255, 255, 255, 0.95)",
   },
   topLeft: {
-    top: -1,
-    left: -1,
+    top: 0,
+    left: 0,
     borderTopWidth: BRACKET_WIDTH,
     borderLeftWidth: BRACKET_WIDTH,
   },
   topRight: {
-    top: -1,
-    right: -1,
+    top: 0,
+    right: 0,
     borderTopWidth: BRACKET_WIDTH,
     borderRightWidth: BRACKET_WIDTH,
   },
   bottomLeft: {
-    bottom: -1,
-    left: -1,
+    bottom: 0,
+    left: 0,
     borderBottomWidth: BRACKET_WIDTH,
     borderLeftWidth: BRACKET_WIDTH,
   },
   bottomRight: {
-    bottom: -1,
-    right: -1,
+    bottom: 0,
+    right: 0,
     borderBottomWidth: BRACKET_WIDTH,
     borderRightWidth: BRACKET_WIDTH,
   },
-  thirdLine: {
+  crosshairVertical: {
     position: "absolute",
-    top: 0,
-    bottom: 0,
+    top: "50%",
+    left: "50%",
     width: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    height: 28,
+    marginLeft: -0.5,
+    marginTop: -14,
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
   },
-  thirdLineHorizontal: {
+  crosshairHorizontal: {
     position: "absolute",
-    left: 0,
-    right: 0,
+    top: "50%",
+    left: "50%",
+    width: 28,
     height: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    marginLeft: -14,
+    marginTop: -0.5,
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
   },
-  hint: {
+  crosshairDot: {
     position: "absolute",
-    top: 56,
-    left: 24,
-    right: 24,
-    textAlign: "center",
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4,
+    top: "50%",
+    left: "50%",
+    width: 6,
+    height: 6,
+    marginLeft: -3,
+    marginTop: -3,
+    borderRadius: 3,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
   },
 });
 
