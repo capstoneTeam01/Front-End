@@ -8,8 +8,11 @@ import {
   Text,
   View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
 import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { detectIssueRegion } from "../api/detectIssueRegion";
 import { COACHING_INSTRUCTIONS, evaluateFocus } from "./evaluateFocus";
@@ -23,7 +26,10 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
   const cameraRef = useRef(null);
   const scanInFlightRef = useRef(false);
   const stableFocusCountRef = useRef(0);
+  const insets = useSafeAreaInsets();
   const [permission, requestPermission] = useCameraPermissions();
+  const [facing, setFacing] = useState("back");
+  const [torchOn, setTorchOn] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [isCapturing, setIsCapturing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -33,6 +39,8 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
 
   useEffect(() => {
     if (!visible) {
+      setFacing("back");
+      setTorchOn(false);
       setIsReady(false);
       setIsCapturing(false);
       setIsScanning(false);
@@ -183,6 +191,56 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
     }
   };
 
+  const handleOpenGallery = async () => {
+    if (isCapturing) {
+      return;
+    }
+
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status !== "granted") {
+      Alert.alert("Permission required", "Please allow access to your photo library.");
+      return;
+    }
+
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 0.8,
+      });
+
+      if (result.canceled || !result.assets?.length) {
+        return;
+      }
+
+      const asset = result.assets[0];
+      onCapture({
+        uri: asset.uri,
+        width: asset.width,
+        height: asset.height,
+        fileName: asset.fileName || `photo-${Date.now()}.jpg`,
+        mimeType: asset.mimeType || "image/jpeg",
+      });
+      onClose();
+    } catch (error) {
+      console.error("Gallery picker error:", error);
+      Alert.alert("Could not open gallery", "Something went wrong. Please try again.");
+    }
+  };
+
+  const handleFlipCamera = () => {
+    setFacing((current) => (current === "back" ? "front" : "back"));
+    setTorchOn(false);
+  };
+
+  const handleToggleTorch = () => {
+    if (facing === "front") {
+      return;
+    }
+    setTorchOn((current) => !current);
+  };
+
   const renderContent = () => {
     if (!permission) {
       return (
@@ -211,40 +269,92 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
         <CameraView
           ref={cameraRef}
           style={StyleSheet.absoluteFill}
-          facing="back"
+          facing={facing}
+          enableTorch={torchOn && facing === "back"}
           animateShutter={false}
           onCameraReady={() => setIsReady(true)}
         />
+        <View style={styles.tintOverlay} pointerEvents="none" />
         <CameraGuidelines />
         <DetectionHexagon
           issueRegion={detection?.issueRegion}
           detectedObject={detection?.detectedObject}
           isFocused={isFocused}
         />
-        <View style={styles.scanHint} pointerEvents="none">
-          {isScanning ? <ActivityIndicator size="small" color="#fff" style={styles.scanSpinner} /> : null}
-          <Text style={styles.scanHintText}>{scanStatus}</Text>
-        </View>
-        <View style={styles.controls}>
-          <Pressable style={styles.closeButton} onPress={handleClose} disabled={isCapturing}>
-            <Text style={styles.closeButtonText}>Cancel</Text>
+
+        <View style={[styles.topBar, { paddingTop: insets.top + 10 }]}>
+          <Pressable
+            style={styles.iconButton}
+            onPress={handleClose}
+            disabled={isCapturing}
+            accessibilityLabel="Go back"
+          >
+            <Ionicons name="chevron-back" size={22} color="#fff" />
           </Pressable>
+
+          <View style={styles.aiBadge}>
+            <View style={[styles.aiDot, isReady && styles.aiDotReady]} />
+            <Text style={styles.aiBadgeText}>{isReady ? "AI Ready" : "Starting…"}</Text>
+          </View>
+
+          <Pressable
+            style={[styles.iconButton, facing === "front" && styles.iconButtonDisabled]}
+            onPress={handleToggleTorch}
+            disabled={facing === "front" || isCapturing}
+            accessibilityLabel="Toggle flash"
+          >
+            <Ionicons
+              name={torchOn ? "flash" : "flash-outline"}
+              size={20}
+              color="#fff"
+            />
+          </Pressable>
+        </View>
+
+        <View style={[styles.instructionCard, { bottom: insets.bottom + 128 }]}>
+          {isScanning ? (
+            <ActivityIndicator size="small" color="#fff" style={styles.scanSpinner} />
+          ) : null}
+          <Text style={styles.instructionPrimary}>
+            Center the plumbing issue inside the frame
+          </Text>
+          <Text style={styles.instructionSecondary}>{scanStatus}</Text>
+        </View>
+
+        <View style={[styles.controls, { paddingBottom: insets.bottom + 24 }]}>
+          <Pressable
+            style={styles.sideButton}
+            onPress={handleOpenGallery}
+            disabled={isCapturing}
+            accessibilityLabel="Open gallery"
+          >
+            <Ionicons name="images-outline" size={22} color="#fff" />
+          </Pressable>
+
           <Pressable
             style={[
               styles.captureButton,
-              isFocused && styles.captureReady,
               (!isReady || isCapturing) && styles.captureDisabled,
             ]}
             onPress={handleCapture}
             disabled={!isReady || isCapturing}
+            accessibilityLabel="Take photo"
           >
             {isCapturing ? (
-              <ActivityIndicator color="#111" />
+              <ActivityIndicator color="#0f172a" />
             ) : (
               <View style={styles.captureInner} />
             )}
           </Pressable>
-          <View style={styles.sideSpacer} />
+
+          <Pressable
+            style={styles.sideButton}
+            onPress={handleFlipCamera}
+            disabled={isCapturing}
+            accessibilityLabel="Flip camera"
+          >
+            <Ionicons name="camera-reverse-outline" size={22} color="#fff" />
+          </Pressable>
         </View>
       </>
     );
@@ -261,7 +371,11 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#0b1224",
+  },
+  tintOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(11, 18, 36, 0.18)",
   },
   centered: {
     flex: 1,
@@ -293,68 +407,121 @@ const styles = StyleSheet.create({
     color: "#93c5fd",
     fontWeight: "600",
   },
-  scanHint: {
+  topBar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  iconButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(30, 41, 59, 0.72)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+  },
+  iconButtonDisabled: {
+    opacity: 0.45,
+  },
+  aiBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: "rgba(30, 41, 59, 0.78)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+  },
+  aiDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#64748b",
+  },
+  aiDotReady: {
+    backgroundColor: "#22c55e",
+  },
+  aiBadgeText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  instructionCard: {
     position: "absolute",
     left: 24,
     right: 24,
-    bottom: 140,
     alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderRadius: 16,
+    backgroundColor: "rgba(15, 23, 42, 0.82)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.06)",
   },
   scanSpinner: {
     marginBottom: 8,
   },
-  scanHintText: {
+  instructionPrimary: {
     color: "#fff",
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: "600",
     textAlign: "center",
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4,
+    lineHeight: 22,
+  },
+  instructionSecondary: {
+    marginTop: 6,
+    color: "#94a3b8",
+    fontSize: 13,
+    textAlign: "center",
+    lineHeight: 18,
   },
   controls: {
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 40,
+    bottom: 0,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 32,
+    paddingHorizontal: 36,
   },
-  closeButton: {
-    minWidth: 72,
-  },
-  closeButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
+  sideButton: {
+    width: 52,
+    height: 52,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(30, 41, 59, 0.78)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
   },
   captureButton: {
-    width: 76,
-    height: 76,
-    borderRadius: 38,
-    borderWidth: 4,
+    width: 82,
+    height: 82,
+    borderRadius: 41,
+    borderWidth: 5,
     borderColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.15)",
-  },
-  captureReady: {
-    borderColor: "#22c55e",
-    backgroundColor: "rgba(34, 197, 94, 0.25)",
+    backgroundColor: "transparent",
   },
   captureDisabled: {
     opacity: 0.5,
   },
   captureInner: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    backgroundColor: "#fff",
-  },
-  sideSpacer: {
-    minWidth: 72,
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    backgroundColor: "#f8fafc",
   },
 });
 
