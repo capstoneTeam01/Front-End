@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
 import ImageUpload from "../components/ImageUpload";
 import AnalyzingScreen from "./AnalyzingScreen";
@@ -34,7 +34,9 @@ const isEmergencyIssue = (analysisResult) => {
 };
 
 const ScanScreen = ({ navigation, route }) => {
-  const title = route?.params?.title || "Scan Issue";
+  const title = route?.params?.title || "Start New Scan";
+  const subtitle = route?.params?.subtitle;
+  const openCamera = route?.params?.openCamera ?? true;
 
   const [step, setStep] = useState(STEP.UPLOAD);
   const [analysisResult, setAnalysisResult] = useState(null);
@@ -86,13 +88,16 @@ const ScanScreen = ({ navigation, route }) => {
           onBack={handleBack}
           onBellPress={() => navigation?.navigate("Notifications")}
         />
+        {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       </View>
 
       {step === STEP.UPLOAD && (
         <ImageUpload
+          autoOpenCamera={openCamera}
           onAnalysisStart={handleAnalysisStart}
           onAnalysisComplete={handleAnalysisComplete}
           onAnalysisError={handleAnalysisError}
+          onDismiss={() => navigation?.goBack()}
         />
       )}
 
@@ -100,15 +105,12 @@ const ScanScreen = ({ navigation, route }) => {
         <AnalyzingScreen onCancel={() => setStep(STEP.UPLOAD)} />
       )}
 
-      {/* Clean up the code below by removing console logs and comments, and ensuring onPress handlers are correctly set. */}
       {step === STEP.RECOMMENDATION && (
         <RecommendationScreen
           analysisResult={analysisResult}
           imageUri={imageUri}
           onFindExpertsPress={handleFindExpertsPress}
-          // Todo: why do we have need low urgency here? Should we pass the urgency level to the DIYSolutionScreen and let it decide what to show based on that?
           onDiyPress={() => {
-            console.log("DIY pressed, Navigatin to DIYSolutionScreen with analysisResult:", analysisResult, "and urgency:", analysisResult?.analysis?.urgency || "low"  );
             navigation?.navigate("DIYSolution", {
               analysisResult,
               urgency: analysisResult?.analysis?.urgency || "low",
@@ -136,6 +138,13 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 8,
+  },
+  subtitle: {
+    marginTop: 4,
+    marginBottom: 8,
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    textAlign: "center",
   },
 });
 

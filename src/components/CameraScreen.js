@@ -182,7 +182,6 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
         fileName: `photo-${Date.now()}.jpg`,
         mimeType: "image/jpeg",
       });
-      onClose();
     } catch (error) {
       console.error("Camera capture error:", error);
       Alert.alert("Capture failed", "Could not take a photo. Please try again.");
@@ -222,7 +221,6 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
         fileName: asset.fileName || `photo-${Date.now()}.jpg`,
         mimeType: asset.mimeType || "image/jpeg",
       });
-      onClose();
     } catch (error) {
       console.error("Gallery picker error:", error);
       Alert.alert("Could not open gallery", "Something went wrong. Please try again.");
