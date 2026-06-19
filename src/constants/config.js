@@ -1,14 +1,27 @@
-// Use your computer's LAN IP when testing on a physical device (not localhost).
-export const API_URL = "http://localhost:5000";
-
-// Paste a token from POST /api/auth/login while testing before login UI exists.
-// Expires after ~1 hour; re-login if uploads return 401.
-export const AUTH_TOKEN =
+// - Android emulator fallback: http://10.0.2.2:5000
+export const API_URL =
+  process.env.EXPO_PUBLIC_FIXBEE_API_URL ||
+  process.env.EXPO_PUBLIC_API_URL ||
   "";
 
-// Real API upload to backend → Vercel Blob (set true only for UI-only testing).
-export const USE_MOCK_UPLOAD = false;   //make it true and test if dont have authtoken yet
+export const USE_DEV_AUTO_LOGIN = true;
 
-// FIXBEE-65 mock scenarios (only when USE_MOCK_UPLOAD is true):
-// "success" | "validation_error" | "upload_error"
+export const AUTH_TOKEN = "";
+
+export const DEV_LOGIN = {
+  email: "testuser1@example.com",
+  password: "password123",
+};
+
+export const PROVIDER_CACHE_STALE_MINUTES = 10;
+
+export const USE_MOCK_UPLOAD = false;
+
 export const MOCK_UPLOAD_RESULT = "success";
+
+export const USE_DEMO_ANALYSIS_FALLBACK = true;
+
+export const PREFERRED_QUOTE_MAIL_CLIENT = process.env.EXPO_PUBLIC_PREFERRED_QUOTE_MAIL_CLIENT || "gmail";
+export const FIXBEE_QUOTE_CC_EMAIL = process.env.EXPO_PUBLIC_FIXBEE_QUOTE_CC_EMAIL || "fixbee.official@gmail.com";
+
+export const FIXBEE_REQUESTER_NAME = process.env.EXPO_PUBLIC_FIXBEE_REQUESTER_NAME || "FixBee User";
