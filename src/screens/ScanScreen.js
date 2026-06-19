@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, Text, StyleSheet } from "react-native";
-
 import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
 import ImageUpload from "../components/ImageUpload";
 import AnalyzingScreen from "./AnalyzingScreen";
@@ -8,13 +7,6 @@ import RecommendationScreen from "./RecommendationScreen";
 import EmergencyIssueScreen from "./EmergencyIssueScreen";
 import COLORS from "../constants/colors";
 import { SIDE_PADDING } from "../constants/layout";
-import { getProviderRouteParamsFromIssue } from "../utils/issueProviderRouteMapper";
-import {
-  buildLocationRouteParams,
-  getCurrentCityFromGps,
-  prefetchCurrentLocation,
-} from "../utils/locationHelper";
-import { DEFAULT_PROVIDER_CITY } from "../utils/providerConstants";
 
 const STEP = {
   UPLOAD: "upload",
@@ -46,49 +38,36 @@ const ScanScreen = ({ navigation, route }) => {
   const subtitle = route?.params?.subtitle;
   const openCamera = route?.params?.openCamera ?? true;
 
-
   const [step, setStep] = useState(STEP.UPLOAD);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [imageUri, setImageUri] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
-  const [prefetchedLocationInfo, setPrefetchedLocationInfo] = useState(null);
-  const [resolvingProviderCity, setResolvingProviderCity] = useState(false);
 
   const handleAnalysisStart = (uri) => {
     setImageUri(uri);
     setStep(STEP.ANALYZING);
-
-    // Start the city lookup during upload/AI time so Find Experts feels faster.
-    prefetchCurrentLocation({ reason: "image-upload-analysis" }).then((location) => {
-      if (!location) return;
-      setPrefetchedLocationInfo(location);
-      console.log("[FixBee][Scan] location prefetched during image processing", {
-        city: location.city,
-        streetAddress: location.streetAddress,
-        source: location.source,
-      });
-    });
   };
 
   const handleAnalysisComplete = (result) => {
     setAnalysisResult(result);
-    setUploadedImageUrl(result?.uploadedImageUrl || result?.analysis?.uploadedImageUrl || null);
 
-    
-    if (result?.uploadedImageUri && !imageUri) {
-      setImageUri(result.uploadedImageUri);
+    if (isEmergencyIssue(result)) {
+      setStep(STEP.EMERGENCY);
+      return;
     }
 
-    setStep(isEmergencyIssue(result) ? STEP.EMERGENCY : STEP.RECOMMENDATION);
+    setStep(STEP.RECOMMENDATION);
   };
 
-  const handleAnalysisError = (error) => {
-    console.warn("[FixBee][Scan] analysis failed", error?.message || error);
+  const handleAnalysisError = () => {
     setStep(STEP.UPLOAD);
   };
 
   const handleBack = () => {
-    if (step !== STEP.UPLOAD) {
+    if (
+      step === STEP.RECOMMENDATION ||
+      step === STEP.EMERGENCY ||
+      step === STEP.ANALYZING
+    ) {
       setStep(STEP.UPLOAD);
       return;
     }
@@ -96,46 +75,8 @@ const ScanScreen = ({ navigation, route }) => {
     navigation?.goBack();
   };
 
-  const handleFindExpertsPress = async () => {
-    if (resolvingProviderCity) return;
-
-    setResolvingProviderCity(true);
-
-    let providerCity = DEFAULT_PROVIDER_CITY;
-    let locationInfo = null;
-
-    try {
-      locationInfo =
-        prefetchedLocationInfo ||
-        (await getCurrentCityFromGps({
-          preferCached: true,
-          cacheReason: "find-experts",
-        }));
-      providerCity = locationInfo?.city || DEFAULT_PROVIDER_CITY;
-      console.log("[FixBee][ProviderRoute] provider city resolved", {
-        providerCity,
-        source: locationInfo?.providerCitySource || locationInfo?.source,
-      });
-    } catch (error) {
-      console.log("[FixBee][ProviderRoute] city fallback used", {
-        fallbackCity: DEFAULT_PROVIDER_CITY,
-        error: error?.message,
-      });
-    }
-
-    const providerRouteParams = getProviderRouteParamsFromIssue({
-      analysisResult,
-      city: providerCity,
-      title,
-    });
-
-    providerRouteParams.uploadedImageUri = imageUri || analysisResult?.uploadedImageUri;
-    providerRouteParams.uploadedImageUrl = uploadedImageUrl || analysisResult?.uploadedImageUrl;
-    Object.assign(providerRouteParams, buildLocationRouteParams(locationInfo));
-    providerRouteParams.detectedUserCity = providerCity;
-
-    setResolvingProviderCity(false);
-    navigation?.navigate("ProviderList", providerRouteParams);
+  const handleFindExpertsPress = () => {
+    console.log("Find Experts pressed");
   };
 
   return (
@@ -160,19 +101,21 @@ const ScanScreen = ({ navigation, route }) => {
         />
       )}
 
-      {step === STEP.ANALYZING && <AnalyzingScreen onCancel={() => setStep(STEP.UPLOAD)} />}
+      {step === STEP.ANALYZING && (
+        <AnalyzingScreen onCancel={() => setStep(STEP.UPLOAD)} />
+      )}
 
       {step === STEP.RECOMMENDATION && (
         <RecommendationScreen
           analysisResult={analysisResult}
           imageUri={imageUri}
           onFindExpertsPress={handleFindExpertsPress}
-          onDiyPress={() =>
+          onDiyPress={() => {
             navigation?.navigate("DIYSolution", {
               analysisResult,
               urgency: analysisResult?.analysis?.urgency || "low",
-            })
-          }
+            });
+          }}
         />
       )}
 
