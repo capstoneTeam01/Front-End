@@ -39,6 +39,12 @@
         {
           "cameraPermission": "Allow FixBee to take photos for issue reporting."
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow FixBee to use your location to fill the service address."
+        }
       ]
     ]
   }
