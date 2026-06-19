@@ -1,29 +1,24 @@
-import React from "react";
-import { ScrollView, View, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ScrollView,
+  View,
+  FlatList,
+  Text,
+} from "react-native";
+
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import RecentScanCard from "../components/RecentScanCard/RecentScanCard";
 import RepairListItem from "../components/RepairListItem/RepairListItem";
 
+import { getPhotoHistory } from "../api/getPhotoHistory";
+
 import COLORS from "../constants/colors";
 import styles from "./MyRepairsScreenStyle";
 
-const recentScans = [
-  {
-    id: "1",
-    title: "Sink Leak Pipe",
-    date: "4 Days ago",
-    status: "Issue Detected",
-  },
-  {
-    id: "2",
-    title: "Ceiling Stain",
-    date: "2 Weeks ago",
-    status: "Pending",
-  },
-];
 
 const completedRepairs = [
   {
@@ -43,7 +38,147 @@ const completedRepairs = [
   },
 ];
 
+
+const formatScanDate = (createdAt) => {
+  if (!createdAt) {
+    return "Date unavailable";
+  }
+
+  const scanDate = new Date(createdAt);
+  const currentDate = new Date();
+
+  if (Number.isNaN(scanDate.getTime())) {
+    return "Date unavailable";
+  }
+
+  const timeDifference =
+    currentDate.getTime() - scanDate.getTime();
+
+  const millisecondsInOneDay =
+    1000 * 60 * 60 * 24;
+
+  const daysDifference = Math.floor(
+    timeDifference / millisecondsInOneDay
+  );
+
+  if (daysDifference <= 0) {
+    return "Today";
+  }
+
+  if (daysDifference === 1) {
+    return "1 day ago";
+  }
+
+  return `${daysDifference} days ago`;
+};
+
+
 const MyRepairsScreen = ({ navigation }) => {
+  const [recentScans, setRecentScans] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+
+  const loadPhotoHistory = async () => {
+    try {
+      setIsLoading(true);
+      setErrorMessage("");
+
+      const historyData = await getPhotoHistory();
+
+      if (!Array.isArray(historyData)) {
+        throw new Error("History data is unavailable.");
+      }
+
+      const formattedScans = [];
+
+      for (const historyItem of historyData) {
+        let title = "Repair Issue";
+        let status = "Analyzed";
+
+        if (historyItem.detectedObject) {
+          title = historyItem.detectedObject;
+        }
+
+        if (
+          historyItem.analysis &&
+          historyItem.analysis.detectedIssue
+        ) {
+          title = historyItem.analysis.detectedIssue;
+        }
+
+        if (
+          historyItem.analysis &&
+          historyItem.analysis.urgency
+        ) {
+          status = historyItem.analysis.urgency;
+        }
+
+        const formattedScan = {
+          id: historyItem.photoId,
+          title: title,
+          date: formatScanDate(historyItem.createdAt),
+          status: status,
+          imageUrl: historyItem.imageUrl,
+        };
+
+        formattedScans.push(formattedScan);
+      }
+
+      setRecentScans(formattedScans);
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+  useEffect(() => {
+    loadPhotoHistory();
+  }, []);
+
+
+  const renderRecentScans = () => {
+    if (isLoading) {
+      return (
+        <Text>
+          Loading recent scans...
+        </Text>
+      );
+    }
+
+    if (errorMessage) {
+      return (
+        <Text>
+          {errorMessage}
+        </Text>
+      );
+    }
+
+    if (recentScans.length === 0) {
+      return (
+        <Text>
+          No recent scans found.
+        </Text>
+      );
+    }
+
+    return (
+      <FlatList
+        horizontal
+        data={recentScans}
+        keyExtractor={(item) => item.id}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scanList}
+        renderItem={({ item }) => (
+          <RecentScanCard item={item} />
+        )}
+      />
+    );
+  };
+
+
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView
@@ -52,7 +187,9 @@ const MyRepairsScreen = ({ navigation }) => {
       >
         <ScreenHeader
           title="My Repairs"
-          onBellPress={() => navigation?.navigate("Notifications")}
+          onBellPress={() =>
+            navigation?.navigate("Notifications")
+          }
         />
 
         <View style={styles.section}>
@@ -62,14 +199,7 @@ const MyRepairsScreen = ({ navigation }) => {
             onActionPress={() => {}}
           />
 
-          <FlatList
-            horizontal
-            data={recentScans}
-            keyExtractor={(item) => item.id}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scanList}
-            renderItem={({ item }) => <RecentScanCard item={item} />}
-          />
+          {renderRecentScans()}
         </View>
 
         <View style={styles.section}>
