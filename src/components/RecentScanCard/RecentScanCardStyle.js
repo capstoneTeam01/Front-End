@@ -12,9 +12,19 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 
-  image: {
+  imageContainer: {
     height: 110,
     backgroundColor: "#F3F4F6",
+  },
+
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+
+  imagePlaceholder: {
+    width: "100%",
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
