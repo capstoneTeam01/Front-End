@@ -11,49 +11,34 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./DIYSolutionScreenStyle";
-/* Update: we are importing getDiyInstructions API here to fetch the DIY instructions based on the analysis result and
-urgency level passed from the ScanScreen. This will allow us to display relevant instructions and tools for 
-different types of issues and urgency levels, rather than relying on hardcoded data. We can use the analysisResult and 
-urgency parameters to determine which instructions to fetch and display to the user.
-*/
+
 import { getDiyInstructions } from "../api/getDiyInstructions";
 
-
-// I have hardcoded this information to test with, but ideally this should come from the ScanScreen analysis result. 
-// The steps and tools may vary based on the specific issue detected in the scan.
-// Todo: clean up the hardcoded data and ensure the DIYSolutionScreen receives the necessary information from the ScanScreen 
-// to display relevant instructions and tools based on the detected issue and its urgency level.
-const tools = ["FAllback -Adjustable Wrench", "Bucket", "Plumber's Tape", "Flashlight"];
+const tools = ["Adjustable Wrench", "Bucket", "Plumber's Tape", "Flashlight"];
 
 const steps = [
   {
-    title: "FAllback - Shut Off Water Supply",
+    title: "Shut Off Water Supply",
     desc: "Turn off the nearby water valve before starting the repair.",
   },
   {
-    title: "FAllback - Control Water Leakage",
+    title: "Control Water Leakage",
     desc: "Place a bucket under the leaking area to catch excess water.",
   },
   {
-    title: "FAllback - Dry the Pipe Area",
+    title: "Dry the Pipe Area",
     desc: "Dry the affected pipe area using a cloth or towel.",
   },
   {
-    title: "FAllback - Apply Plumber’s Tape",
+    title: "Apply Plumber’s Tape",
     desc: "Wrap plumber’s tape tightly around the leaking section.",
   },
   {
-    title: "FAllback - Monitor the Leak",
+    title: "Monitor the Leak",
     desc: "Check the pipe for additional leakage over the next few minutes.",
   },
 ];
 
-/*
-This screen provides step-by-step DIY instructions for users to temporarily control a detected leak.
-It includes a list of tools that may be needed, detailed repair steps with progress tracking, and safety warnings. 
-Users can mark each step as completed, and once all steps are done, they can confirm the repair is complete. 
-There is also an option to find nearby professionals if users need additional help.
-*/
 const DIYSolutionScreen = ({ navigation, route}) => {
   console.log("DIYSolutionScreen received route params:", route?.params);
 
