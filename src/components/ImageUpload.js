@@ -6,10 +6,11 @@ import * as ImagePicker from "expo-image-picker";
 import { UploadError, uploadPhoto } from "../api/uploadPhoto";
 import { analyzeImage } from "../api/analyzeImage";
 import {
-  AUTH_TOKEN,
   MOCK_UPLOAD_RESULT,
+  USE_DEMO_ANALYSIS_FALLBACK,
   USE_MOCK_UPLOAD,
 } from "../constants/config";
+import { buildDemoAnalysisFallback, isNetworkErrorMessage } from "../utils/demoAnalysisFallback";
 import CameraScreen from "./CameraScreen";
 
 const runMockUpload = async () => {
@@ -29,7 +30,12 @@ const runMockUpload = async () => {
     );
   }
 
-  return { url: "mock://upload-success", message: "Image uploaded successfully" };
+  return {
+    photoId: `mock-photo-${Date.now()}`,
+    uploadedImageUrl: "",
+    url: "mock://upload-success",
+    message: "Image uploaded successfully",
+  };
 };
 
 const ImageUpload = ({
@@ -84,22 +90,71 @@ const ImageUpload = ({
 
     try {
       let uploadResult;
+      let analysisResult;
 
-      if (USE_MOCK_UPLOAD) {
-        uploadResult = await runMockUpload();
-      } else {
-        uploadResult = await uploadPhoto(asset, AUTH_TOKEN);
+      try {
+        if (USE_MOCK_UPLOAD) {
+          uploadResult = await runMockUpload();
+        } else {
+          uploadResult = await uploadPhoto(asset);
+        }
+      } catch (uploadError) {
+        if (USE_DEMO_ANALYSIS_FALLBACK && isNetworkErrorMessage(uploadError)) {
+          console.log("[FixBee][Scan] backend upload unavailable; using demo analysis fallback", {
+            message: uploadError?.message,
+          });
+
+          analysisResult = buildDemoAnalysisFallback({
+            imageUri: asset.uri,
+            reason: "upload-network-failed",
+          });
+        } else {
+          throw uploadError;
+        }
       }
 
-      const photoId = uploadResult.photoId || uploadResult.id;
+      if (!analysisResult) {
+        const photoId = uploadResult.photoId || uploadResult.id;
 
-      const analysisResult = await analyzeImage({
-        photoId,
-        location: "Vancouver, BC",
-      });
+        if (!photoId) {
+          throw new UploadError(
+            "Upload worked, but backend did not return a photo ID.",
+            "MISSING_PHOTO_ID"
+          );
+        }
+
+        try {
+          analysisResult = await analyzeImage({
+            photoId,
+            location: "Vancouver, BC",
+          });
+        } catch (analysisError) {
+          if (USE_DEMO_ANALYSIS_FALLBACK && isNetworkErrorMessage(analysisError)) {
+            console.log("[FixBee][Scan] backend analysis unavailable; using demo analysis fallback", {
+              message: analysisError?.message,
+            });
+
+            analysisResult = buildDemoAnalysisFallback({
+              imageUri: asset.uri,
+              uploadedImageUrl: uploadResult.uploadedImageUrl || uploadResult.url,
+              reason: "analysis-network-failed",
+            });
+          } else {
+            throw analysisError;
+          }
+        }
+      }
 
       if (onAnalysisComplete) {
-        onAnalysisComplete(analysisResult);
+        onAnalysisComplete({
+          ...analysisResult,
+          uploadedImageUri: analysisResult?.uploadedImageUri || asset.uri,
+          uploadedImageUrl:
+            uploadResult?.uploadedImageUrl ||
+            uploadResult?.url ||
+            analysisResult?.uploadedImageUrl ||
+            analysisResult?.analysis?.uploadedImageUrl,
+        });
       }
     } catch (error) {
       console.error("Upload/analysis error:", error);
@@ -109,7 +164,7 @@ const ImageUpload = ({
       );
 
       if (onAnalysisError) {
-        onAnalysisError();
+        onAnalysisError(error);
       }
     } finally {
       setIsUploading(false);

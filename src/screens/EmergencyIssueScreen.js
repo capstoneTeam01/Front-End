@@ -2,6 +2,15 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
 
+
+const getEstimateValue = (...values) => {
+  const match = values
+    .map((value) => String(value || "").trim())
+    .find((value) => value && value.toLowerCase() !== "null" && value.toLowerCase() !== "undefined" && value.toUpperCase() !== "N/A");
+
+  return match || "N/A";
+};
+
 const getActionText = (action) => {
     if (typeof action === "string") {
         return action;
@@ -23,6 +32,18 @@ const EmergencyIssueScreen = ({
 }) => {
     const result = analysisResult?.analysis || analysisResult || {};
     const immediateActions = result.recommendedActions || [];
+    const estimatedCostText = getEstimateValue(
+        result.estimatedCostRange,
+        result.costEstimate,
+        result.estimatedCost,
+        result.costRange
+    );
+    const estimatedTimeText = getEstimateValue(
+        result.estimatedRepairTime,
+        result.repairTimeEstimate,
+        result.estimatedTime,
+        result.repairTime
+    );
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -87,14 +108,14 @@ const EmergencyIssueScreen = ({
                 <View style={styles.estimateItem}>
                     <Text style={styles.estimateLabel}>Estimate Cost</Text>
                     <Text style={styles.estimateValue}>
-                        {result.estimatedCostRange || "N/A"}
+                        {estimatedCostText}
                     </Text>
                 </View>
 
                 <View style={styles.estimateItem}>
                     <Text style={styles.estimateLabel}>Estimate Time</Text>
                     <Text style={styles.estimateValue}>
-                        {result.estimatedRepairTime || "N/A"}
+                        {estimatedTimeText}
                     </Text>
                 </View>
             </View>

@@ -6,8 +6,6 @@ import {
 const toCleanText = (value) => String(value || "").trim();
 const toLowerText = (value) => toCleanText(value).toLowerCase();
 
-// Keep this mapping small and beginner-friendly.
-// The backend currently supports plumbers well, so unclear AI labels are safely normalized.
 export const normalizeProviderCategory = (value, fallback = DEFAULT_PROVIDER_CATEGORY) => {
   const text = toLowerText(value);
 
@@ -62,8 +60,18 @@ export const getProviderRouteParamsFromIssue = ({
     fromIssue: issueLabel,
     detectedObject: toCleanText(result.detectedObject),
     urgency: toCleanText(result.urgency),
-    estimatedCostRange: toCleanText(result.estimatedCostRange),
-    estimatedRepairTime: toCleanText(result.estimatedRepairTime),
+    estimatedCostRange: toCleanText(
+      result.estimatedCostRange ||
+        result.costEstimate ||
+        result.estimatedCost ||
+        result.costRange
+    ),
+    estimatedRepairTime: toCleanText(
+      result.estimatedRepairTime ||
+        result.repairTimeEstimate ||
+        result.estimatedTime ||
+        result.repairTime
+    ),
     providerSource: "issue-analysis",
   };
 };
