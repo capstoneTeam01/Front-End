@@ -22,9 +22,6 @@ const withTimeout = (promise, timeoutMs, timeoutMessage) => {
 
 const isWarmupUsable = () => {
   if (!lastWarmupResult?.ok || !lastWarmupResult?.finishedAt) return false;
-
-  // Keep this short because the backend token can be invalidated when the
-  // developer restarts Node/Redis during capstone testing.
   return Date.now() - lastWarmupResult.finishedAt <= 2 * 60 * 1000;
 };
 
@@ -79,10 +76,6 @@ export const warmUpFixBeeSession = async ({ reason = "app-start", forceRefresh =
         reason,
         error: firstError?.message,
       });
-
-      // On the first QR/Open Expo run, the backend or LAN socket can still be
-      // waking up. Clear only the token, wait briefly, and try once more so the
-      // user's first image upload does not silently fail.
       await resetAuthSession({ reason: `startup-warmup-retry:${reason}` });
       await delay(WARMUP_RETRY_DELAY_MS);
 

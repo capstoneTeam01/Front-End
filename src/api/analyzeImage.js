@@ -1,4 +1,4 @@
-import { API_URL, AUTH_TOKEN } from "../constants/config";
+import { apiPost } from "./apiClient";
 
 class AnalyzeImageError extends Error {
   constructor(message, code = "ANALYSIS_FAILED") {
@@ -8,14 +8,7 @@ class AnalyzeImageError extends Error {
   }
 }
 
-const analyzeImage = async ({ photoId, location }, token = AUTH_TOKEN) => {
-  if (!token) {
-    throw new AnalyzeImageError(
-      "Not logged in. Add AUTH_TOKEN in src/constants/config.js for testing.",
-      "UNAUTHORIZED"
-    );
-  }
-
+const analyzeImage = async ({ photoId, location }) => {
   if (!photoId) {
     throw new AnalyzeImageError(
       "Photo ID is required before analysis.",
@@ -23,46 +16,29 @@ const analyzeImage = async ({ photoId, location }, token = AUTH_TOKEN) => {
     );
   }
 
-  let response;
-
   try {
-    response = await fetch(`${API_URL}/api/analysis`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}`,
-      },
-      body: JSON.stringify({
+    console.log("[FixBee][Scan] requesting image analysis with auto auth", {
+      photoId,
+      location,
+    });
+
+    return await apiPost(
+      "/api/analysis",
+      {
         photoId,
         location,
-      }),
-    });
-  } catch {
-    throw new AnalyzeImageError(
-      "Network error. Check your connection and API_URL.",
-      "NETWORK_ERROR"
+      },
+      {
+        timeoutMs: 90000,
+      }
     );
-  }
-
-  let data = {};
-
-  try {
-    data = await response.json();
-  } catch {
-    data = {};
-  }
-
-  if (!response.ok) {
-    const code =
-      data.error || (response.status === 401 ? "UNAUTHORIZED" : "ANALYSIS_FAILED");
-
+  } catch (error) {
+    const code = error?.status === 401 ? "UNAUTHORIZED" : error?.code || "ANALYSIS_FAILED";
     throw new AnalyzeImageError(
-      data.message || "Image analysis failed. Please try again.",
+      error?.message || "Image analysis failed. Please try again.",
       code
     );
   }
-
-  return data;
 };
 
 export { analyzeImage, AnalyzeImageError };

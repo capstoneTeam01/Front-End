@@ -15,9 +15,6 @@ export const SUPPORTED_CITIES = [
   "New Westminster",
   "Delta",
 ];
-
-// This fallback is intentionally written through SQLite first.
-// The UI still follows the offline-first rule: data source -> SQLite -> UI.
 export const DEMO_PROVIDERS = [
   {
     id: "demo-apex-repair-solutions",
@@ -29,6 +26,7 @@ export const DEMO_PROVIDERS = [
     primaryCategory: "Plumbing",
     phoneDisplay: "+1 604-555-0182",
     phoneNormalized: "+16045550182",
+    email: "apex.demo@example.com",
     address: "626 Kingsway, Vancouver, BC",
     city: "Vancouver",
     province: "BC",
@@ -49,6 +47,7 @@ export const DEMO_PROVIDERS = [
     primaryCategory: "Plumbing",
     phoneDisplay: "+1 778-555-0136",
     phoneNormalized: "+17785550136",
+    email: "primefix.demo@example.com",
     address: "261 E 64th Ave, Vancouver, BC",
     city: "Vancouver",
     province: "BC",
@@ -69,6 +68,7 @@ export const DEMO_PROVIDERS = [
     primaryCategory: "Plumbing",
     phoneDisplay: "+1 604-555-0148",
     phoneNormalized: "+16045550148",
+    email: "reliable.demo@example.com",
     address: "4820 Kingsway, Burnaby, BC",
     city: "Burnaby",
     province: "BC",
@@ -89,6 +89,7 @@ export const DEMO_PROVIDERS = [
     primaryCategory: "Plumbing",
     phoneDisplay: "+1 604-555-0164",
     phoneNormalized: "+16045550164",
+    email: "metro.demo@example.com",
     address: "7900 Westminster Hwy, Richmond, BC",
     city: "Richmond",
     province: "BC",
@@ -109,6 +110,7 @@ export const DEMO_PROVIDERS = [
     primaryCategory: "Plumbing",
     phoneDisplay: "+1 236-555-0119",
     phoneNormalized: "+12365550119",
+    email: "trusted.demo@example.com",
     address: "1450 Lonsdale Ave, North Vancouver, BC",
     city: "North Vancouver",
     province: "BC",
@@ -129,6 +131,7 @@ export const DEMO_PROVIDERS = [
     primaryCategory: "Plumbing",
     phoneDisplay: "+1 604-555-0177",
     phoneNormalized: "+16045550177",
+    email: "fixwise.demo@example.com",
     address: "102 Columbia St, New Westminster, BC",
     city: "New Westminster",
     province: "BC",
@@ -149,6 +152,7 @@ export const DEMO_PROVIDERS = [
     primaryCategory: "Plumbing",
     phoneDisplay: "+1 778-555-0188",
     phoneNormalized: "+17785550188",
+    email: "swift.demo@example.com",
     address: "104 Ave, Surrey, BC",
     city: "Surrey",
     province: "BC",
@@ -169,6 +173,7 @@ export const DEMO_PROVIDERS = [
     primaryCategory: "Plumbing",
     phoneDisplay: "+1 604-555-0199",
     phoneNormalized: "+16045550199",
+    email: "bluepeak.demo@example.com",
     address: "Marine Dr, West Vancouver, BC",
     city: "West Vancouver",
     province: "BC",
