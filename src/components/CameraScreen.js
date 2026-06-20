@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  AppState,
+  Linking,
   Modal,
   Pressable,
   StyleSheet,
@@ -19,15 +21,19 @@ import { COACHING_INSTRUCTIONS, evaluateFocus } from "./evaluateFocus";
 import CameraGuidelines from "./CameraGuidelines";
 import DetectionHexagon from "./DetectionHexagon";
 
-const SCAN_INTERVAL_MS = 2000;
+const SCAN_INTERVAL_MS = 1200;
+const SCAN_START_DELAY_MS = 500;
 const STABLE_SCANS_REQUIRED = 1;
 
 const CameraScreen = ({ visible, onClose, onCapture }) => {
   const cameraRef = useRef(null);
   const scanInFlightRef = useRef(false);
   const stableFocusCountRef = useRef(0);
+  const missedScansRef = useRef(0);
+  const hasShownAlertRef = useRef(false);
+  const hasRequestedRef = useRef(false);
   const insets = useSafeAreaInsets();
-  const [permission, requestPermission] = useCameraPermissions();
+  const [permission, requestPermission, getPermission] = useCameraPermissions();
   const [facing, setFacing] = useState("back");
   const [torchOn, setTorchOn] = useState(false);
   const [isReady, setIsReady] = useState(false);
@@ -47,19 +53,69 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
       setDetection(null);
       setIsFocused(false);
       stableFocusCountRef.current = 0;
+      missedScansRef.current = 0;
       setScanStatus(COACHING_INSTRUCTIONS.NO_OBJECT);
     }
   }, [visible]);
 
   useEffect(() => {
-    if (!visible || !permission) {
+    if (!visible) {
+      hasShownAlertRef.current = false;
+      hasRequestedRef.current = false;
       return;
     }
 
-    if (!permission.granted && permission.canAskAgain) {
-      requestPermission();
+    if (!permission || permission.granted) {
+      return;
     }
-  }, [visible, permission, requestPermission]);
+
+    if (permission.canAskAgain === false) {
+      if (hasShownAlertRef.current) {
+        return;
+      }
+
+      hasShownAlertRef.current = true;
+
+      const timer = setTimeout(() => {
+        Alert.alert(
+          "Camera access disabled",
+          "Enable camera in Settings to scan issues.",
+          [
+            { text: "Cancel", style: "cancel", onPress: onClose },
+            { text: "Open Settings", onPress: () => Linking.openSettings() },
+          ]
+        );
+      }, 400);
+
+      return () => clearTimeout(timer);
+    }
+
+    if (hasRequestedRef.current) {
+      return;
+    }
+
+    hasRequestedRef.current = true;
+
+    const timer = setTimeout(() => {
+      requestPermission();
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [visible, permission, requestPermission, onClose]);
+
+  useEffect(() => {
+    if (!visible) {
+      return undefined;
+    }
+
+    const subscription = AppState.addEventListener("change", (state) => {
+      if (state === "active" && getPermission) {
+        getPermission();
+      }
+    });
+
+    return () => subscription.remove();
+  }, [visible, getPermission]);
 
   const runDetectionScan = useCallback(async () => {
     if (
@@ -77,9 +133,8 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
 
     try {
       const photo = await cameraRef.current.takePictureAsync({
-        quality: 0.2,
+        quality: 0.25,
         base64: true,
-        skipProcessing: true,
         shutterSound: false,
       });
 
@@ -105,6 +160,8 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
         const focused =
           focus.isFocused && stableFocusCountRef.current >= STABLE_SCANS_REQUIRED;
 
+        missedScansRef.current = 0;
+
         setDetection({
           issueRegion: result.issueRegion,
           detectedObject: result.detectedObject,
@@ -121,9 +178,13 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
         return;
       }
 
-      setDetection(null);
-      setIsFocused(false);
-      stableFocusCountRef.current = 0;
+      missedScansRef.current += 1;
+
+      if (missedScansRef.current >= 2) {
+        setDetection(null);
+        setIsFocused(false);
+        stableFocusCountRef.current = 0;
+      }
 
       if (result.message && !result.success) {
         setScanStatus(result.message);
@@ -149,10 +210,31 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
       return undefined;
     }
 
-    runDetectionScan();
-    const intervalId = setInterval(runDetectionScan, SCAN_INTERVAL_MS);
+    let cancelled = false;
+    let timeoutId = null;
 
-    return () => clearInterval(intervalId);
+    const scheduleNextScan = (delayMs) => {
+      timeoutId = setTimeout(async () => {
+        if (cancelled) {
+          return;
+        }
+
+        await runDetectionScan();
+
+        if (!cancelled) {
+          scheduleNextScan(SCAN_INTERVAL_MS);
+        }
+      }, delayMs);
+    };
+
+    scheduleNextScan(SCAN_START_DELAY_MS);
+
+    return () => {
+      cancelled = true;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [visible, isReady, permission?.granted, isCapturing, runDetectionScan]);
 
   const handleClose = () => {
@@ -240,24 +322,10 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
   };
 
   const renderContent = () => {
-    if (!permission) {
+    if (!permission?.granted) {
       return (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color="#fff" />
-        </View>
-      );
-    }
-
-    if (!permission.granted) {
-      return (
-        <View style={styles.centered}>
-          <Text style={styles.permissionText}>Camera access is required.</Text>
-          <Pressable style={styles.permissionButton} onPress={requestPermission}>
-            <Text style={styles.permissionButtonText}>Allow camera</Text>
-          </Pressable>
-          <Pressable style={styles.cancelLink} onPress={handleClose}>
-            <Text style={styles.cancelLinkText}>Cancel</Text>
-          </Pressable>
         </View>
       );
     }
@@ -275,7 +343,8 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
         <View style={styles.tintOverlay} pointerEvents="none" />
         <CameraGuidelines />
         <DetectionHexagon
-          issueRegion={detection?.issueRegion}
+          detection={detection}
+          trackingEnabled={visible && isReady && !isCapturing}
           detectedObject={detection?.detectedObject}
           isFocused={isFocused}
         />
