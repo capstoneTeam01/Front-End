@@ -1,36 +1,49 @@
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import Svg, { Polygon } from "react-native-svg";
 
-import { regionToHexagonPoints } from "./regionToHexagon";
+import { pointsToAttr } from "./outlineTracking";
+import { useLiveOutline } from "./useLiveOutline";
 
-const DetectionHexagon = ({ issueRegion, detectedObject, isFocused = false }) => {
+const DetectionHexagon = ({
+  detection,
+  trackingEnabled = false,
+  detectedObject,
+  isFocused = false,
+}) => {
   const { width, height } = useWindowDimensions();
+  const displayPoints = useLiveOutline(detection, trackingEnabled);
 
-  if (!issueRegion) {
+  if (!displayPoints?.length) {
     return null;
   }
 
-  const points = regionToHexagonPoints(issueRegion, width, height);
-
-  if (!points) {
-    return null;
-  }
-
-  const pointsAttr = points.map((point) => `${point.x},${point.y}`).join(" ");
-  const strokeColor = isFocused ? "#22c55e" : "#ef4444";
-  const fillColor = isFocused ? "rgba(34, 197, 94, 0.12)" : "rgba(239, 68, 68, 0.08)";
-  const labelTop = Math.max(48, points[0].y - 28);
+  const pointsAttr = pointsToAttr(displayPoints);
+  const strokeColor = isFocused ? "#22c55e" : "#f87171";
+  const fillColor = isFocused ? "rgba(34, 197, 94, 0.15)" : "rgba(248, 113, 113, 0.12)";
+  const glowColor = isFocused ? "rgba(34, 197, 94, 0.35)" : "rgba(248, 113, 113, 0.28)";
+  const labelTop = Math.max(48, Math.min(...displayPoints.map((point) => point.y)) - 28);
 
   return (
     <View style={styles.overlay} pointerEvents="none">
       <Svg width={width} height={height} style={StyleSheet.absoluteFill}>
         <Polygon
           points={pointsAttr}
+          fill="none"
+          stroke={glowColor}
+          strokeWidth={10}
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+        <Polygon
+          points={pointsAttr}
           fill={fillColor}
           stroke={strokeColor}
-          strokeWidth={3}
+          strokeWidth={2.5}
+          strokeLinejoin="round"
+          strokeLinecap="round"
         />
       </Svg>
+
       {detectedObject ? (
         <Text style={[styles.label, { top: labelTop, color: strokeColor }]}>
           {isFocused ? "Ready to capture" : detectedObject}
