@@ -20,6 +20,7 @@ import { detectIssueRegion } from "../api/detectIssueRegion";
 import { COACHING_INSTRUCTIONS, evaluateFocus } from "./evaluateFocus";
 import CameraGuidelines from "./CameraGuidelines";
 import DetectionHexagon from "./DetectionHexagon";
+import PreviewScreen from "./PreviewScreen/PreviewScreen";
 
 const SCAN_INTERVAL_MS = 1200;
 const SCAN_START_DELAY_MS = 500;
@@ -42,6 +43,8 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
   const [detection, setDetection] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [scanStatus, setScanStatus] = useState(COACHING_INSTRUCTIONS.NO_OBJECT);
+  const [previewPhoto, setPreviewPhoto] = useState(null);
+  const [isConfirming, setIsConfirming] = useState(false);
 
   useEffect(() => {
     if (!visible) {
@@ -52,6 +55,8 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
       setIsScanning(false);
       setDetection(null);
       setIsFocused(false);
+      setPreviewPhoto(null);
+      setIsConfirming(false);
       stableFocusCountRef.current = 0;
       missedScansRef.current = 0;
       setScanStatus(COACHING_INSTRUCTIONS.NO_OBJECT);
@@ -206,7 +211,7 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
   }, [visible, isReady, isCapturing]);
 
   useEffect(() => {
-    if (!visible || !isReady || !permission?.granted || isCapturing) {
+    if (!visible || !isReady || !permission?.granted || isCapturing || previewPhoto) {
       return undefined;
     }
 
@@ -235,17 +240,46 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
         clearTimeout(timeoutId);
       }
     };
-  }, [visible, isReady, permission?.granted, isCapturing, runDetectionScan]);
+  }, [visible, isReady, permission?.granted, isCapturing, previewPhoto, runDetectionScan]);
 
   const handleClose = () => {
-    if (isCapturing) {
+    if (isCapturing || isConfirming) {
       return;
     }
     onClose();
   };
 
+  const handleRetake = () => {
+    if (isConfirming) {
+      return;
+    }
+    setPreviewPhoto(null);
+  };
+
+  const handleConfirmPreview = async () => {
+    if (!previewPhoto || isConfirming) {
+      return;
+    }
+
+    setIsConfirming(true);
+
+    try {
+      onCapture(previewPhoto);
+    } catch (error) {
+      console.error("Preview confirm error:", error);
+      Alert.alert("Something went wrong", "Could not continue. Please try again.");
+      setIsConfirming(false);
+    }
+  };
+
   const handleCapture = async () => {
-    if (!cameraRef.current || isCapturing || !isReady) {
+    if (
+      !cameraRef.current ||
+      isCapturing ||
+      !isReady ||
+      isScanning ||
+      scanInFlightRef.current
+    ) {
       return;
     }
 
@@ -257,7 +291,7 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
         shutterSound: true,
       });
 
-      onCapture({
+      setPreviewPhoto({
         uri: photo.uri,
         width: photo.width,
         height: photo.height,
@@ -265,8 +299,13 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
         mimeType: "image/jpeg",
       });
     } catch (error) {
-      console.error("Camera capture error:", error);
-      Alert.alert("Capture failed", "Could not take a photo. Please try again.");
+      const message = error?.message || String(error);
+      const isBusyError = /unmounted|not ready|busy/i.test(message);
+
+      if (!isBusyError) {
+        console.error("Camera capture error:", error);
+        Alert.alert("Capture failed", "Could not take a photo. Please try again.");
+      }
     } finally {
       setIsCapturing(false);
     }
@@ -296,7 +335,7 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
       }
 
       const asset = result.assets[0];
-      onCapture({
+      setPreviewPhoto({
         uri: asset.uri,
         width: asset.width,
         height: asset.height,
@@ -401,10 +440,10 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
           <Pressable
             style={[
               styles.captureButton,
-              (!isReady || isCapturing) && styles.captureDisabled,
+              (!isReady || isCapturing || isScanning) && styles.captureDisabled,
             ]}
             onPress={handleCapture}
-            disabled={!isReady || isCapturing}
+            disabled={!isReady || isCapturing || isScanning}
             accessibilityLabel="Take photo"
           >
             {isCapturing ? (
@@ -430,7 +469,18 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
       <StatusBar style="light" />
-      <View style={styles.container}>{renderContent()}</View>
+      <View style={styles.container}>
+        {previewPhoto ? (
+          <PreviewScreen
+            photo={previewPhoto}
+            onRetake={handleRetake}
+            onConfirm={handleConfirmPreview}
+            isConfirming={isConfirming}
+          />
+        ) : (
+          renderContent()
+        )}
+      </View>
     </Modal>
   );
 };
