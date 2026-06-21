@@ -1,26 +1,10 @@
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
+import { Image, ScrollView, Text, View } from "react-native";
+import getEstimateValue from "../utils/getEstimateValue";
+import AnalysisResultSummary from "../components/AnalysisResultSummary/AnalysisResultSummary";
 import RepairEstimateSection from "../components/RepairEstimateSection/RepairEstimateSection";
 import RecommendedActionsList from "../components/RecommendedActionsList/RecommendedActionsList";
 import UserActionButtons from "../components/UserActionButtons/UserActionButtons";
-
-const getEstimateValue = (...values) => {
-  const match = values
-    .map((value) => String(value || "").trim())
-    .find((value) => value && value.toLowerCase() !== "null" && value.toLowerCase() !== "undefined" && value.toUpperCase() !== "N/A");
-
-  return match || "N/A";
-};
-
-const formatIssueTitle = (issue) => {
-  if (!issue) {
-    return "Repair Issue Detected";
-  }
-
-  return issue.toLowerCase().includes("detected")
-    ? issue
-    : `${issue} Detected`;
-};
+import styles from "./RecommendationScreenStyle";
 
 const RecommendationScreen = ({
   analysisResult,
@@ -29,12 +13,14 @@ const RecommendationScreen = ({
   onDiyPress,
 }) => {
   const result = analysisResult?.analysis || analysisResult || {};
+
   const estimatedCostText = getEstimateValue(
     result.estimatedCostRange,
     result.costEstimate,
     result.estimatedCost,
     result.costRange
   );
+
   const estimatedTimeText = getEstimateValue(
     result.estimatedRepairTime,
     result.repairTimeEstimate,
@@ -43,7 +29,10 @@ const RecommendationScreen = ({
   );
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+    >
       <Text style={styles.screenTitle}>Issue Detected</Text>
 
       {imageUri ? (
@@ -54,24 +43,18 @@ const RecommendationScreen = ({
         </View>
       )}
 
-      <View style={styles.summaryCard}>
-        <Text style={styles.issueTitle}>
-          {formatIssueTitle(result.detectedIssue)}
-        </Text>
-
-        <Text style={styles.issueDescription}>
-          {result.urgencyDescription ||
-            `FixBee identified signs of ${result.detectedObject || "a repair issue"}.`}
-        </Text>
-
-        <UrgencyBadge urgency={result.urgency} />
-
-      </View>
+      <AnalysisResultSummary
+        detectedIssue={result.detectedIssue}
+        detectedObject={result.detectedObject}
+        urgency={result.urgency}
+        urgencyDescription={result.urgencyDescription}
+        isEmergency={false}
+      />
 
       <RepairEstimateSection
         urgency={result.urgency}
-        estimatedCostRange={result.estimatedCostRange}
-        estimatedRepairTime={result.estimatedRepairTime}
+        estimatedCostRange={estimatedCostText}
+        estimatedRepairTime={estimatedTimeText}
       />
 
       <RecommendedActionsList
@@ -90,78 +73,3 @@ const RecommendationScreen = ({
 };
 
 export default RecommendationScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F7F7F7",
-  },
-
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 18,
-    paddingBottom: 28,
-  },
-
-  screenTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#222222",
-    textAlign: "center",
-    marginBottom: 16,
-  },
-
-  image: {
-    width: "100%",
-    height: 230,
-    borderRadius: 22,
-    marginBottom: 16,
-    backgroundColor: "#D9D9D9",
-  },
-
-  imagePlaceholder: {
-    width: "100%",
-    height: 230,
-    borderRadius: 22,
-    marginBottom: 16,
-    backgroundColor: "#D9D9D9",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  placeholderText: {
-    color: "#555555",
-    fontSize: 15,
-  },
-
-  summaryCard: {
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#E1E1E1",
-    borderRadius: 18,
-    padding: 16,
-    marginBottom: 18,
-  },
-
-  issueTitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#222222",
-    marginBottom: 8,
-    textTransform: "capitalize",
-  },
-
-  issueDescription: {
-    fontSize: 15,
-    color: "#555555",
-    lineHeight: 22,
-    marginBottom: 14,
-  },
-
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#222222",
-    marginBottom: 10,
-  },
-});
