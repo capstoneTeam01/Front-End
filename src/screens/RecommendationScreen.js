@@ -1,7 +1,7 @@
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
-
 import RepairEstimateSection from "../components/RepairEstimateSection/RepairEstimateSection";
+import RecommendedActionsList from "../components/RecommendedActionsList/RecommendedActionsList";
 
 const getEstimateValue = (...values) => {
   const match = values
@@ -9,20 +9,6 @@ const getEstimateValue = (...values) => {
     .find((value) => value && value.toLowerCase() !== "null" && value.toLowerCase() !== "undefined" && value.toUpperCase() !== "N/A");
 
   return match || "N/A";
-};
-
-const getActionText = (action) => {
-  if (typeof action === "string") {
-    return action;
-  }
-
-  return (
-    action.label ||
-    action.title ||
-    action.type ||
-    action.action ||
-    "Recommended action"
-  );
 };
 
 const formatIssueTitle = (issue) => {
@@ -42,7 +28,6 @@ const RecommendationScreen = ({
   onDiyPress,
 }) => {
   const result = analysisResult?.analysis || analysisResult || {};
-  const recommendedActions = result.recommendedActions || [];
   const estimatedCostText = getEstimateValue(
     result.estimatedCostRange,
     result.costEstimate,
@@ -88,19 +73,11 @@ const RecommendationScreen = ({
         estimatedRepairTime={result.estimatedRepairTime}
       />
 
-      <Text style={styles.sectionTitle}>Recommended Actions</Text>
-
-      <View style={styles.actionsCard}>
-        {recommendedActions.length > 0 ? (
-          recommendedActions.map((action, index) => (
-            <View key={index} style={styles.actionItem}>
-              <Text style={styles.actionText}>{getActionText(action)}</Text>
-            </View>
-          ))
-        ) : (
-          <Text style={styles.emptyText}>No recommended actions available.</Text>
-        )}
-      </View>
+      <RecommendedActionsList
+        title="Recommended Actions"
+        actions={result.recommendedActions}
+        emptyMessage="No recommended actions available."
+      />
 
       <View style={styles.buttonRow}>
         <Pressable style={styles.primaryButton} onPress={onFindExpertsPress}>
@@ -189,34 +166,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#222222",
     marginBottom: 10,
-  },
-
-  actionsCard: {
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#E1E1E1",
-    borderRadius: 16,
-    overflow: "hidden",
-    marginBottom: 24,
-  },
-
-  actionItem: {
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EFEFEF",
-  },
-
-  actionText: {
-    fontSize: 15,
-    color: "#222222",
-    fontWeight: "500",
-  },
-
-  emptyText: {
-    fontSize: 15,
-    color: "#666666",
-    padding: 16,
   },
 
   buttonRow: {
