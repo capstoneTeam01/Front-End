@@ -1,7 +1,8 @@
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
 import RepairEstimateSection from "../components/RepairEstimateSection/RepairEstimateSection";
 import RecommendedActionsList from "../components/RecommendedActionsList/RecommendedActionsList";
+import UserActionButtons from "../components/UserActionButtons/UserActionButtons";
 
 const getEstimateValue = (...values) => {
   const match = values
@@ -79,15 +80,11 @@ const RecommendationScreen = ({
         emptyMessage="No recommended actions available."
       />
 
-      <View style={styles.buttonRow}>
-        <Pressable style={styles.primaryButton} onPress={onFindExpertsPress}>
-          <Text style={styles.primaryButtonText}>Find Experts</Text>
-        </Pressable>
-
-        <Pressable style={styles.secondaryButton} onPress={onDiyPress}>
-          <Text style={styles.secondaryButtonText}>DIY</Text>
-        </Pressable>
-      </View>
+      <UserActionButtons
+        onFindExpertsPress={onFindExpertsPress}
+        onDiyPress={onDiyPress}
+        showDiy={true}
+      />
     </ScrollView>
   );
 };
@@ -166,40 +163,5 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#222222",
     marginBottom: 10,
-  },
-
-  buttonRow: {
-    flexDirection: "row",
-    gap: 12,
-  },
-
-  primaryButton: {
-    flex: 1,
-    height: 52,
-    borderRadius: 14,
-    backgroundColor: "#8B8B8B",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  primaryButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-
-  secondaryButton: {
-    flex: 1,
-    height: 52,
-    borderRadius: 14,
-    backgroundColor: "#E1E1E1",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  secondaryButtonText: {
-    color: "#222222",
-    fontSize: 16,
-    fontWeight: "700",
   },
 });
