@@ -1,6 +1,7 @@
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
 
+import RepairEstimateSection from "../components/RepairEstimateSection/RepairEstimateSection";
 
 const getEstimateValue = (...values) => {
   const match = values
@@ -81,28 +82,11 @@ const RecommendationScreen = ({
 
       </View>
 
-      <Text style={styles.estimateSectionTitle}>Repair Estimate</Text>
-
-      <View style={styles.estimateRow}>
-        <View style={styles.estimateBox}>
-          <Text style={styles.estimateLabel}>Severity Level</Text>
-          <Text style={styles.estimateValue}>{result.urgency || "N/A"}</Text>
-        </View>
-
-        <View style={styles.estimateBox}>
-          <Text style={styles.estimateLabel}>Estimate Cost</Text>
-          <Text style={styles.estimateValue}>
-            {estimatedCostText}
-          </Text>
-        </View>
-
-        <View style={styles.estimateBox}>
-          <Text style={styles.estimateLabel}>Estimate Time</Text>
-          <Text style={styles.estimateValue}>
-            {estimatedTimeText}
-          </Text>
-        </View>
-      </View>
+      <RepairEstimateSection
+        urgency={result.urgency}
+        estimatedCostRange={result.estimatedCostRange}
+        estimatedRepairTime={result.estimatedRepairTime}
+      />
 
       <Text style={styles.sectionTitle}>Recommended Actions</Text>
 
@@ -200,52 +184,11 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
 
-  estimateSectionTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#222222",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-
   sectionTitle: {
     fontSize: 20,
     fontWeight: "700",
     color: "#222222",
     marginBottom: 10,
-  },
-
-  estimateRow: {
-    flexDirection: "row",
-    gap: 10,
-    marginBottom: 20,
-  },
-
-  estimateBox: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#E1E1E1",
-    borderRadius: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 8,
-    alignItems: "center",
-    minHeight: 86,
-  },
-
-  estimateLabel: {
-    fontSize: 12,
-    color: "#666666",
-    textAlign: "center",
-    marginBottom: 8,
-  },
-
-  estimateValue: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#222222",
-    textAlign: "center",
-    textTransform: "capitalize",
   },
 
   actionsCard: {

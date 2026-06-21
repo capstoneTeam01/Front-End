@@ -1,14 +1,15 @@
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
+import RepairEstimateSection from "../components/RepairEstimateSection/RepairEstimateSection";
 
 
 const getEstimateValue = (...values) => {
-  const match = values
-    .map((value) => String(value || "").trim())
-    .find((value) => value && value.toLowerCase() !== "null" && value.toLowerCase() !== "undefined" && value.toUpperCase() !== "N/A");
+    const match = values
+        .map((value) => String(value || "").trim())
+        .find((value) => value && value.toLowerCase() !== "null" && value.toLowerCase() !== "undefined" && value.toUpperCase() !== "N/A");
 
-  return match || "N/A";
+    return match || "N/A";
 };
 
 const getActionText = (action) => {
@@ -104,21 +105,12 @@ const EmergencyIssueScreen = ({
                 )}
             </View>
 
-            <View style={styles.estimateCard}>
-                <View style={styles.estimateItem}>
-                    <Text style={styles.estimateLabel}>Estimate Cost</Text>
-                    <Text style={styles.estimateValue}>
-                        {estimatedCostText}
-                    </Text>
-                </View>
-
-                <View style={styles.estimateItem}>
-                    <Text style={styles.estimateLabel}>Estimate Time</Text>
-                    <Text style={styles.estimateValue}>
-                        {estimatedTimeText}
-                    </Text>
-                </View>
-            </View>
+            <RepairEstimateSection
+                estimatedCostRange={result.estimatedCostRange}
+                estimatedRepairTime={result.estimatedRepairTime}
+                showSeverity={false}
+                showTitle={false}
+            />
 
             <Pressable style={styles.primaryButton} onPress={onFindExpertsPress}>
                 <Text style={styles.primaryButtonText}>Find Experts</Text>
@@ -249,36 +241,6 @@ const styles = StyleSheet.create({
         color: "#666666",
         padding: 16,
         lineHeight: 22,
-    },
-
-    estimateCard: {
-        flexDirection: "row",
-        gap: 12,
-        marginBottom: 22,
-    },
-
-    estimateItem: {
-        flex: 1,
-        backgroundColor: "#FFFFFF",
-        borderWidth: 1,
-        borderColor: "#E1E1E1",
-        borderRadius: 16,
-        paddingVertical: 14,
-        paddingHorizontal: 10,
-        alignItems: "center",
-    },
-
-    estimateLabel: {
-        fontSize: 13,
-        color: "#666666",
-        marginBottom: 8,
-    },
-
-    estimateValue: {
-        fontSize: 15,
-        fontWeight: "700",
-        color: "#222222",
-        textAlign: "center",
     },
 
     primaryButton: {
