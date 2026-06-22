@@ -14,7 +14,12 @@ import styles from "./DIYSolutionScreenStyle";
 
 import { getDiyInstructions } from "../api/getDiyInstructions";
 
-const tools = ["Adjustable Wrench", "Bucket", "Plumber's Tape", "Flashlight"];
+const tools = [
+  "Adjustable Wrench",
+  "Bucket",
+  "Plumber's Tape",
+  "Flashlight",
+];
 
 const steps = [
   {
@@ -39,43 +44,56 @@ const steps = [
   },
 ];
 
-const DIYSolutionScreen = ({ navigation, route}) => {
-  console.log("DIYSolutionScreen received route params:", route?.params);
+const DIYSolutionScreen = ({ navigation, route }) => {
+  console.log(
+    "DIYSolutionScreen received route params:",
+    route?.params
+  );
 
-   const { analysisResult, urgency } = route?.params || {};
-   console.log("DIYSolutionScreen extracted analysisResult:", analysisResult, "and urgency:", urgency);
-   const [currentStep, setCurrentStep] = useState(0);
-   const [modalVisible, setModalVisible] = useState(false);
-   const [loading, setLoading] = useState(true);
-   const [diyData, setDiyData] = useState(null);
+  const { analysisResult, urgency } = route?.params || {};
 
+  console.log(
+    "DIYSolutionScreen extracted analysisResult:",
+    analysisResult,
+    "and urgency:",
+    urgency
+  );
 
+  const [currentStep, setCurrentStep] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [diyData, setDiyData] = useState(null);
 
-useEffect(() => {
-  loadDiyInstructions();
-}, []);
+  useEffect(() => {
+    loadDiyInstructions();
+  }, []);
 
-const loadDiyInstructions = async () => {
-  console.log("Loading DIY instructions with analysisResult:", analysisResult, "and urgency:", urgency);
-  try {
-    const response = await getDiyInstructions(
-      analysisResult?.analysis || analysisResult,
+  const loadDiyInstructions = async () => {
+    console.log(
+      "Loading DIY instructions with analysisResult:",
+      analysisResult,
+      "and urgency:",
       urgency
     );
 
-    console.log("\n #####################################################DIY Response:", response);
+    try {
+      const response = await getDiyInstructions(
+        analysisResult?.analysis || analysisResult,
+        urgency
+      );
 
-    setDiyData(response.diyInstructions);
-  } catch (error) {
-    console.log("DIY Error:", error);
-  } finally {
-    setLoading(false);
-  }
-};
-   
+      console.log("DIY Response:", response);
+
+      setDiyData(response.diyInstructions);
+    } catch (error) {
+      console.log("DIY Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const repairSteps = diyData?.repairSteps || steps;
-
-const allDone = currentStep >= repairSteps.length;
+  const allDone = currentStep >= repairSteps.length;
 
   const handleStepPress = (index) => {
     if (index === currentStep) {
@@ -84,22 +102,25 @@ const allDone = currentStep >= repairSteps.length;
   };
 
   if (loading) {
-  return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.loadingBox}>
-        <ActivityIndicator size="large" />
-        <Text style={styles.loadingText}>
-          Generating DIY Instructions...
-        </Text>
-      </View>
-    </SafeAreaView>
-  );
-}
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.loadingBox}>
+          <ActivityIndicator size="large" />
+
+          <Text style={styles.loadingText}>
+            Generating DIY Instructions...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation?.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation?.goBack()}
+        >
           <Ionicons
             name="chevron-back"
             size={styles.backIcon.fontSize}
@@ -107,7 +128,9 @@ const allDone = currentStep >= repairSteps.length;
           />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>DIY Solution</Text>
+        <Text style={styles.headerTitle}>
+          DIY Solution
+        </Text>
 
         <View style={styles.headerSpace} />
       </View>
@@ -122,21 +145,31 @@ const allDone = currentStep >= repairSteps.length;
 
         <Text style={styles.subtitle}>
           {diyData?.summary ||
-          "Follow the steps below to temporarily control the issue."}
-          </Text>
+            "Follow the steps below to temporarily control the issue."}
+        </Text>
 
-        <Text style={styles.sectionTitle}>Tools You May Need</Text>
+        <Text style={styles.sectionTitle}>
+          Tools You May Need
+        </Text>
 
         <View style={styles.toolCard}>
-         {(diyData?.toolsNeeded || tools).map((item) => (
-            <TouchableOpacity key={item} style={styles.toolRow}>
+          {(diyData?.toolsNeeded || tools).map((item) => (
+            <TouchableOpacity
+              key={item}
+              style={styles.toolRow}
+            >
               <View style={styles.hexIcon} />
-              <Text style={styles.toolText}>{item}</Text>
+
+              <Text style={styles.toolText}>
+                {item}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Repair Steps</Text>
+        <Text style={styles.sectionTitle}>
+          Repair Steps
+        </Text>
 
         <View style={styles.stepsBox}>
           {repairSteps.map((item, index) => {
@@ -166,7 +199,9 @@ const allDone = currentStep >= repairSteps.length;
                         color={styles.stepCheckIcon.color}
                       />
                     ) : (
-                      <Text style={styles.stepNumber}>{index + 1}</Text>
+                      <Text style={styles.stepNumber}>
+                        {index + 1}
+                      </Text>
                     )}
                   </View>
 
@@ -184,7 +219,9 @@ const allDone = currentStep >= repairSteps.length;
                   <Text
                     style={[
                       styles.stepTitle,
-                      !active && !completed && styles.inactiveText,
+                      !active &&
+                        !completed &&
+                        styles.inactiveText,
                     ]}
                   >
                     {item.title}
@@ -193,7 +230,9 @@ const allDone = currentStep >= repairSteps.length;
                   <Text
                     style={[
                       styles.stepDesc,
-                      !active && !completed && styles.inactiveDesc,
+                      !active &&
+                        !completed &&
+                        styles.inactiveDesc,
                     ]}
                   >
                     {item.instruction || item.desc}
@@ -214,23 +253,33 @@ const allDone = currentStep >= repairSteps.length;
           </View>
 
           <Text style={styles.warningText}>
-           {diyData?.safetyWarnings?.join("\n") || 
-           "Stop immediately if leakage increases or water reaches nearby electrical outlets."}
+            {diyData?.safetyWarnings?.join("\n") ||
+              "Stop immediately if leakage increases or water reaches nearby electrical outlets."}
           </Text>
         </View>
 
         <View style={styles.helpBox}>
-          <Text style={styles.helpTitle}>Feeling Stuck?</Text>
+          <Text style={styles.helpTitle}>
+            Feeling Stuck?
+          </Text>
+
           <Text style={styles.helpText}>
-             {diyData?.professionalAdvice ||
-            "Get help from nearby professionals anytime."}
+            {diyData?.professionalAdvice ||
+              "Get help from nearby professionals anytime."}
           </Text>
         </View>
       </ScrollView>
 
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.secondaryButton}>
-          <Text style={styles.secondaryText}>Find Experts</Text>
+        <TouchableOpacity
+          style={styles.secondaryButton}
+          onPress={() =>
+            navigation?.navigate("ProviderList")
+          }
+        >
+          <Text style={styles.secondaryText}>
+            Find Experts
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -238,14 +287,22 @@ const allDone = currentStep >= repairSteps.length;
           onPress={() => setModalVisible(true)}
           style={[
             styles.diyButton,
-            allDone ? styles.diyButtonActive : styles.diyButtonDisabled,
+            allDone
+              ? styles.diyButtonActive
+              : styles.diyButtonDisabled,
           ]}
         >
-          <Text style={styles.diyButtonText}>DIY Done</Text>
+          <Text style={styles.diyButtonText}>
+            DIY Done
+          </Text>
         </TouchableOpacity>
       </View>
 
-      <Modal transparent visible={modalVisible} animationType="slide">
+      <Modal
+        transparent
+        visible={modalVisible}
+        animationType="slide"
+      >
         <View style={styles.modalOverlay}>
           <View style={styles.completeModal}>
             <View style={styles.modalHandle} />
@@ -258,19 +315,25 @@ const allDone = currentStep >= repairSteps.length;
               />
             </View>
 
-            <Text style={styles.modalTitle}>Repair Completed</Text>
+            <Text style={styles.modalTitle}>
+              Repair Completed
+            </Text>
 
             <Text style={styles.modalText}>
               Continue monitoring the issue over the next few hours.
             </Text>
 
             <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.modalDarkButton}
+              <TouchableOpacity
+                style={styles.modalDarkButton}
                 onPress={() => {
                   setModalVisible(false);
                   navigation?.navigate("MyRepairs");
-                  }}>
-                <Text style={styles.modalDarkText}>Recent Scans</Text>
+                }}
+              >
+                <Text style={styles.modalDarkText}>
+                  Recent Scans
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -280,7 +343,9 @@ const allDone = currentStep >= repairSteps.length;
                   navigation?.navigate("Home");
                 }}
               >
-                <Text style={styles.modalLightText}>Home</Text>
+                <Text style={styles.modalLightText}>
+                  Home
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
