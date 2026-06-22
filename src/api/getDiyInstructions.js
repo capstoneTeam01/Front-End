@@ -1,5 +1,4 @@
-import { AUTH_TOKEN } from "../constants/config";
-import { resolveApiUrl } from "./resolveApiUrl";
+import { apiPost } from "./apiClient";
 
 class DiyInstructionsError extends Error {
   constructor(message, code = "DIY_INSTRUCTIONS_FAILED") {
@@ -11,55 +10,56 @@ class DiyInstructionsError extends Error {
 
 const getDiyInstructions = async (
   analysisResult,
-  urgency = "Low",
-  token = AUTH_TOKEN
+  urgency = "Low"
 ) => {
-  let response;
+  if (!analysisResult) {
+    throw new DiyInstructionsError(
+      "Analysis result is required to generate DIY instructions.",
+      "MISSING_ANALYSIS_RESULT"
+    );
+  }
 
   try {
-    response = await fetch(
-      `${resolveApiUrl()}/api/analysis/diy-instructions`,
+    console.log(
+      "[FixBee][DIY] requesting instructions with auto auth",
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token.startsWith("Bearer ")
-            ? token
-            : `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          analysisResult,
-          urgency,
-        }),
+        detectedIssue: analysisResult.detectedIssue,
+        detectedObject: analysisResult.detectedObject,
+        urgency,
       }
     );
-    //Todo: remove console logs after testing
-    console.log("DIY API status:", response.status);
-    console.log("DIY API response:", data);
-  } catch {
+
+    const data = await apiPost(
+      "/api/analysis/diy-instructions",
+      {
+        analysisResult,
+        urgency,
+      },
+      {
+        timeoutMs: 90000,
+      }
+    );
+
+    console.log("[FixBee][DIY] API response:", data);
+
+    return data;
+  } catch (error) {
+    console.log("[FixBee][DIY] request failed:", {
+      status: error?.status,
+      message: error?.message,
+    });
+
+    let errorCode = "DIY_INSTRUCTIONS_FAILED";
+
+    if (error?.status === 401) {
+      errorCode = "UNAUTHORIZED";
+    }
+
     throw new DiyInstructionsError(
-      "Network error while generating DIY instructions.",
-      "NETWORK_ERROR"
+      error?.message || "Failed to generate DIY instructions.",
+      errorCode
     );
   }
-
-  let data = {};
-
-  try {
-    data = await response.json();
-  } catch {
-    data = {};
-  }
-
- if (!response.ok) {
-  console.log("########################################DIY backend error:", data);
-  throw new DiyInstructionsError(
-    data.message || "Failed to generate DIY instructions.",
-    "DIY_INSTRUCTIONS_FAILED"
-  );
-}
-
-  return data;
 };
 
 export { getDiyInstructions, DiyInstructionsError };
