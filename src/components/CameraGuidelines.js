@@ -1,14 +1,35 @@
 import { StyleSheet, useWindowDimensions, View } from "react-native";
+import Svg, { Polygon } from "react-native-svg";
 
 const FRAME_SIZE_RATIO = 0.72;
 const BRACKET_LENGTH = 32;
 const BRACKET_WIDTH = 2.5;
+const HEX_SIZE_RATIO = 0.58;
 
-const CameraGuidelines = () => {
+const buildHexPoints = (size) => {
+  const w = size;
+  const h = size * 0.92;
+
+  return [
+    [w * 0.25, 0],
+    [w * 0.75, 0],
+    [w, h * 0.5],
+    [w * 0.75, h],
+    [w * 0.25, h],
+    [0, h * 0.5],
+  ]
+    .map((point) => point.join(","))
+    .join(" ");
+};
+
+const CameraGuidelines = ({ isReady = false }) => {
   const { width, height } = useWindowDimensions();
   const frameSize = width * FRAME_SIZE_RATIO;
   const frameLeft = (width - frameSize) / 2;
   const frameTop = height * 0.2 + (height * 0.42 - frameSize) / 2;
+  const hexSize = frameSize * HEX_SIZE_RATIO;
+  const strokeColor = isReady ? "#22c55e" : "#94a3b8";
+  const fillColor = isReady ? "rgba(34, 197, 94, 0.12)" : "rgba(148, 163, 184, 0.08)";
 
   const renderDimRegion = (style) => <View style={[styles.dim, style]} pointerEvents="none" />;
 
@@ -53,6 +74,28 @@ const CameraGuidelines = () => {
         <View style={styles.crosshairVertical} />
         <View style={styles.crosshairHorizontal} />
         <View style={styles.crosshairDot} />
+
+        <View
+          style={[
+            styles.guidelineHexagon,
+            {
+              top: (frameSize - hexSize * 0.92) / 2,
+              left: (frameSize - hexSize) / 2,
+              width: hexSize,
+              height: hexSize * 0.92,
+            },
+          ]}
+        >
+          <Svg width={hexSize} height={hexSize * 0.92} style={StyleSheet.absoluteFill}>
+            <Polygon
+              points={buildHexPoints(hexSize)}
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={2.5}
+              strokeLinejoin="round"
+            />
+          </Svg>
+        </View>
       </View>
     </View>
   );
@@ -129,6 +172,9 @@ const styles = StyleSheet.create({
     marginTop: -3,
     borderRadius: 3,
     backgroundColor: "rgba(255, 255, 255, 0.9)",
+  },
+  guidelineHexagon: {
+    position: "absolute",
   },
 });
 
