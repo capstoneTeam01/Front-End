@@ -19,7 +19,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { detectIssueRegion } from "../api/detectIssueRegion";
 import { COACHING_INSTRUCTIONS, evaluateFocus } from "./evaluateFocus";
 import CameraGuidelines from "./CameraGuidelines";
-import DetectionHexagon from "./DetectionHexagon";
 import PreviewScreen from "./PreviewScreen/PreviewScreen";
 
 const SCAN_INTERVAL_MS = 1200;
@@ -277,6 +276,7 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
       !cameraRef.current ||
       isCapturing ||
       !isReady ||
+      !isFocused ||
       isScanning ||
       scanInFlightRef.current
     ) {
@@ -360,6 +360,8 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
     setTorchOn((current) => !current);
   };
 
+  const canCapture = isReady && isFocused && !isCapturing && !isScanning;
+
   const renderContent = () => {
     if (!permission?.granted) {
       return (
@@ -380,13 +382,7 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
           onCameraReady={() => setIsReady(true)}
         />
         <View style={styles.tintOverlay} pointerEvents="none" />
-        <CameraGuidelines />
-        <DetectionHexagon
-          detection={detection}
-          trackingEnabled={visible && isReady && !isCapturing}
-          detectedObject={detection?.detectedObject}
-          isFocused={isFocused}
-        />
+        <CameraGuidelines isReady={isFocused} />
 
         <View style={[styles.topBar, { paddingTop: insets.top + 10 }]}>
           <Pressable
@@ -399,8 +395,8 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
           </Pressable>
 
           <View style={styles.aiBadge}>
-            <View style={[styles.aiDot, isReady && styles.aiDotReady]} />
-            <Text style={styles.aiBadgeText}>{isReady ? "AI Ready" : "Starting…"}</Text>
+            <View style={[styles.aiDot, isFocused && styles.aiDotReady]} />
+            <Text style={styles.aiBadgeText}>AI Mode</Text>
           </View>
 
           <Pressable
@@ -440,10 +436,11 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
           <Pressable
             style={[
               styles.captureButton,
-              (!isReady || isCapturing || isScanning) && styles.captureDisabled,
+              canCapture && styles.captureButtonReady,
+              !canCapture && styles.captureDisabled,
             ]}
             onPress={handleCapture}
-            disabled={!isReady || isCapturing || isScanning}
+            disabled={!canCapture}
             accessibilityLabel="Take photo"
           >
             {isCapturing ? (
@@ -626,10 +623,13 @@ const styles = StyleSheet.create({
     height: 82,
     borderRadius: 41,
     borderWidth: 5,
-    borderColor: "#fff",
+    borderColor: "#64748b",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "transparent",
+  },
+  captureButtonReady: {
+    borderColor: "#22c55e",
   },
   captureDisabled: {
     opacity: 0.5,
