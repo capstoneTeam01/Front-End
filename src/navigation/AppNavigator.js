@@ -2,6 +2,12 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import SplashScreen from "../screens/SplashScreen";
+import LoginScreen from "../screens/LoginScreen";
+import SignUpScreen from "../screens/SignUpScreen";
+import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
+import OnboardingScreen from "../screens/OnboardingScreen";
+
 import HomeScreen from "../screens/HomeScreen";
 import CategoryScreen from "../screens/CategoryScreen";
 import ScanScreen from "../screens/ScanScreen";
@@ -13,13 +19,23 @@ import ProviderDetailsScreen from "../screens/ProviderDetailsScreen";
 import ProviderAddressTimeScreen from "../screens/ProviderAddressTimeScreen";
 import ProviderQuoteRequestScreen from "../screens/ProviderQuoteRequestScreen";
 import ProviderConfirmationScreen from "../screens/ProviderConfirmationScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import EditProfileScreen from "../screens/EditProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+        {/* Auth & onboarding flow */}
+        <Stack.Screen name="Splash" component={SplashScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+
+        {/* Main app */}
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Category" component={CategoryScreen} />
         <Stack.Screen name="Scan" component={ScanScreen} />
@@ -31,6 +47,10 @@ const AppNavigator = () => {
         <Stack.Screen name="ProviderAddressTime" component={ProviderAddressTimeScreen} />
         <Stack.Screen name="ProviderQuoteRequest" component={ProviderQuoteRequestScreen} />
         <Stack.Screen name="ProviderConfirmation" component={ProviderConfirmationScreen} />
+
+        {/* Profile */}
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
