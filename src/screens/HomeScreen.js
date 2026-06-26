@@ -4,7 +4,6 @@ import {
   ScrollView,
   View,
   Text,
-  TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,6 +14,7 @@ import CategoryCard from "../components/CategoryCard/CategoryCard";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import RepairListItem from "../components/RepairListItem/RepairListItem";
 import CategoryPopup from "../components/CategoryPopup/CategoryPopup";
+import BottomNav from "../components/BottomNav/BottomNav";
 
 import { CATEGORIES, POPULAR_REPAIRS } from "../data/repairData";
 import { getMe } from "../api/getMe";
@@ -156,20 +156,7 @@ const HomeScreen = ({ navigation }) => {
         {renderRepairs()}
       </ScrollView>
 
-      <View style={styles.bottomNav}>
-        <NavItem icon="home" label="Home" active />
-        <NavItem
-          icon="scan-outline"
-          label="Scan"
-          onPress={() => setPopupVisible(true)}
-        />
-        <NavItem
-          icon="build-outline"
-          label="Repairs"
-          onPress={() => navigation?.navigate("MyRepairs")}
-          />
-        <NavItem icon="person-outline" label="Profile" />
-      </View>
+      <BottomNav active="Home" onScanPress={() => setPopupVisible(true)} />
 
       <CategoryPopup
         visible={popupVisible}
@@ -179,22 +166,5 @@ const HomeScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const NavItem = ({ icon, label, active, onPress }) => (
-  <TouchableOpacity
-    style={styles.navItem}
-    onPress={onPress}
-    activeOpacity={0.7}
-  >
-    <Ionicons
-      name={icon}
-      size={22}
-      color={active ? COLORS.navActive : COLORS.navInactive}
-    />
-    <Text style={[styles.navLabel, active && styles.navLabelActive]}>
-      {label}
-    </Text>
-  </TouchableOpacity>
-);
 
 export default HomeScreen;

@@ -1,0 +1,148 @@
+import React, { useRef, useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import styles from "./OnboardingScreenStyle";
+import AuthButton from "../components/AuthButton/AuthButton";
+import CityPickerSheet from "../components/CityPickerSheet/CityPickerSheet";
+import { updateMyCity } from "../api/updateMyCity";
+
+const { width } = Dimensions.get("window");
+
+const SLIDES = [
+  {
+    key: "spot",
+    title: "Spot The Problem",
+    body: "Take a photo of an issue and let FixBee identify what's wrong.",
+  },
+  {
+    key: "solution",
+    title: "Get Smart Solution",
+    body: "Receive issue details, DIY guidance, and estimated repair costs instantly.",
+  },
+  {
+    key: "trusted",
+    title: "Find Trusted Help",
+    body: "Connect with trusted professionals when the repair needs expert attention.",
+  },
+  {
+    key: "city",
+    title: "Select Your City",
+    body: "Choose your city so we can match you with nearby professionals.",
+    isCity: true,
+  },
+];
+
+const OnboardingScreen = ({ navigation }) => {
+  const scrollRef = useRef(null);
+  const [index, setIndex] = useState(0);
+  const [city, setCity] = useState(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const isLast = index === SLIDES.length - 1;
+
+  const goToSlide = (i) => {
+    scrollRef.current?.scrollTo({ x: i * width, animated: true });
+    setIndex(i);
+  };
+
+  const handleScroll = (event) => {
+    const next = Math.round(event.nativeEvent.contentOffset.x / width);
+    if (next !== index) setIndex(next);
+  };
+
+  const finishOnboarding = async () => {
+    if (!city) {
+      Alert.alert("Pick your city", "Select a city to continue.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await updateMyCity(city);
+      navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+    } catch (error) {
+      Alert.alert("Couldn't save your city", error?.message || "Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleNext = () => {
+    if (isLast) {
+      finishOnboarding();
+    } else {
+      goToSlide(index + 1);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        ref={scrollRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onMomentumScrollEnd={handleScroll}
+      >
+        {SLIDES.map((slide) => (
+          <View key={slide.key} style={[styles.slide, { width }]}>
+            <View style={styles.hexHero}>
+              <View style={styles.beePlaceholder} />
+            </View>
+
+            <View style={styles.textBlock}>
+              <Text style={styles.title}>{slide.title}</Text>
+              <Text style={styles.body}>{slide.body}</Text>
+
+              {slide.isCity && (
+                <TouchableOpacity
+                  style={styles.cityField}
+                  onPress={() => setSheetOpen(true)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={[styles.cityText, !city && styles.cityPlaceholder]}>
+                    {city || "Select a city"}
+                  </Text>
+                  <Text style={styles.chevron}>▾</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+
+      <View style={styles.dotsRow}>
+        {SLIDES.map((s, i) => (
+          <View key={s.key} style={[styles.dot, i === index && styles.dotActive]} />
+        ))}
+      </View>
+
+      <View style={styles.footer}>
+        <AuthButton
+          label={isLast ? "Get Started" : "Next"}
+          onPress={handleNext}
+          loading={saving}
+        />
+      </View>
+
+      <CityPickerSheet
+        visible={sheetOpen}
+        selectedCity={city}
+        onSelect={(c) => {
+          setCity(c);
+          setSheetOpen(false);
+        }}
+        onClose={() => setSheetOpen(false)}
+      />
+    </View>
+  );
+};
+
+export default OnboardingScreen;

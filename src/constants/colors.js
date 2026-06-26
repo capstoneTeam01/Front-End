@@ -1,5 +1,4 @@
 const COLORS = {
-  // --- Kumara's existing tokens (unchanged) ---
   black: "#000000",
   gray900: "#A1A1A1",
   gray700: "#D1D5DC",
@@ -8,9 +7,6 @@ const COLORS = {
   white: "#FDFDFD",
 
   placeholderTextColor: "rgba(10, 10, 10, 0.5)",
-
-  // --- Added for screens (wireframe is monochrome) ---
-  // AppTextField.js imports COLORS.placeholder — alias so it doesn't break.
   placeholder: "rgba(10, 10, 10, 0.5)",
 
   textPrimary: "#0A0A0A", // titles / strong text
@@ -23,6 +19,23 @@ const COLORS = {
 
   navInactive: "#A1A1A1", // bottom-tab inactive
   navActive: "#0A0A0A", // bottom-tab active
+
+  //Design system
+  primary: "#FBB800", // Primary
+  secondary: "#4A2F0B", // Secondary
+  honeyBrown: "#8A5611", // Honey-Brown
+  goldenHoney: "#E6A800", // Golden-Honey
+  warmCream: "#FFF9E6", // Warm-Cream-Bg (splash background)
+  lightHoney: "#FDE68A", // Light-Honey (buttons, active rows)
+  charcoal: "#1A1A1A", // Charcoal-Black
+  mediumGrey: "#A8A8A8", // Medium-Grey
+  greyText: "#C1C1C1", // Grey-Text (input border stroke)
+
+  //Translucent white overlays used on the yellow auth screens.
+  whiteOverlayStrong: "rgba(255, 255, 255, 0.85)",
+  whiteOverlayHalf: "rgba(255, 255, 255, 0.5)",
+  whiteOverlaySoft: "rgba(255, 255, 255, 0.22)",
+  whiteOverlayFaint: "rgba(255, 255, 255, 0.18)",
 };
 
 export default COLORS;

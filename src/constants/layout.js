@@ -1,12 +1,9 @@
-// Values taken directly from the FixBee Design Guide (Image 1).
-
-// 8pt grid spacing system
 export const SPACING = {
-  xs: 4, // extra small
-  sm: 8, // small
-  card: 16, // card spacing
-  section: 24, // section spacing / side padding
-  large: 32, // large section gap
+  xs: 4, 
+  sm: 8, 
+  card: 16, 
+  section: 24, 
+  large: 32, 
 };
 
 export const SIDE_PADDING = 24;
