@@ -1,53 +1,59 @@
 import { apiPost } from "./apiClient";
 
 class DiyInstructionsError extends Error {
-  constructor(message, code = "DIY_INSTRUCTIONS_FAILED") {
+  constructor(
+    message,
+    code = "DIY_INSTRUCTIONS_FAILED",
+    status = null
+  ) {
     super(message);
+
     this.name = "DiyInstructionsError";
     this.code = code;
+    this.status = status;
   }
 }
 
-const getDiyInstructions = async (
-  analysisResult,
-  urgency = "Low"
-) => {
-  if (!analysisResult) {
+const getDiyInstructions = async (photoId) => {
+  if (!photoId) {
     throw new DiyInstructionsError(
-      "Analysis result is required to generate DIY instructions.",
-      "MISSING_ANALYSIS_RESULT"
+      "Photo ID is required to retrieve DIY instructions.",
+      "MISSING_PHOTO_ID"
     );
   }
 
   try {
     console.log(
-      "[FixBee][DIY] requesting instructions with auto auth",
+      "[FixBee][DIY] requesting cached instructions",
       {
-        detectedIssue: analysisResult.detectedIssue,
-        detectedObject: analysisResult.detectedObject,
-        urgency,
+        photoId: photoId,
       }
     );
 
     const data = await apiPost(
       "/api/analysis/diy-instructions",
       {
-        analysisResult,
-        urgency,
+        photoId: photoId,
       },
       {
-        timeoutMs: 90000,
+        timeoutMs: 30000,
       }
     );
 
-    console.log("[FixBee][DIY] API response:", data);
+    console.log(
+      "[FixBee][DIY] API response:",
+      data
+    );
 
     return data;
   } catch (error) {
-    console.log("[FixBee][DIY] request failed:", {
-      status: error?.status,
-      message: error?.message,
-    });
+    console.log(
+      "[FixBee][DIY] request failed:",
+      {
+        status: error?.status,
+        message: error?.message,
+      }
+    );
 
     let errorCode = "DIY_INSTRUCTIONS_FAILED";
 
@@ -55,11 +61,24 @@ const getDiyInstructions = async (
       errorCode = "UNAUTHORIZED";
     }
 
+    if (error?.status === 409) {
+      errorCode = "DIY_SKIPPED";
+    }
+
+    if (error?.status === 500) {
+      errorCode = "DIY_GENERATION_FAILED";
+    }
+
     throw new DiyInstructionsError(
-      error?.message || "Failed to generate DIY instructions.",
-      errorCode
+      error?.message ||
+        "Failed to retrieve DIY instructions.",
+      errorCode,
+      error?.status || null
     );
   }
 };
 
-export { getDiyInstructions, DiyInstructionsError };
+export {
+  getDiyInstructions,
+  DiyInstructionsError,
+};

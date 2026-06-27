@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+
 import COLORS from "../../constants/colors";
 import {
   RADIUS,
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: COLORS.textPrimary,
     textAlign: "center",
-    textTransform: "capitalize",
+    flexShrink: 1,
   },
 });
 
