@@ -9,31 +9,17 @@ class DiyInstructionsError extends Error {
   }
 }
 
-const getDiyInstructions = async (analysisResult, urgency = "Low") => {
-  if (!analysisResult) {
-    throw new DiyInstructionsError(
-      "analysisResult is required",
-      "MISSING_ANALYSIS_RESULT"
-    );
+const getDiyInstructions = async (photoId) => {
+  if (!photoId) {
+    throw new DiyInstructionsError("photoId is required", "MISSING_PHOTO_ID");
   }
 
   try {
-    console.log("Sending DIY request:", {
-  analysisResult,
-  urgency,
-});
-    const data = await apiPost(
+    return await apiPost(
       "/api/analysis/diy-instructions",
-      {
-        analysisResult,
-        urgency,
-      },
-      {
-        timeoutMs: 30000,
-      }
+      { photoId },
+      { timeoutMs: 30000 }
     );
-
-    return data;
   } catch (error) {
     throw new DiyInstructionsError(
       error?.message || "Failed to retrieve DIY instructions.",

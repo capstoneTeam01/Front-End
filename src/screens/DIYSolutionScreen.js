@@ -95,79 +95,57 @@ const DIYSolutionScreen = ({
       setLoadingMessage(
         "Loading DIY Instructions..."
       );
-
       try {
-        for (
-          let attempt = 1;
-          attempt <= MAX_PENDING_CHECKS;
-          attempt += 1
-        ) {
-          const response = await getDiyInstructions(
-  analysisResult?.analysis || analysisResult,
-  route?.params?.urgency || "Low"
-);
+for (
+  let attempt = 1;
+  attempt <= MAX_PENDING_CHECKS;
+  attempt += 1
+) {
+  const response = await getDiyInstructions(photoId);
 
-          const generationStatus =
-            response?.diyGenerationStatus ||
-            (response?.diyInstructions
-              ? "completed"
-              : "pending");
+  const generationStatus =
+    response?.diyGenerationStatus ||
+    (response?.diyInstructions ? "completed" : "pending");
 
-          if (
-            generationStatus ===
-              "completed" &&
-            response?.diyInstructions
-          ) {
-            setDiyData(
-              response.diyInstructions
-            );
+  if (
+    generationStatus === "completed" &&
+    response?.diyInstructions
+  ) {
+    setDiyData(response.diyInstructions);
+    setCurrentStep(0);
+    setLoading(false);
+    return;
+  }
 
-            setCurrentStep(0);
-            setLoading(false);
+  if (generationStatus === "skipped") {
+    setLoading(false);
 
-            return;
-          }
+    Alert.alert(
+      "DIY instructions unavailable",
+      response?.message ||
+        "DIY instructions were not generated for this scan.",
+      [
+        {
+          text: "Go Back",
+          onPress: () => navigation?.goBack(),
+        },
+      ]
+    );
 
-          if (
-            generationStatus ===
-            "skipped"
-          ) {
-            setLoading(false);
+    return;
+  }
 
-            Alert.alert(
-              "DIY instructions unavailable",
-              response?.message ||
-                "DIY instructions were not generated for this scan.",
-              [
-                {
-                  text: "Go Back",
-                  onPress: () =>
-                    navigation?.goBack(),
-                },
-              ]
-            );
+  if (generationStatus === "failed") {
+    throw new Error(
+      response?.message ||
+        "DIY instruction generation failed."
+    );
+  }
 
-            return;
-          }
+  setLoadingMessage("Preparing DIY Instructions...");
 
-          if (
-            generationStatus ===
-            "failed"
-          ) {
-            throw new Error(
-              response?.message ||
-                "DIY instruction generation failed."
-            );
-          }
-
-          setLoadingMessage(
-            "Preparing DIY Instructions..."
-          );
-
-          await wait(
-            PENDING_CHECK_DELAY
-          );
-        }
+  await wait(PENDING_CHECK_DELAY);
+}
 
         throw new Error(
           "DIY instructions are taking longer than expected. Please try again shortly."
