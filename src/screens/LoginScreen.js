@@ -43,7 +43,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleGoogle = () => {
-    Alert.alert("Coming soon", "Google sign-in will be available in the next build.");
+    Alert.alert("Google service is temoprary disable");
   };
 
   return (
