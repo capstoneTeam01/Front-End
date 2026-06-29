@@ -102,10 +102,10 @@ const DIYSolutionScreen = ({
           attempt <= MAX_PENDING_CHECKS;
           attempt += 1
         ) {
-          const response =
-            await getDiyInstructions(
-              photoId
-            );
+          const response = await getDiyInstructions(
+  analysisResult?.analysis || analysisResult,
+  route?.params?.urgency || "Low"
+);
 
           const generationStatus =
             response?.diyGenerationStatus ||

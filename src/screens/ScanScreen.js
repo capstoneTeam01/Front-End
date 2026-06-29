@@ -70,17 +70,18 @@ const ScanScreen = ({ navigation, route }) => {
     });
   };
 
-  const handleAnalysisComplete = (result) => {
-    setAnalysisResult(result);
-    setUploadedImageUrl(result?.uploadedImageUrl || result?.analysis?.uploadedImageUrl || null);
+ const handleAnalysisComplete = (result) => {
+  setAnalysisResult(result);
+  setUploadedImageUrl(
+    result?.uploadedImageUrl || result?.analysis?.uploadedImageUrl || null
+  );
 
-    
-    if (result?.uploadedImageUri && !imageUri) {
-      setImageUri(result.uploadedImageUri);
-    }
+  if (result?.uploadedImageUri && !imageUri) {
+    setImageUri(result.uploadedImageUri);
+  }
 
-    setStep(isEmergencyIssue(result) ? STEP.EMERGENCY : STEP.RECOMMENDATION);
-  };
+  setStep(isEmergencyIssue(result) ? STEP.EMERGENCY : STEP.RECOMMENDATION);
+};
 
   const handleAnalysisError = (error) => {
     console.warn("[FixBee][Scan] analysis failed", error?.message || error);
@@ -167,12 +168,9 @@ const ScanScreen = ({ navigation, route }) => {
           analysisResult={analysisResult}
           imageUri={imageUri}
           onFindExpertsPress={handleFindExpertsPress}
-          onDiyPress={() =>
-            navigation?.navigate("DIYSolution", {
-              analysisResult,
-              urgency: analysisResult?.analysis?.urgency || "low",
-            })
-          }
+ onDiyPress={(diyParams) =>
+  navigation?.navigate("DIYSolution", diyParams)
+}
         />
       )}
 

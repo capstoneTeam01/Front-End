@@ -54,15 +54,28 @@ const RecommendationScreen = ({
       "The image is not clear enough for a reliable repair assessment. Please retake the photo."
     : result.urgencyDescription;
 
-  const handleDiyPress = () => {
-    if (isLowConfidence) {
-      return;
-    }
+  const getPhotoId = () => {
+  return (
+    analysisResult?.photoId ||
+    analysisResult?.scan?.photoId ||
+    analysisResult?.analysis?.photoId ||
+    analysisResult?.data?.photoId ||
+    analysisResult?._id ||
+    result?.photoId ||
+    null
+  );
+};
 
-    if (onDiyPress) {
-      onDiyPress();
-    }
-  };
+const handleDiyPress = () => {
+  if (isLowConfidence) {
+    return;
+  }
+
+  onDiyPress?.({
+    analysisResult,
+    urgency: result?.urgency || "Low",
+  });
+};
 
   return (
     <ScrollView

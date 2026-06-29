@@ -148,6 +148,11 @@ const ImageUpload = ({
       if (onAnalysisComplete) {
         onAnalysisComplete({
           ...analysisResult,
+            photoId:
+    analysisResult?.photoId ||
+    analysisResult?.analysis?.photoId ||
+    uploadResult?.photoId ||
+    uploadResult?.id,
           uploadedImageUri: analysisResult?.uploadedImageUri || asset.uri,
           uploadedImageUrl:
             uploadResult?.uploadedImageUrl ||
