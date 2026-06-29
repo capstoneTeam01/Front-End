@@ -1,43 +1,123 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Platform,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
 import ProviderPlainButton from "../components/ProviderPlainButton";
-import { getCurrentUserDisplayName } from "../features/auth/services/currentUserProfileService";
+import { uploadPhoto } from "../api/uploadPhoto";
 import { loadProvidersByIds } from "../localDb/businessDirectoryProviderLocalDb";
 import {
   buildProviderQuoteEmailDraft,
-  openProviderQuoteEmailDraft,
+  buildProviderQuoteRequestPayload,
+  sendProviderQuoteRequestFromPreview,
 } from "../services/providerQuoteEmailService";
-
-const androidTopSpace = Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
-const bottomButtonSpace = Platform.OS === "android" ? 72 : 20;
+import COLORS from "../constants/colors";
 
 const clean = (value) => String(value || "").trim();
-const getIssueTitle = (routeParams = {}) => clean(routeParams.fromIssue) || "Repair issue";
+const androidTopSpace =
+  Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
+const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
+
+const getIssueTitle = (routeParams = {}) =>
+  clean(routeParams.fromIssue) ||
+  clean(routeParams.issueTitle) ||
+  "Repair issue";
+
+const normalizePreviewImage = (image = {}, index = 0) => {
+  const url = clean(image.url || image.uploadedImageUrl);
+  const thumbnailUri = clean(
+    image.thumbnailUri || image.uri || image.localUri || image.imageUri || url,
+  );
+
+  if (!url && !thumbnailUri) return null;
+
+  return {
+    url,
+    thumbnailUri,
+    label: clean(image.label) || `Issue Photo ${index + 1}`,
+  };
+};
+
+const getInitialQuoteImages = (routeParams = {}) => {
+  const draftImages = Array.isArray(routeParams?.quotePreviewDraft?.images)
+    ? routeParams.quotePreviewDraft.images
+    : [];
+
+  const fromDraft = draftImages.map(normalizePreviewImage).filter(Boolean);
+  if (fromDraft.length) return fromDraft;
+
+  const firstImage = normalizePreviewImage(
+    {
+      url: routeParams?.uploadedImageUrl,
+      thumbnailUri: routeParams?.uploadedImageUri || routeParams?.imageUri,
+      label: "Issue Photo",
+    },
+    0,
+  );
+
+  return firstImage ? [firstImage] : [];
+};
 
 const ProviderQuoteRequestScreen = ({ navigation, route }) => {
   const [sending, setSending] = useState(false);
-  const selectedProviderIds = useMemo(
-    () => (Array.isArray(route?.params?.selectedProviderIds) ? route.params.selectedProviderIds : []),
-    [route?.params?.selectedProviderIds]
+  const [addingImage, setAddingImage] = useState(false);
+  const [providers, setProviders] = useState([]);
+  const [quoteImages, setQuoteImages] = useState(() =>
+    getInitialQuoteImages(route?.params),
   );
 
-  const handleOpenDraft = async () => {
-    setSending(true);
+  const selectedProviderIds = useMemo(
+    () =>
+      Array.isArray(route?.params?.selectedProviderIds)
+        ? route.params.selectedProviderIds
+        : [],
+    [route?.params?.selectedProviderIds],
+  );
 
-    try {
-      const providers = await loadProvidersByIds(selectedProviderIds);
-      const requesterName = await getCurrentUserDisplayName();
-      const emailDraft = buildProviderQuoteEmailDraft({
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      const rows = await loadProvidersByIds(selectedProviderIds);
+      if (active) {
+        setProviders(rows);
+      }
+      console.log("[FixBee][QuoteRequest] preview providers loaded", {
+        selectedCount: selectedProviderIds.length,
+        loadedCount: rows.length,
+      });
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [selectedProviderIds.join(",")]);
+
+  useEffect(() => {
+    setQuoteImages((current) => {
+      if (current.length) return current;
+      return getInitialQuoteImages(route?.params);
+    });
+  }, [
+    route?.params?.uploadedImageUri,
+    route?.params?.uploadedImageUrl,
+    route?.params?.quotePreviewDraft,
+  ]);
+
+  const draft = useMemo(
+    () =>
+      buildProviderQuoteEmailDraft({
         providers,
         issue: getIssueTitle(route?.params),
         detectedObject: route?.params?.detectedObject,
@@ -52,47 +132,400 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         notes: route?.params?.notes,
         imageUri: route?.params?.uploadedImageUri,
         uploadedImageUrl: route?.params?.uploadedImageUrl,
-        requesterName,
+        requesterName: route?.params?.quotePreviewDraft?.requesterName,
+        requesterEmail:
+          route?.params?.quotePreviewDraft?.requesterEmail || route?.params?.requesterEmail,
+        images: quoteImages,
+        preferImages: true,
+      }),
+    [route?.params, providers, quoteImages],
+  );
+
+  const imagePreviewItems = Array.isArray(draft?.images) ? draft.images : [];
+
+  const handleAddImage = async () => {
+    try {
+      setAddingImage(true);
+      const permission =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permission.status !== "granted") {
+        Alert.alert(
+          "Gallery permission needed",
+          "Please allow photo library access to add another issue image.",
+        );
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.85,
+        allowsEditing: false,
       });
 
-      console.log("[FixBee][QuoteRequest] opening quote draft from review screen", {
-        selectedCount: selectedProviderIds.length,
-        hasImageLink: Boolean(emailDraft.imageUrl),
-      });
+      if (result.canceled || !result.assets?.[0]) return;
 
-      const opened = await openProviderQuoteEmailDraft(emailDraft);
-      navigation.navigate("ProviderConfirmation", {
-        ...route.params,
-        quoteStatus: opened ? "email-draft-opened" : "email-draft-not-opened",
-        quoteEmailTo: emailDraft.to,
-        quoteEmailCc: emailDraft.cc,
-        quoteEmailBcc: emailDraft.bcc,
-        quoteEmailSubject: emailDraft.subject,
+      const asset = result.assets[0];
+      console.log("[FixBee][QuoteRequest] uploading extra preview image", {
+        hasUri: Boolean(asset.uri),
+      });
+      const uploaded = await uploadPhoto(asset);
+
+      setQuoteImages((current) => [
+        ...current,
+        {
+          url: uploaded.uploadedImageUrl || uploaded.url || "",
+          thumbnailUri: asset.uri,
+          label: `Issue Photo ${current.length + 1}`,
+        },
+      ]);
+
+      console.log("[FixBee][QuoteRequest] extra preview image uploaded", {
+        hasUrl: Boolean(uploaded.uploadedImageUrl || uploaded.url),
       });
     } catch (error) {
-      Alert.alert("Quote request failed", error.message || "Could not prepare the email draft.");
+      console.log(
+        "[FixBee][QuoteRequest] add gallery image failed",
+        error?.message,
+      );
+      Alert.alert(
+        "Could not add image",
+        error?.message || "Please try selecting the image again.",
+      );
+    } finally {
+      setAddingImage(false);
+    }
+  };
+
+  const handleRemoveImage = (imageIndex) => {
+    setQuoteImages((current) =>
+      current.filter((_, index) => index !== imageIndex),
+    );
+    console.log("[FixBee][QuoteRequest] preview image removed", { imageIndex });
+  };
+
+  const handleSendRequest = async () => {
+    if (!providers.length) {
+      Alert.alert(
+        "Provider missing",
+        "Selected providers could not be loaded from SQLite. Go back and select providers again.",
+      );
+      return;
+    }
+
+    if (!draft?.to) {
+      Alert.alert(
+        "Provider email missing",
+        "None of the selected providers has an email address in the local provider cache.",
+      );
+      return;
+    }
+
+    setSending(true);
+
+    try {
+      const payload = buildProviderQuoteRequestPayload({
+        draft,
+        providers,
+        issue: getIssueTitle(route?.params),
+        detectedObject: route?.params?.detectedObject,
+        category: route?.params?.category,
+        address: route?.params?.address,
+        unit: route?.params?.unit,
+        city: route?.params?.city,
+        date: route?.params?.date,
+        time: route?.params?.time,
+        notes: route?.params?.notes,
+      });
+
+      const result = await sendProviderQuoteRequestFromPreview(payload);
+
+      navigation.navigate("ProviderConfirmation", {
+        ...route.params,
+        quoteStatus: "email-sent",
+        quoteRequestId: result?.quoteRequestId || result?.recentScanId,
+        recentScanId: result?.recentScanId,
+        quoteEmailTo: result?.email?.to || result?.to,
+        quoteEmailCc: result?.email?.cc || result?.cc,
+        quoteEmailBccCount: result?.email?.bccCount ?? result?.bccCount,
+        quoteEmailSubject: result?.email?.subject || payload?.email?.subject,
+      });
+    } catch (error) {
+      console.log(
+        "[FixBee][QuoteRequest] official send failed",
+        error?.message,
+      );
+      Alert.alert(
+        "Quote request failed",
+        error.message || "Could not send the quote request.",
+      );
     } finally {
       setSending(false);
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ padding: 12, paddingTop: 12 + androidTopSpace }}>
-        <ProviderPlainButton title="Back" onPress={() => navigation.goBack()} />
-        <Text>Quote Request</Text>
+    <SafeAreaView style={styles.safe}>
+      <View style={[styles.topBar, { paddingTop: 8 + androidTopSpace }]}>
+        <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
+          <Text style={styles.backIcon}>‹</Text>
+        </Pressable>
+        <Text style={styles.topTitle}>Preview</Text>
+        <View style={styles.topSpacer} />
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 24 }}>
-        <Text>Ready to open email draft.</Text>
-        <Text>Selected providers: {selectedProviderIds.length}</Text>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.title}>Request Summary</Text>
+        <Text style={styles.subtitle}>
+          Issue details summarized and ready for provider review.
+        </Text>
+
+        <View style={styles.mailCard}>
+          <Text style={styles.mailLabel}>To</Text>
+          <Text style={styles.mailLink}>
+            {draft?.to || "Provider email missing"}
+          </Text>
+
+          <Text style={styles.mailLabel}>CC</Text>
+          <Text style={styles.mailLink}>
+            {draft?.cc || "Logged-in user email will be added by backend"}
+          </Text>
+
+          {draft?.bcc ? (
+            <>
+              <Text style={styles.mailLabel}>BCC</Text>
+              <Text style={styles.mailLink}>{draft.bcc}</Text>
+            </>
+          ) : null}
+
+          <Text style={styles.mailLabel}>Subject</Text>
+          <Text style={styles.subject}>
+            {draft?.subject || "Service Request"}
+          </Text>
+
+          <Text style={styles.mailLabel}>Message</Text>
+          <Text style={styles.bodyText}>
+            {draft?.body || "Quote request preview is not available."}
+          </Text>
+        </View>
+
+        <View style={styles.imagesHeaderRow}>
+          <Text style={styles.imagesTitle}>Issue photos</Text>
+          <Text style={styles.imagesHint}>Tap honey delete icon to remove</Text>
+        </View>
+
+        <View style={styles.imagesRow}>
+          {imagePreviewItems.map((image, index) => (
+            <View
+              key={`${image.thumbnailUri || image.url}-${index}`}
+              style={styles.imageTile}
+            >
+              {image.thumbnailUri || image.url ? (
+                <Image
+                  source={{ uri: image.thumbnailUri || image.url }}
+                  style={styles.thumbnail}
+                />
+              ) : null}
+              <Pressable
+                onPress={() => handleRemoveImage(index)}
+                style={styles.removeImageButton}
+                hitSlop={8}
+              >
+                <Text style={styles.removeImageText}>×</Text>
+              </Pressable>
+              <Text style={styles.imageLabel}>
+                {index === 0 ? "Issue Report" : image.label || "Issue Photo"}
+              </Text>
+            </View>
+          ))}
+
+          <Pressable
+            onPress={handleAddImage}
+            style={styles.addImageTile}
+            disabled={addingImage}
+          >
+            {addingImage ? (
+              <ActivityIndicator size="small" />
+            ) : (
+              <Text style={styles.addImageText}>＋</Text>
+            )}
+          </Pressable>
+        </View>
       </ScrollView>
 
-      <View style={{ padding: 12, paddingBottom: bottomButtonSpace }}>
-        {sending ? <ActivityIndicator /> : <ProviderPlainButton title="Open Email Draft" onPress={handleOpenDraft} />}
+      <View style={[styles.bottomCta, { paddingBottom: bottomButtonSpace }]}>
+        {sending ? (
+          <ActivityIndicator />
+        ) : (
+          <ProviderPlainButton
+            title="Send Quote Request"
+            onPress={handleSendRequest}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  topBar: {
+    minHeight: 78,
+    backgroundColor: COLORS.honeyLight,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
+    paddingHorizontal: 18,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  backIcon: {
+    fontSize: 26,
+    color: COLORS.providerBrown,
+    fontWeight: "500",
+  },
+  topTitle: {
+    color: COLORS.providerBrown,
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  topSpacer: {
+    width: 24,
+  },
+  content: {
+    paddingHorizontal: 24,
+    paddingTop: 20,
+    paddingBottom: 130,
+  },
+  title: {
+    color: COLORS.textPrimary,
+    fontSize: 19,
+    fontWeight: "800",
+  },
+  subtitle: {
+    color: COLORS.providerMidGray,
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 6,
+    marginBottom: 20,
+  },
+  mailCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 18,
+    padding: 18,
+    borderWidth: 1,
+    borderColor: COLORS.providerLightGray,
+  },
+  mailLabel: {
+    color: COLORS.providerMidGray,
+    fontSize: 12,
+    fontWeight: "700",
+    marginTop: 12,
+    marginBottom: 4,
+  },
+  mailLink: {
+    color: COLORS.honeyDark,
+    fontSize: 13,
+    fontWeight: "700",
+    marginBottom: 2,
+  },
+  subject: {
+    color: COLORS.textPrimary,
+    fontSize: 13,
+    fontWeight: "800",
+    marginBottom: 4,
+  },
+  bodyText: {
+    color: COLORS.textPrimary,
+    fontSize: 12,
+    lineHeight: 17,
+  },
+  imagesHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 18,
+    marginBottom: 8,
+  },
+  imagesTitle: {
+    color: COLORS.textPrimary,
+    fontSize: 13,
+    fontWeight: "800",
+  },
+  imagesHint: {
+    color: COLORS.providerMidGray,
+    fontSize: 10,
+    fontWeight: "700",
+  },
+  imagesRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
+    gap: 13,
+  },
+  imageTile: {
+    width: 68,
+    alignItems: "center",
+    position: "relative",
+  },
+  thumbnail: {
+    width: 62,
+    height: 62,
+    borderRadius: 12,
+    backgroundColor: COLORS.providerLightGray,
+  },
+  removeImageButton: {
+    position: "absolute",
+    top: -6,
+    right: 0,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: COLORS.honeyLight,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: COLORS.white,
+  },
+  removeImageText: {
+    color: COLORS.providerBrown,
+    fontSize: 16,
+    lineHeight: 18,
+    fontWeight: "900",
+  },
+  imageLabel: {
+    color: COLORS.providerBrown,
+    fontSize: 9,
+    fontWeight: "700",
+    marginTop: 5,
+    textAlign: "center",
+  },
+  addImageTile: {
+    width: 62,
+    height: 62,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.honeyLight,
+    backgroundColor: COLORS.honeyCream,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addImageText: {
+    color: COLORS.honey,
+    fontSize: 25,
+    fontWeight: "300",
+  },
+  bottomCta: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 22,
+    paddingTop: 12,
+    backgroundColor: COLORS.honeyCream,
+  },
+});
 
 export default ProviderQuoteRequestScreen;
