@@ -36,6 +36,15 @@ const COLORS = {
   whiteOverlayHalf: "rgba(255, 255, 255, 0.5)",
   whiteOverlaySoft: "rgba(255, 255, 255, 0.22)",
   whiteOverlayFaint: "rgba(255, 255, 255, 0.18)",
+
+  honey: "#FBB800",
+  honeyDark: "#E6A800",
+  honeyLight: "#FDE68A",
+  honeyCream: "#FFF9E6",
+  providerBrown: "#4A2F0B",
+  providerLightGray: "#F6F6F6",
+  providerMidGray: "#C1C1C1",
+  providerBorder: "#D1D5DC",
 };
 
 export default COLORS;
