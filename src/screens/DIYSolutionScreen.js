@@ -22,6 +22,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import styles from "./DIYSolutionScreenStyle";
 import { getDiyInstructions } from "../api/getDiyInstructions";
+import { updateRepairStatus } from "../api/updateRepairStatus";
 
 const MAX_PENDING_CHECKS = 30;
 const PENDING_CHECK_DELAY = 500;
@@ -33,6 +34,20 @@ const getPhotoId = (analysisResult) => {
     analysisResult?.analysis?.photoId ||
     null
   );
+};
+
+
+const handleDiyDone = async () => {
+  try {
+    await updateRepairStatus(photoId, "completed");
+    setModalVisible(true);
+  } catch (error) {
+    Alert.alert(
+      "Unable to update repair",
+      error?.message || "Repair was completed, but the status could not be updated."
+    );
+    setModalVisible(true);
+  }
 };
 
 const wait = (milliseconds) => {

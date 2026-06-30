@@ -21,6 +21,7 @@ import ProviderQuoteRequestScreen from "../screens/ProviderQuoteRequestScreen";
 import ProviderConfirmationScreen from "../screens/ProviderConfirmationScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
+import RecentScansScreen from "../screens/RecentScansScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,7 @@ const AppNavigator = () => {
         <Stack.Screen name="ProviderAddressTime" component={ProviderAddressTimeScreen} />
         <Stack.Screen name="ProviderQuoteRequest" component={ProviderQuoteRequestScreen} />
         <Stack.Screen name="ProviderConfirmation" component={ProviderConfirmationScreen} />
+        <Stack.Screen name="RecentScans" component={RecentScansScreen} />
 
         {/* Profile */}
         <Stack.Screen name="Profile" component={ProfileScreen} />

@@ -84,7 +84,8 @@ const MyRepairsScreen = ({ navigation }) => {
       setIsLoading(true);
       setErrorMessage("");
 
-      const historyData = await getPhotoHistory();
+      const response = await getPhotoHistory();
+      const historyData = response?.history || response || [];
 
       if (!Array.isArray(historyData)) {
         throw new Error("History data is unavailable.");
@@ -120,6 +121,7 @@ const MyRepairsScreen = ({ navigation }) => {
           date: formatScanDate(historyItem.createdAt),
           status: status,
           imageUrl: historyItem.imageUrl,
+          analysis: historyItem.analysis,
         };
 
         formattedScans.push(formattedScan);
@@ -172,7 +174,18 @@ const MyRepairsScreen = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scanList}
         renderItem={({ item }) => (
-          <RecentScanCard item={item} />
+          <RecentScanCard
+          item={item}
+          onPress={() =>
+              navigation?.navigate("DIYSolution", {
+                analysisResult: {
+                  ...item.analysis,
+                  photoId: item.id,
+
+              },
+                urgency: item.analysis?.urgency || "Low",
+            })
+        }/>
         )}
       />
     );
@@ -196,8 +209,12 @@ const MyRepairsScreen = ({ navigation }) => {
           <SectionHeader
             title="Recent Scans"
             actionLabel="See All"
-            onActionPress={() => {}}
-          />
+            onActionPress={() =>
+              navigation?.navigate("RecentScans", {
+                scans: recentScans,
+              })
+              }
+              />
 
           {renderRecentScans()}
         </View>
@@ -206,7 +223,8 @@ const MyRepairsScreen = ({ navigation }) => {
           <SectionHeader
             title="Completed Repairs"
             actionLabel="See All"
-            onActionPress={() => {}}
+            onActionPress={() =>
+              {}}
           />
 
           <View style={styles.completedList}>

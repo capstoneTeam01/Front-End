@@ -17,7 +17,8 @@ const RecommendationScreen = ({
     analysisResult?.analysis || analysisResult || {};
 
   const isLowConfidence =
-    result.analysisStatus === "LOW_CONFIDENCE";
+    result.analysisStatus === "LOW_CONFIDENCE" ||
+    String(result.confidence || "").toLowerCase() === "low";
 
   const estimatedCostText = isLowConfidence
     ? "N/A"
@@ -71,8 +72,13 @@ const handleDiyPress = () => {
     return;
   }
 
+  const photoId = getPhotoId();
+
   onDiyPress?.({
-    analysisResult,
+    analysisResult: {
+      ...analysisResult,
+      photoId,
+    },
     urgency: result?.urgency || "Low",
   });
 };
