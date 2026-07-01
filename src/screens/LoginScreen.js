@@ -13,8 +13,10 @@ import AppTextField from "../components/AppTextField/AppTextField";
 import AuthButton from "../components/AuthButton/AuthButton";
 import GoogleButton from "../components/GoogleButton/GoogleButton";
 import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
-import { loginWithGoogle } from "../features/auth/services/authSessionService";
-import { loginUser } from "../features/auth/services/authSessionService";
+import {
+  loginUser,
+  loginWithGoogle,
+} from "../features/auth/services/authSessionService";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -51,6 +53,7 @@ const LoginScreen = ({ navigation }) => {
       setSubmitting(false);
     }
   };
+
   const handleGoogle = async () => {
     setGoogleLoading(true);
     try {
@@ -73,6 +76,7 @@ const LoginScreen = ({ navigation }) => {
       setGoogleLoading(false);
     }
   };
+
   return (
     <KeyboardAvoidingView
       style={styles.flex}

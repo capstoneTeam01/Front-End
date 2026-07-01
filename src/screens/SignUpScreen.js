@@ -13,8 +13,10 @@ import AppTextField from "../components/AppTextField/AppTextField";
 import AuthButton from "../components/AuthButton/AuthButton";
 import GoogleButton from "../components/GoogleButton/GoogleButton";
 import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
-import { loginWithGoogle } from "../features/auth/services/authSessionService";
-import { registerUser } from "../features/auth/services/authSessionService";
+import {
+  registerUser,
+  loginWithGoogle,
+} from "../features/auth/services/authSessionService";
 
 const MIN_PASSWORD = 8;
 
