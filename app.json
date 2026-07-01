@@ -3,6 +3,7 @@
     "name": "Frontend",
     "slug": "Frontend",
     "version": "1.0.0",
+    "scheme": "fixbee",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -53,36 +54,7 @@
         {
           "locationWhenInUsePermission": "Allow FixBee to use your location to fill the service address."
         }
-      ],
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.811380357759-vgk8k19f4q94qpvmqnsuajl3n0eti2ks"
-        }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "ios": {
-            "useFrameworks": "static",
-            "extraPods": [
-              {
-                "name": "AppCheckCore",
-                "modular_headers": true
-              },
-              {
-                "name": "GoogleUtilities",
-                "modular_headers": true
-              },
-              {
-                "name": "RecaptchaInterop",
-                "modular_headers": true
-              }
-            ]
-          }
-        }
-      ],
-      "expo-font"
+      ]
     ]
   }
 }
