@@ -15,7 +15,7 @@ import GoogleButton from "../components/GoogleButton/GoogleButton";
 import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
 import {
   registerUser,
-  loginWithGoogle,
+  loginWithGoogleToken,
 } from "../features/auth/services/authSessionService";
 
 const MIN_PASSWORD = 8;
@@ -82,7 +82,7 @@ const SignUpScreen = ({ navigation }) => {
       const result = await googleSignIn();
       if (result?.cancelled) return;
 
-      const { user } = await loginWithGoogle(result.idToken);
+      const { user } = await loginWithGoogleToken(result.idToken);
 
       const hasLocation = !!user?.location;
       navigation.reset({

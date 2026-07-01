@@ -15,7 +15,7 @@ import GoogleButton from "../components/GoogleButton/GoogleButton";
 import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
 import {
   loginUser,
-  loginWithGoogle,
+  loginWithGoogloginWithGoogleTokenle,
 } from "../features/auth/services/authSessionService";
 
 const LoginScreen = ({ navigation }) => {
@@ -60,7 +60,7 @@ const LoginScreen = ({ navigation }) => {
       const result = await googleSignIn();
       if (result?.cancelled) return;
 
-      const { user } = await loginWithGoogle(result.idToken);
+      const { user } = await loginWithGoogleToken(result.idToken);
 
       const hasLocation = !!user?.location;
       navigation.reset({
