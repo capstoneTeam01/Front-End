@@ -6,17 +6,19 @@ const BRACKET_LENGTH = 32;
 const BRACKET_WIDTH = 2.5;
 const HEX_SIZE_RATIO = 0.58;
 
+const HEX_HEIGHT_RATIO = 1.08;
+
 const buildHexPoints = (size) => {
   const w = size;
-  const h = size * 0.92;
+  const h = size * HEX_HEIGHT_RATIO;
 
   return [
-    [w * 0.25, 0],
-    [w * 0.75, 0],
-    [w, h * 0.5],
-    [w * 0.75, h],
-    [w * 0.25, h],
-    [0, h * 0.5],
+    [w * 0.5, 0],
+    [w, h * 0.25],
+    [w, h * 0.75],
+    [w * 0.5, h],
+    [0, h * 0.75],
+    [0, h * 0.25],
   ]
     .map((point) => point.join(","))
     .join(" ");
@@ -79,14 +81,14 @@ const CameraGuidelines = ({ isReady = false }) => {
           style={[
             styles.guidelineHexagon,
             {
-              top: (frameSize - hexSize * 0.92) / 2,
+              top: (frameSize - hexSize * HEX_HEIGHT_RATIO) / 2,
               left: (frameSize - hexSize) / 2,
               width: hexSize,
-              height: hexSize * 0.92,
+              height: hexSize * HEX_HEIGHT_RATIO,
             },
           ]}
         >
-          <Svg width={hexSize} height={hexSize * 0.92} style={StyleSheet.absoluteFill}>
+          <Svg width={hexSize} height={hexSize * HEX_HEIGHT_RATIO} style={StyleSheet.absoluteFill}>
             <Polygon
               points={buildHexPoints(hexSize)}
               fill={fillColor}

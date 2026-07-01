@@ -1,4 +1,5 @@
 import { Image, ScrollView, Text, View } from "react-native";
+
 import getEstimateValue from "../utils/getEstimateValue";
 import AnalysisResultSummary from "../components/AnalysisResultSummary/AnalysisResultSummary";
 import RepairEstimateSection from "../components/RepairEstimateSection/RepairEstimateSection";
@@ -12,47 +13,102 @@ const RecommendationScreen = ({
   onFindExpertsPress,
   onDiyPress,
 }) => {
-  const result = analysisResult?.analysis || analysisResult || {};
+  const result =
+    analysisResult?.analysis || analysisResult || {};
 
-  const estimatedCostText = getEstimateValue(
-    result.estimatedCostRange,
-    result.costEstimate,
-    result.estimatedCost,
-    result.costRange
-  );
+  const isLowConfidence =
+    result.analysisStatus === "LOW_CONFIDENCE";
 
-  const estimatedTimeText = getEstimateValue(
-    result.estimatedRepairTime,
-    result.repairTimeEstimate,
-    result.estimatedTime,
-    result.repairTime
+  const estimatedCostText = isLowConfidence
+    ? "N/A"
+    : getEstimateValue(
+        result.estimatedCostRange,
+        result.costEstimate,
+        result.estimatedCost,
+        result.costRange
+      );
+
+  const estimatedTimeText = isLowConfidence
+    ? "N/A"
+    : getEstimateValue(
+        result.estimatedRepairTime,
+        result.repairTimeEstimate,
+        result.estimatedTime,
+        result.repairTime
+      );
+
+  const displayedIssue = isLowConfidence
+    ? "Unable to Confirm Repair Issue"
+    : result.detectedIssue;
+
+  const displayedObject = isLowConfidence
+    ? "N/A"
+    : result.detectedObject;
+
+  const displayedUrgency = isLowConfidence
+    ? "N/A"
+    : result.urgency;
+
+  const displayedDescription = isLowConfidence
+    ? result.userMessage ||
+      "The image is not clear enough for a reliable repair assessment. Please retake the photo."
+    : result.urgencyDescription;
+
+  const getPhotoId = () => {
+  return (
+    analysisResult?.photoId ||
+    analysisResult?.scan?.photoId ||
+    analysisResult?.analysis?.photoId ||
+    analysisResult?.data?.photoId ||
+    analysisResult?._id ||
+    result?.photoId ||
+    null
   );
+};
+
+const handleDiyPress = () => {
+  if (isLowConfidence) {
+    return;
+  }
+
+  onDiyPress?.({
+    analysisResult,
+    urgency: result?.urgency || "Low",
+  });
+};
 
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
     >
-      <Text style={styles.screenTitle}>Issue Detected</Text>
+      <Text style={styles.screenTitle}>
+        Issue Detected
+      </Text>
 
       {imageUri ? (
-        <Image source={{ uri: imageUri }} style={styles.image} />
+        <Image
+          source={{ uri: imageUri }}
+          style={styles.image}
+        />
       ) : (
         <View style={styles.imagePlaceholder}>
-          <Text style={styles.placeholderText}>Image Preview</Text>
+          <Text style={styles.placeholderText}>
+            Image Preview
+          </Text>
         </View>
       )}
 
       <AnalysisResultSummary
-        detectedIssue={result.detectedIssue}
-        detectedObject={result.detectedObject}
-        urgency={result.urgency}
-        urgencyDescription={result.urgencyDescription}
+        detectedIssue={displayedIssue}
+        detectedObject={displayedObject}
+        urgency={displayedUrgency}
+        urgencyDescription={displayedDescription}
         isEmergency={false}
       />
 
       <RepairEstimateSection
-        urgency={result.urgency}
+        urgency={displayedUrgency}
         estimatedCostRange={estimatedCostText}
         estimatedRepairTime={estimatedTimeText}
       />
@@ -60,13 +116,17 @@ const RecommendationScreen = ({
       <RecommendedActionsList
         title="Recommended Actions"
         actions={result.recommendedActions}
-        emptyMessage="No recommended actions available."
+        emptyMessage={
+          isLowConfidence
+            ? "Retake the photo with better lighting and a clearer view."
+            : "No recommended actions available."
+        }
       />
 
       <UserActionButtons
         onFindExpertsPress={onFindExpertsPress}
-        onDiyPress={onDiyPress}
-        showDiy={true}
+        onDiyPress={handleDiyPress}
+        showDiy={!isLowConfidence}
       />
     </ScrollView>
   );

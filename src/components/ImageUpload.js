@@ -12,6 +12,7 @@ import {
 } from "../constants/config";
 import { buildDemoAnalysisFallback, isNetworkErrorMessage } from "../utils/demoAnalysisFallback";
 import CameraScreen from "./CameraScreen";
+import { prepareServiceProviderFlowAfterImageSelected } from "../services/serviceProviderFlowService";
 
 const runMockUpload = async () => {
   await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -87,6 +88,7 @@ const ImageUpload = ({
     if (onAnalysisStart) {
       onAnalysisStart(asset.uri);
     }
+    prepareServiceProviderFlowAfterImageSelected({ imageUri: asset.uri });    
 
     try {
       let uploadResult;
@@ -148,6 +150,11 @@ const ImageUpload = ({
       if (onAnalysisComplete) {
         onAnalysisComplete({
           ...analysisResult,
+            photoId:
+    analysisResult?.photoId ||
+    analysisResult?.analysis?.photoId ||
+    uploadResult?.photoId ||
+    uploadResult?.id,
           uploadedImageUri: analysisResult?.uploadedImageUri || asset.uri,
           uploadedImageUrl:
             uploadResult?.uploadedImageUrl ||

@@ -19,6 +19,9 @@ const prettyNameFromEmail = (email) => {
     .join(" ");
 };
 
+const emailFromUser = (user) =>
+  clean(user?.email || user?.profile?.email || user?.contact?.email).toLowerCase();
+
 const decodeJwtPayload = (token) => {
   try {
     const payloadPart = clean(token).replace(/^Bearer\s+/i, "").split(".")[1];
@@ -43,6 +46,37 @@ const displayNameFromToken = async () => {
 const displayNameFromSavedLogin = async () => {
   const savedUser = await getAuthUserProfile();
   return extractUserDisplayName(savedUser) || prettyNameFromEmail(savedUser?.email);
+};
+
+export const getCurrentUserEmail = async () => {
+  try {
+    const { user } = await getMe();
+    const email = emailFromUser(user);
+
+    if (email) {
+      console.log("[FixBee][Auth] quote requester email resolved from backend profile", email);
+      return email;
+    }
+  } catch (error) {
+    console.log("[FixBee][Auth] backend requester email lookup failed", error?.message);
+  }
+
+  const savedUser = await getAuthUserProfile();
+  const savedEmail = emailFromUser(savedUser);
+  if (savedEmail) {
+    console.log("[FixBee][Auth] quote requester email resolved from saved login profile", savedEmail);
+    return savedEmail;
+  }
+
+  const token = await getSavedToken();
+  const payload = decodeJwtPayload(token);
+  const tokenEmail = emailFromUser(payload);
+  if (tokenEmail) {
+    console.log("[FixBee][Auth] quote requester email resolved from token", tokenEmail);
+    return tokenEmail;
+  }
+
+  return clean(DEV_LOGIN.email).toLowerCase();
 };
 
 export const getCurrentUserDisplayName = async () => {

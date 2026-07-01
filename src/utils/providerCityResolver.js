@@ -41,6 +41,65 @@ const CITY_ANCHORS = [
   { city: "Delta", latitude: 49.0847, longitude: -123.0586 },
 ];
 
+const CITY_ZONES = [
+  {
+    city: "Vancouver",
+    latitudeMin: 49.198,
+    latitudeMax: 49.296,
+    longitudeMin: -123.23,
+    longitudeMax: -123.02,
+  },
+  {
+    city: "Richmond",
+    latitudeMin: 49.09,
+    latitudeMax: 49.205,
+    longitudeMin: -123.24,
+    longitudeMax: -122.94,
+  },
+  {
+    city: "Burnaby",
+    latitudeMin: 49.19,
+    latitudeMax: 49.3,
+    longitudeMin: -123.035,
+    longitudeMax: -122.86,
+  },
+  {
+    city: "New Westminster",
+    latitudeMin: 49.17,
+    latitudeMax: 49.235,
+    longitudeMin: -122.97,
+    longitudeMax: -122.86,
+  },
+  {
+    city: "North Vancouver",
+    latitudeMin: 49.295,
+    latitudeMax: 49.38,
+    longitudeMin: -123.16,
+    longitudeMax: -122.93,
+  },
+  {
+    city: "West Vancouver",
+    latitudeMin: 49.31,
+    latitudeMax: 49.39,
+    longitudeMin: -123.29,
+    longitudeMax: -123.12,
+  },
+  {
+    city: "Surrey",
+    latitudeMin: 49.02,
+    latitudeMax: 49.23,
+    longitudeMin: -122.91,
+    longitudeMax: -122.66,
+  },
+  {
+    city: "Delta",
+    latitudeMin: 49.0,
+    latitudeMax: 49.2,
+    longitudeMin: -123.12,
+    longitudeMax: -122.87,
+  },
+];
+
 const toRadians = (degrees) => (degrees * Math.PI) / 180;
 
 const distanceKm = (a, b) => {
@@ -95,6 +154,29 @@ export const getNearestSupportedCityFromCoords = ({ latitude, longitude } = {}) 
   };
 };
 
+export const getSupportedCityFromCoordinateZone = ({ latitude, longitude } = {}) => {
+  const lat = Number(latitude);
+  const lon = Number(longitude);
+
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+
+  const zone = CITY_ZONES.find(
+    (item) =>
+      lat >= item.latitudeMin &&
+      lat <= item.latitudeMax &&
+      lon >= item.longitudeMin &&
+      lon <= item.longitudeMax,
+  );
+
+  return zone
+    ? {
+        city: zone.city,
+        latitude: lat,
+        longitude: lon,
+      }
+    : null;
+};
+
 export const resolveProviderCity = ({
   city,
   address,
@@ -105,13 +187,13 @@ export const resolveProviderCity = ({
 } = {}) => {
   const textCity = getSupportedCityFromText(city);
   const addressCity = getSupportedCityFromText(address);
+  const zoneCity = getSupportedCityFromCoordinateZone({ latitude, longitude });
   const nearest = getNearestSupportedCityFromCoords({ latitude, longitude });
 
-  if (preferCoordinates && nearest?.city) {
+  if (preferCoordinates && zoneCity?.city) {
     return {
-      city: nearest.city,
-      source: "coordinates",
-      distanceKm: nearest.distanceKm,
+      city: zoneCity.city,
+      source: "coordinate-zone",
       rawCity: cleanText(city),
     };
   }
@@ -128,6 +210,23 @@ export const resolveProviderCity = ({
     return {
       city: addressCity,
       source: "address-text",
+      rawCity: cleanText(city),
+    };
+  }
+
+  if (zoneCity?.city) {
+    return {
+      city: zoneCity.city,
+      source: "coordinate-zone",
+      rawCity: cleanText(city),
+    };
+  }
+
+  if (preferCoordinates && nearest?.city) {
+    return {
+      city: nearest.city,
+      source: "coordinates",
+      distanceKm: nearest.distanceKm,
       rawCity: cleanText(city),
     };
   }

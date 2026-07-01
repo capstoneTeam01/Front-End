@@ -1,10 +1,5 @@
-import { Alert, Linking, Platform } from "react-native";
-
-import {
-  FIXBEE_QUOTE_CC_EMAIL,
-  FIXBEE_REQUESTER_NAME,
-  PREFERRED_QUOTE_MAIL_CLIENT,
-} from "../constants/config";
+import { sendProviderQuoteRequest } from "../api/providerQuoteRequestApi";
+import { FIXBEE_REQUESTER_NAME } from "../constants/config";
 import {
   buildFullServiceAddress,
   buildHtmlQuoteEmailBody,
@@ -13,7 +8,6 @@ import {
 } from "../utils/quoteTextFormatter";
 
 const clean = (value) => String(value || "").trim();
-const encode = (value) => encodeURIComponent(clean(value));
 
 const uniqueEmails = (providers = []) => {
   const seen = new Set();
@@ -29,12 +23,26 @@ const uniqueEmails = (providers = []) => {
 
 const getPublicImageUrl = ({ uploadedImageUrl, imageUri }) => {
   const publicUrl = clean(uploadedImageUrl);
-  if (publicUrl.startsWith("http://") || publicUrl.startsWith("https://")) return publicUrl;
+  if (publicUrl.startsWith("http://") || publicUrl.startsWith("https://"))
+    return publicUrl;
 
   const uri = clean(imageUri);
   if (uri.startsWith("http://") || uri.startsWith("https://")) return uri;
 
   return "";
+};
+
+const normalizeQuoteImage = (image = {}, index = 0) => {
+  const url = clean(image.url || image.uploadedImageUrl);
+  const thumbnailUri = clean(
+    image.thumbnailUri || image.uri || image.localUri || url,
+  );
+
+  return {
+    url,
+    thumbnailUri,
+    label: clean(image.label) || `Issue Photo ${index + 1}`,
+  };
 };
 
 export const buildProviderQuoteEmailDraft = ({
@@ -53,17 +61,44 @@ export const buildProviderQuoteEmailDraft = ({
   imageUri,
   uploadedImageUrl,
   requesterName = FIXBEE_REQUESTER_NAME,
+  requesterEmail,
+  images = [],
+  preferImages = false,
 }) => {
   const providerEmails = uniqueEmails(providers);
-  console.log("[FixBee][QuoteEmail] building provider quote email", {
+  console.log("[FixBee][QuoteEmail] building provider quote preview", {
     providerCount: providers.length,
     providerEmailCount: providerEmails.length,
     hasUploadedImageUrl: Boolean(clean(uploadedImageUrl)),
+    imageCount: images.length || (uploadedImageUrl || imageUri ? 1 : 0),
   });
+
   const [to = "", ...bccList] = providerEmails;
   const issueTitle = normalizeQuoteIssueTitle(issue);
   const fullAddress = buildFullServiceAddress({ address, unit, city });
-  const imageUrl = getPublicImageUrl({ uploadedImageUrl, imageUri });
+  const originalImageUrl = getPublicImageUrl({ uploadedImageUrl, imageUri });
+  const suppliedImages = Array.isArray(images)
+    ? images.map(normalizeQuoteImage).filter(Boolean)
+    : [];
+  const shouldUseSuppliedImages = preferImages || suppliedImages.length > 0;
+  const fallbackImages = [
+    originalImageUrl || imageUri
+      ? normalizeQuoteImage(
+          {
+            url: originalImageUrl,
+            thumbnailUri: imageUri || originalImageUrl,
+            label: "Issue Photo",
+          },
+          0,
+        )
+      : null,
+  ].filter(Boolean);
+  const normalizedImages = (
+    shouldUseSuppliedImages ? suppliedImages : fallbackImages
+  ).filter((image) => image && (image.url || image.thumbnailUri));
+  const imageUrl = shouldUseSuppliedImages
+    ? clean(normalizedImages.find((image) => image.url)?.url)
+    : originalImageUrl;
 
   const plainBody = buildPlainQuoteEmailBody({
     issueTitle,
@@ -77,8 +112,8 @@ export const buildProviderQuoteEmailDraft = ({
     notes: clean(notes),
     imageUrl,
     requesterName,
+    requesterEmail,
   });
-
   const htmlBody = buildHtmlQuoteEmailBody({
     issueTitle,
     detectedObject: clean(detectedObject),
@@ -90,110 +125,108 @@ export const buildProviderQuoteEmailDraft = ({
     time,
     notes: clean(notes),
     imageUrl,
+    images: normalizedImages,
     requesterName,
+    requesterEmail,
   });
 
   return {
     to,
-    cc: FIXBEE_QUOTE_CC_EMAIL,
+    cc: clean(requesterEmail) || "Logged-in user email will be added by backend",
+    requesterEmail: clean(requesterEmail),
     bcc: bccList.join(","),
     bccList,
-    subject: issueTitle.slice(0, 78),
+    subject: `Service Request: ${issueTitle}`.slice(0, 110),
     body: plainBody,
     htmlBody,
     imageUrl,
+    images: normalizedImages,
     requesterName,
     providerEmails,
     providersMissingEmail: providers
       .filter((provider) => !clean(provider.email))
       .map((provider) => provider.businessName),
-    attachmentLabel: imageUrl
-      ? "Vercel Blob image link will be included in the email body."
-      : "No public image link was available for this draft.",
   };
 };
 
-const buildMailtoUrl = (draft) => {
-  const query = [
-    draft.cc ? `cc=${encode(draft.cc)}` : "",
-    draft.bcc ? `bcc=${encode(draft.bcc)}` : "",
-    `subject=${encode(draft.subject)}`,
-    `body=${encode(draft.body)}`,
-  ].filter(Boolean).join("&");
+const mapProviderForRequest = (provider = {}) => ({
+  id: clean(provider.id),
+  mongoId: clean(provider.mongoId),
+  businessName: clean(provider.businessName) || "Service Provider",
+  email: clean(provider.email).toLowerCase(),
+  phoneDisplay: clean(provider.phoneDisplay),
+  city: clean(provider.city),
+  address: clean(provider.address),
+});
 
-  return `mailto:${encode(draft.to)}?${query}`;
-};
-
-const buildGmailUrl = (draft) => {
-  const query = [
-    `to=${encode(draft.to)}`,
-    draft.cc ? `cc=${encode(draft.cc)}` : "",
-    draft.bcc ? `bcc=${encode(draft.bcc)}` : "",
-    `subject=${encode(draft.subject)}`,
-    `body=${encode(draft.body)}`,
-  ].filter(Boolean).join("&");
-
-  return `googlegmail://co?${query}`;
-};
-
-const buildOutlookUrl = (draft) => {
-  const query = [
-    `to=${encode(draft.to)}`,
-    draft.cc ? `cc=${encode(draft.cc)}` : "",
-    draft.bcc ? `bcc=${encode(draft.bcc)}` : "",
-    `subject=${encode(draft.subject)}`,
-    `body=${encode(draft.body)}`,
-  ].filter(Boolean).join("&");
-
-  return `ms-outlook://compose?${query}`;
-};
-
-const getPreferredUrl = (draft, preferredClient) => {
-  if (preferredClient === "outlook") return buildOutlookUrl(draft);
-  if (preferredClient === "mailto") return buildMailtoUrl(draft);
-  return buildGmailUrl(draft);
-};
-
-const openWithDeepLink = async (draft, preferredClient) => {
-  const preferredUrl = getPreferredUrl(draft, preferredClient);
-  const mailtoUrl = buildMailtoUrl(draft);
-
-  const canOpenPreferred = await Linking.canOpenURL(preferredUrl);
-  if (canOpenPreferred) {
-    await Linking.openURL(preferredUrl);
-    return true;
-  }
-
-  const canOpenMailto = await Linking.canOpenURL(mailtoUrl);
-  if (canOpenMailto || Platform.OS === "android") {
-    await Linking.openURL(mailtoUrl);
-    return true;
-  }
-
-  return false;
-};
-
-export const openProviderQuoteEmailDraft = async (
+export const buildProviderQuoteRequestPayload = ({
   draft,
-  preferredClient = PREFERRED_QUOTE_MAIL_CLIENT
-) => {
-  if (!draft?.to) {
-    Alert.alert(
-      "Provider email missing",
-      "None of the selected providers has an email address in the local provider cache. Try selecting a provider that has an email address in the directory."
-    );
-    return false;
-  }
+  providers = [],
+  issue,
+  detectedObject,
+  category,
+  address,
+  unit,
+  city,
+  date,
+  time,
+  notes,
+}) => ({
+  scanType: "service-provider-quote-request",
+  status: "ready-to-send",
+  issue: {
+    title: normalizeQuoteIssueTitle(issue),
+    detectedObject: clean(detectedObject),
+    category: clean(category),
+  },
+  serviceRequest: {
+    address: clean(address),
+    unit: clean(unit),
+    city: clean(city),
+    preferredDate: clean(date),
+    preferredTime: clean(time),
+    notes: clean(notes),
+  },
+  providers: providers.map(mapProviderForRequest),
+  images: Array.isArray(draft?.images) ? draft.images : [],
+  requester: {
+    email: clean(draft?.requesterEmail),
+    name: clean(draft?.requesterName),
+  },
+  email: {
+    to: draft?.to,
+    cc: draft?.cc,
+    bcc: draft?.bcc,
+    subject: draft?.subject,
+    body: draft?.body,
+    htmlBody: draft?.htmlBody,
+    imageUrl: draft?.imageUrl,
+    providerEmails: draft?.providerEmails || [],
+  },
+  preview: {
+    subject: draft?.subject,
+    body: draft?.body,
+    to: draft?.to,
+    cc: draft?.cc,
+    bcc: draft?.bcc,
+  },
+});
 
-  try {
-    console.log("[FixBee][QuoteEmail] preferred mail client", { preferredClient });
-    const opened = await openWithDeepLink(draft, preferredClient);
-    if (opened) return true;
+export const sendProviderQuoteRequestFromPreview = async (payload) => {
+  console.log("[FixBee][QuoteRequest] sending official backend quote request", {
+    providerCount: payload?.providers?.length || 0,
+    imageCount: payload?.images?.length || 0,
+    hasAddress: Boolean(payload?.serviceRequest?.address),
+  });
 
-    Alert.alert("Email app not available", "No supported email app was found on this device.");
-    return false;
-  } catch (error) {
-    Alert.alert("Could not open email", error.message || "The email draft could not be opened.");
-    return false;
-  }
+  const result = await sendProviderQuoteRequest(payload);
+
+  console.log("[FixBee][QuoteEmail] official backend quote request sent", {
+    quoteRequestId: result?.quoteRequestId || result?.recentScanId,
+    to: result?.email?.to || result?.to,
+    cc: result?.email?.cc || result?.cc,
+    bccCount: result?.email?.bccCount ?? result?.bccCount,
+  });
+
+  return result;
 };
