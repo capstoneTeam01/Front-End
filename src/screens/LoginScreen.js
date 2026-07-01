@@ -12,18 +12,25 @@ import styles from "./LoginScreenStyle";
 import AppTextField from "../components/AppTextField/AppTextField";
 import AuthButton from "../components/AuthButton/AuthButton";
 import GoogleButton from "../components/GoogleButton/GoogleButton";
+import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
+import { loginWithGoogle } from "../features/auth/services/authSessionService";
 import { loginUser } from "../features/auth/services/authSessionService";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const { signIn: googleSignIn } = useGoogleAuth();
 
   const handleLogin = async () => {
     const trimmedEmail = email.trim();
 
     if (!trimmedEmail || !password) {
-      Alert.alert("Missing details", "Enter your email and password to continue.");
+      Alert.alert(
+        "Missing details",
+        "Enter your email and password to continue.",
+      );
       return;
     }
 
@@ -36,16 +43,36 @@ const LoginScreen = ({ navigation }) => {
         routes: [{ name: "Home" }],
       });
     } catch (error) {
-      Alert.alert("Login failed", error?.message || "Please check your details and try again.");
+      Alert.alert(
+        "Login failed",
+        error?.message || "Please check your details and try again.",
+      );
     } finally {
       setSubmitting(false);
     }
   };
+  const handleGoogle = async () => {
+    setGoogleLoading(true);
+    try {
+      const result = await googleSignIn();
+      if (result?.cancelled) return;
 
-  const handleGoogle = () => {
-    Alert.alert("Coming soon", "Google sign-in will be available in the next build.");
+      const { user } = await loginWithGoogle(result.idToken);
+
+      const hasLocation = !!user?.location;
+      navigation.reset({
+        index: 0,
+        routes: [{ name: hasLocation ? "Home" : "Onboarding" }],
+      });
+    } catch (error) {
+      Alert.alert(
+        "Google sign-in failed",
+        error?.message || "Please try again.",
+      );
+    } finally {
+      setGoogleLoading(false);
+    }
   };
-
   return (
     <KeyboardAvoidingView
       style={styles.flex}
@@ -94,7 +121,11 @@ const LoginScreen = ({ navigation }) => {
           <View style={styles.orLine} />
         </View>
 
-        <GoogleButton label="Log In using Google" onPress={handleGoogle} />
+        <GoogleButton
+          label="Log In using Google"
+          onPress={handleGoogle}
+          loading={googleLoading}
+        />
 
         <View style={styles.footerRow}>
           <Text style={styles.footerText}>Don't have an account? </Text>

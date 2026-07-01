@@ -12,6 +12,8 @@ import styles from "./SignUpScreenStyle";
 import AppTextField from "../components/AppTextField/AppTextField";
 import AuthButton from "../components/AuthButton/AuthButton";
 import GoogleButton from "../components/GoogleButton/GoogleButton";
+import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
+import { loginWithGoogle } from "../features/auth/services/authSessionService";
 import { registerUser } from "../features/auth/services/authSessionService";
 
 const MIN_PASSWORD = 8;
@@ -23,6 +25,8 @@ const SignUpScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const { signIn: googleSignIn } = useGoogleAuth();
 
   const handleCreate = async () => {
     const fName = firstName.trim();
@@ -30,17 +34,26 @@ const SignUpScreen = ({ navigation }) => {
     const mail = email.trim();
 
     if (!fName || !lName || !mail || !password || !confirmPassword) {
-      Alert.alert("Missing details", "Please fill in every field to create your account.");
+      Alert.alert(
+        "Missing details",
+        "Please fill in every field to create your account.",
+      );
       return;
     }
 
     if (password.length < MIN_PASSWORD) {
-      Alert.alert("Weak password", `Password must be at least ${MIN_PASSWORD} characters.`);
+      Alert.alert(
+        "Weak password",
+        `Password must be at least ${MIN_PASSWORD} characters.`,
+      );
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert("Passwords don't match", "Please make sure both passwords are the same.");
+      Alert.alert(
+        "Passwords don't match",
+        "Please make sure both passwords are the same.",
+      );
       return;
     }
 
@@ -61,8 +74,27 @@ const SignUpScreen = ({ navigation }) => {
     }
   };
 
-  const handleGoogle = () => {
-    Alert.alert("Coming soon", "Google sign-in will be available in the next build.");
+  const handleGoogle = async () => {
+    setGoogleLoading(true);
+    try {
+      const result = await googleSignIn();
+      if (result?.cancelled) return;
+
+      const { user } = await loginWithGoogle(result.idToken);
+
+      const hasLocation = !!user?.location;
+      navigation.reset({
+        index: 0,
+        routes: [{ name: hasLocation ? "Home" : "Onboarding" }],
+      });
+    } catch (error) {
+      Alert.alert(
+        "Google sign-in failed",
+        error?.message || "Please try again.",
+      );
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
   return (
@@ -123,7 +155,11 @@ const SignUpScreen = ({ navigation }) => {
         />
 
         <View style={styles.createWrap}>
-          <AuthButton label="Create" onPress={handleCreate} loading={submitting} />
+          <AuthButton
+            label="Create"
+            onPress={handleCreate}
+            loading={submitting}
+          />
         </View>
 
         <View style={styles.orRow}>
@@ -132,7 +168,11 @@ const SignUpScreen = ({ navigation }) => {
           <View style={styles.orLine} />
         </View>
 
-        <GoogleButton label="Sign In using Google" onPress={handleGoogle} />
+        <GoogleButton
+          label="Sign In using Google"
+          onPress={handleGoogle}
+          loading={googleLoading}
+        />
 
         <View style={styles.footerRow}>
           <Text style={styles.footerText}>Already have an account? </Text>
