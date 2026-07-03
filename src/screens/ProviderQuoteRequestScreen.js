@@ -10,6 +10,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -73,6 +74,8 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
   const [sending, setSending] = useState(false);
   const [addingImage, setAddingImage] = useState(false);
   const [providers, setProviders] = useState([]);
+  const [messageBody, setMessageBody] = useState("");
+  const [messageEdited, setMessageEdited] = useState(false);
   const [quoteImages, setQuoteImages] = useState(() =>
     getInitialQuoteImages(route?.params),
   );
@@ -142,6 +145,11 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
   );
 
   const imagePreviewItems = Array.isArray(draft?.images) ? draft.images : [];
+
+  useEffect(() => {
+    if (messageEdited) return;
+    setMessageBody(draft?.body || "");
+  }, [draft?.body, messageEdited]);
 
   const handleAddImage = async () => {
     try {
@@ -235,6 +243,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         date: route?.params?.date,
         time: route?.params?.time,
         notes: route?.params?.notes,
+        editedBody: messageBody,
       });
 
       const result = await sendProviderQuoteRequestFromPreview(payload);
@@ -303,9 +312,18 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
           </Text>
 
           <Text style={styles.mailLabel}>Message</Text>
-          <Text style={styles.bodyText}>
-            {draft?.body || "Quote request preview is not available."}
-          </Text>
+          <TextInput
+            value={messageBody}
+            onChangeText={(value) => {
+              setMessageEdited(true);
+              setMessageBody(value);
+            }}
+            style={styles.bodyInput}
+            multiline
+            textAlignVertical="top"
+            placeholder="Edit message body"
+            placeholderTextColor={COLORS.providerMidGray}
+          />
         </View>
 
         <View style={styles.imagesHeaderRow}>
@@ -441,6 +459,14 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     fontSize: 12,
     lineHeight: 17,
+  },
+  bodyInput: {
+    minHeight: 250,
+    color: COLORS.textPrimary,
+    fontSize: 12,
+    lineHeight: 17,
+    padding: 0,
+    margin: 0,
   },
   imagesHeaderRow: {
     flexDirection: "row",
