@@ -69,9 +69,7 @@ const shouldRetryWithFreshToken = (response, data) => {
   if (AUTH_RETRY_STATUSES.has(response.status)) {
     return true;
   }
-
-  // Some beginner backends accidentally return 500 for JWT/session failures.
-  // This keeps the frontend resilient without changing the backend.
+  
   const errorText = getErrorText(data);
   return AUTH_ERROR_PATTERNS.some((pattern) => errorText.includes(pattern));
 };
@@ -170,9 +168,6 @@ export const apiRequest = async (path, options = {}) => {
       message: networkError?.message,
     });
 
-    // The first request after scanning the Expo QR code can fail on a real phone
-    // while the LAN socket/backend session is warming up. Retry once after a
-    // short delay instead of forcing the user to go back and upload again.
     markFixBeeWarmupStale();
     if (needsAuth) {
       await resetAuthSession({ reason: `network-retry:${path}` });
@@ -184,8 +179,6 @@ export const apiRequest = async (path, options = {}) => {
     data = await parseJsonSafely(response);
   }
 
-  // Backend restart / Redis reset / JWT expiry case:
-  // re-login once, replace the stale token, then retry the same request.
   if (needsAuth && shouldRetryWithFreshToken(response, data)) {
     console.log("[FixBee][Auth] backend rejected token, refreshing and retrying request", {
       path,
