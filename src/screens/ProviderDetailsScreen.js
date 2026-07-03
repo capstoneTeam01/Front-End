@@ -3,19 +3,24 @@ import {
   ActivityIndicator,
   Alert,
   Platform,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
 
 import ProviderPlainButton from "../components/ProviderPlainButton";
+import ProviderHexAvatar from "../components/ProviderHexAvatar";
+import ProviderRating from "../components/ProviderRating";
 import { loadProviderDetails } from "../localDb/businessDirectoryProviderLocalDb";
 import { MAX_SELECTED_PROVIDERS } from "../utils/providerConstants";
+import COLORS from "../constants/colors";
 
 const androidTopSpace = Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
-const bottomButtonSpace = Platform.OS === "android" ? 72 : 20;
+const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
 
 const normalizeSelectedIds = (ids = []) => {
   if (!Array.isArray(ids)) return [];
@@ -77,46 +82,161 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ padding: 12, paddingTop: 12 + androidTopSpace }}>
-        <ProviderPlainButton title="Back" onPress={() => navigation.goBack()} />
-        <Text>Provider Details</Text>
+    <SafeAreaView style={styles.safe}>
+      <View style={[styles.topBar, { paddingTop: 8 + androidTopSpace }]}>
+        <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
+          <Text style={styles.backIcon}>‹</Text>
+        </Pressable>
+        <View style={styles.topSpacer} />
+        <View style={styles.topSpacer} />
       </View>
 
       {loading ? (
-        <View style={{ padding: 12 }}>
+        <View style={styles.centerState}>
           <ActivityIndicator />
-          <Text>Loading provider...</Text>
+          <Text style={styles.stateText}>Loading provider...</Text>
         </View>
       ) : null}
 
       {!loading && !provider ? (
-        <View style={{ padding: 12 }}>
-          <Text>Provider not found.</Text>
+        <View style={styles.centerState}>
+          <Text style={styles.stateTitle}>Provider not found.</Text>
           <ProviderPlainButton title="Go Back" onPress={() => navigation.goBack()} />
         </View>
       ) : null}
 
       {provider ? (
         <>
-          <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 24 }}>
-            <Text>{provider.businessName || "Provider"}</Text>
-            <Text>Rating: {provider.rating || "N/A"}</Text>
-            <Text>Reviews: {provider.reviewCount || 0}</Text>
-            <Text>City: {provider.city || provider.requestCity || "Not available"}</Text>
-            <Text>Address: {provider.address || "Not available"}</Text>
-            <Text>Phone: {provider.phoneDisplay || "Not available"}</Text>
-            <Text>Email: {provider.email || "Not available"}</Text>
-            <Text>About: {provider.businessDescription || "No description available."}</Text>
+          <ScrollView contentContainerStyle={styles.content}>
+            <ProviderHexAvatar label={provider.businessName} size={70} />
+            <Text style={styles.name}>{provider.businessName || "Provider"}</Text>
+            <ProviderRating rating={provider.rating} reviewCount={provider.reviewCount} showGoogle />
+
+            <View style={styles.metaRow}>
+              <View style={styles.categoryPill}>
+                <Text style={styles.categoryPillText}>
+                  {provider.primaryCategory || provider.providerType || "Plumbing"}
+                </Text>
+              </View>
+              <View style={styles.availabilityPill}>
+                <Text style={styles.availabilityPillText}>24/7</Text>
+              </View>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Description</Text>
+              <Text style={styles.description}>{provider.businessDescription || "Licensed repair professional available for residential maintenance and repair requests."}</Text>
+            </View>
           </ScrollView>
 
-          <View style={{ padding: 12, paddingBottom: bottomButtonSpace }}>
-            <ProviderPlainButton title="Add to List" onPress={handleAddToList} />
+          <View style={[styles.bottomCta, { paddingBottom: bottomButtonSpace }]}>
+            <ProviderPlainButton title="Add To List" onPress={handleAddToList} />
           </View>
         </>
       ) : null}
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  topBar: {
+    minHeight: 78,
+    backgroundColor: COLORS.honeyLight,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
+    paddingHorizontal: 18,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  backIcon: {
+    fontSize: 26,
+    color: COLORS.providerBrown,
+    fontWeight: "500",
+  },
+  topSpacer: {
+    width: 24,
+  },
+  content: {
+    paddingHorizontal: 26,
+    paddingTop: 28,
+    paddingBottom: 120,
+  },
+  name: {
+    marginTop: 16,
+    color: COLORS.textPrimary,
+    fontSize: 20,
+    fontWeight: "800",
+  },
+  metaRow: {
+    flexDirection: "row",
+    marginTop: 20,
+    gap: 10,
+  },
+  categoryPill: {
+    backgroundColor: COLORS.providerLightGray,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 13,
+  },
+  categoryPillText: {
+    color: COLORS.textPrimary,
+    fontSize: 12,
+    fontWeight: "700",
+  },
+  availabilityPill: {
+    backgroundColor: COLORS.honey,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 13,
+  },
+  availabilityPillText: {
+    color: COLORS.providerBrown,
+    fontSize: 12,
+    fontWeight: "800",
+  },
+  section: {
+    marginTop: 24,
+  },
+  sectionTitle: {
+    color: COLORS.textPrimary,
+    fontSize: 15,
+    fontWeight: "800",
+    marginBottom: 8,
+  },
+  description: {
+    color: COLORS.textPrimary,
+    fontSize: 13,
+    lineHeight: 20,
+  },
+  centerState: {
+    padding: 24,
+    alignItems: "center",
+  },
+  stateTitle: {
+    color: COLORS.textPrimary,
+    fontSize: 15,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  stateText: {
+    color: COLORS.textSecondary,
+    fontSize: 12,
+    marginTop: 8,
+  },
+  bottomCta: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 22,
+    paddingTop: 12,
+    backgroundColor: COLORS.honeyCream,
+  },
+});
 
 export default ProviderDetailsScreen;
