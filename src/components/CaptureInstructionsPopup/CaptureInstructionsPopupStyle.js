@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import { RADIUS, SIDE_PADDING, TYPE } from "../../constants/layout";
+import { RADIUS, SIDE_PADDING } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   backdrop: {
@@ -25,18 +25,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "600",
+    fontFamily: "Rubik_400Regular",
+    fontSize: 22,
+    lineHeight: 28,
     color: COLORS.textPrimary,
-    textAlign: "center",
+    textAlign: "left",
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: TYPE.small.fontSize,
-    fontWeight: "400",
-    color: COLORS.textSecondary,
-    textAlign: "center",
+    fontFamily: "Rubik_400Regular",
+    fontSize: 16,
     lineHeight: 20,
+    color: COLORS.textMuted,
+    textAlign: "left",
     marginBottom: 24,
   },
   tipsCard: {
@@ -58,25 +59,27 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.divider,
   },
   tipIconWrap: {
-    width: 28,
+    width: 44,
     alignItems: "center",
   },
   tipText: {
     flex: 1,
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "400",
+    fontFamily: "Rubik_400Regular",
+    fontSize: 16,
+    lineHeight: 20,
     color: COLORS.textPrimary,
   },
   scanButton: {
-    backgroundColor: COLORS.gray900,
+    backgroundColor: COLORS.primary,
     borderRadius: RADIUS.field,
     paddingVertical: 16,
     alignItems: "center",
   },
   scanButtonText: {
-    color: COLORS.white,
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
+    color: COLORS.secondary,
+    fontFamily: "Rubik_400Regular",
+    fontSize: 16,
+    lineHeight: 20,
   },
 });
 
