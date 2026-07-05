@@ -7,9 +7,8 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
+import AppHeader from "../components/AppHeader/AppHeader";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import RecentScanCard from "../components/RecentScanCard/RecentScanCard";
 import RepairListItem from "../components/RepairListItem/RepairListItem";
@@ -193,18 +192,13 @@ const MyRepairsScreen = ({ navigation }) => {
 
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.safe}>
+      <AppHeader title="My Repairs" />
+
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        <ScreenHeader
-          title="My Repairs"
-          onBellPress={() =>
-            navigation?.navigate("Notifications")
-          }
-        />
-
         <View style={styles.section}>
           <SectionHeader
             title="Recent Scans"
@@ -246,7 +240,7 @@ const MyRepairsScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

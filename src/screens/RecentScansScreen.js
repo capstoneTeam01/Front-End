@@ -1,8 +1,7 @@
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
+import AppHeader from "../components/AppHeader/AppHeader";
 import styles from "./RecentScansScreenStyle";
 import COLORS from "../constants/colors";
 
@@ -10,10 +9,9 @@ const RecentScansScreen = ({ navigation, route }) => {
   const scans = route?.params?.scans || [];
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScreenHeader
+    <View style={styles.safe}>
+      <AppHeader
         title="Recent Scans"
-        showBack
         onBack={() => navigation?.goBack()}
       />
 
@@ -58,7 +56,7 @@ const RecentScansScreen = ({ navigation, route }) => {
       >
         <Text style={styles.backText}>Back</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

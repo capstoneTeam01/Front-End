@@ -3,16 +3,14 @@ import {
   ActivityIndicator,
   Alert,
   Platform,
-  Pressable,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 
+import AppHeader from "../components/AppHeader/AppHeader";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import ProviderCard from "../components/ProviderCard";
 import { useBusinessDirectoryProviderList } from "../hooks/useBusinessDirectoryProviderList";
@@ -30,8 +28,6 @@ import {
 } from "../utils/locationHelper";
 import COLORS from "../constants/colors";
 
-const androidTopSpace =
-  Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
 const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
 
 const normalizeSelectedIds = (ids = []) => {
@@ -267,14 +263,8 @@ const ProviderListScreen = ({ navigation, route }) => {
     : "Select up to 10 request experts.";
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={[styles.topBar, { paddingTop: 8 + androidTopSpace }]}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
-          <Text style={styles.backIcon}>‹</Text>
-        </Pressable>
-        <Text style={styles.topTitle}>Experts List</Text>
-        <View style={styles.topSpacer} />
-      </View>
+    <View style={styles.safe}>
+      <AppHeader title="Experts List" onBack={() => navigation.goBack()} />
 
       <View style={styles.headerBlock}>
         <Text style={styles.title}>Repair Experts</Text>
@@ -334,7 +324,7 @@ const ProviderListScreen = ({ navigation, route }) => {
           disabled={!selectedProviders.length}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -342,29 +332,6 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: COLORS.white,
-  },
-  topBar: {
-    minHeight: 78,
-    backgroundColor: COLORS.honeyLight,
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
-    paddingHorizontal: 18,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  backIcon: {
-    fontSize: 26,
-    color: COLORS.providerBrown,
-    fontWeight: "500",
-  },
-  topTitle: {
-    color: COLORS.providerBrown,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  topSpacer: {
-    width: 24,
   },
   headerBlock: {
     paddingHorizontal: 22,

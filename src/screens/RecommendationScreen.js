@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Image,
-  Pressable,
   ScrollView,
   Text,
   View,
@@ -9,13 +8,13 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import getEstimateValue from "../utils/getEstimateValue";
+import AppHeader from "../components/AppHeader/AppHeader";
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
 import RepairEstimateSection from "../components/RepairEstimateSection/RepairEstimateSection";
 import RecommendedActionsList from "../components/RecommendedActionsList/RecommendedActionsList";
 import UserActionButtons from "../components/UserActionButtons/UserActionButtons";
 
 import {
-  RecommendationHeaderShape,
   RecommendationImageOverlay,
 } from "../components/shapes/RecommendationShape";
 
@@ -121,32 +120,11 @@ const RecommendationScreen = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <RecommendationHeaderShape
-          style={styles.headerShape}
-        />
-
-        <Pressable
-          onPress={onBack}
-          hitSlop={12}
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed
-              ? styles.backButtonPressed
-              : null,
-          ]}
-        >
-          <Ionicons
-            name="chevron-back"
-            size={28}
-            color={COLORS.secondary}
-          />
-        </Pressable>
-
-        <Text style={styles.headerTitle}>
-          Issue Detected
-        </Text>
-      </View>
+      <AppHeader
+        title="Issue Detected"
+        onBack={onBack}
+        style={styles.headerContainer}
+      />
 
       <ScrollView
         style={styles.scrollArea}
