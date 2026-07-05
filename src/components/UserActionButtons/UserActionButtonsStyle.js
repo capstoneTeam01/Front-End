@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+
 import COLORS from "../../constants/colors";
 import {
   BUTTON_HEIGHT,
@@ -8,38 +9,40 @@ import {
 
 const styles = StyleSheet.create({
   buttonRow: {
+    width: "100%",
     flexDirection: "row",
     gap: 12,
   },
 
-  primaryButton: {
+  button: {
     flex: 1,
     height: BUTTON_HEIGHT,
     borderRadius: RADIUS.field,
-    backgroundColor: COLORS.gray900,
     alignItems: "center",
     justifyContent: "center",
   },
 
-  primaryButtonText: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "700",
-    color: COLORS.white,
+  findExpertsWithDiyButton: {
+    backgroundColor: COLORS.lightHoney,
   },
 
-  secondaryButton: {
-    flex: 1,
-    height: BUTTON_HEIGHT,
-    borderRadius: RADIUS.field,
-    backgroundColor: COLORS.gray500,
-    alignItems: "center",
-    justifyContent: "center",
+  findExpertsSingleButton: {
+    backgroundColor: COLORS.primary,
   },
 
-  secondaryButtonText: {
+  diyButton: {
+    backgroundColor: COLORS.primary,
+  },
+
+  buttonPressed: {
+    opacity: 0.78,
+  },
+
+  buttonText: {
     fontSize: TYPE.button.fontSize,
-    fontWeight: "700",
-    color: COLORS.textPrimary,
+    fontWeight: "500",
+    color: COLORS.secondary,
+    textAlign: "center",
   },
 });
 
