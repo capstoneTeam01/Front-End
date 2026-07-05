@@ -1,6 +1,7 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import COLORS from "../constants/colors";
+import FONT from "../constants/typography";
 import ProviderHexAvatar from "./ProviderHexAvatar";
 import ProviderRating from "./ProviderRating";
 
@@ -48,12 +49,14 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   name: {
+    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
     fontSize: 14,
     fontWeight: "700",
     marginBottom: 3,
   },
   distance: {
+    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
     fontSize: 11,
     marginTop: 2,

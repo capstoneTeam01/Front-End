@@ -220,6 +220,14 @@ const ScanScreen = ({ navigation, route }) => {
       uploadedImageUrl ||
       analysisResult?.uploadedImageUrl;
 
+    providerRouteParams.photoId =
+      providerRouteParams.photoId ||
+      analysisResult?.photoId ||
+      analysisResult?.analysis?.photoId ||
+      analysisResult?.scan?.photoId ||
+      analysisResult?.data?.photoId ||
+      null;
+
     Object.assign(
       providerRouteParams,
       buildLocationRouteParams(locationInfo)

@@ -3,6 +3,7 @@ import { Platform, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, View } 
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import ProviderHexAvatar from "../components/ProviderHexAvatar";
 import COLORS from "../constants/colors";
+import FONT from "../constants/typography";
 
 const androidTopSpace = Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
 
@@ -71,24 +72,28 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   checkOverlay: {
+    fontFamily: FONT.extraBold,
     position: "absolute",
     color: COLORS.providerBrown,
     fontWeight: "900",
     fontSize: 17,
   },
   title: {
+    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
     fontSize: 21,
     fontWeight: "800",
     marginBottom: 10,
   },
   subtitle: {
+    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
     fontSize: 13,
     textAlign: "center",
     lineHeight: 19,
   },
   reference: {
+    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
     fontSize: 10,
     marginTop: 14,
@@ -111,6 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   homeText: {
+    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
     fontSize: 13,
     fontWeight: "700",

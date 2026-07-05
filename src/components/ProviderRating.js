@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import COLORS from "../constants/colors";
+import FONT from "../constants/typography";
 import ProviderGoogleIcon from "./ProviderGoogleIcon";
 
 const ProviderRating = ({ rating, reviewCount, showGoogle = false }) => (
@@ -24,20 +25,24 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   star: {
+    fontFamily: FONT.bold,
     color: COLORS.honeyDark,
     fontSize: 12,
     marginRight: 3,
   },
   text: {
+    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
     fontSize: 12,
     fontWeight: "700",
   },
   muted: {
+    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
     fontSize: 11,
   },
   onText: {
+    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
     fontSize: 11,
     marginLeft: 4,
