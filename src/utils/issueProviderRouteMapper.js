@@ -3,13 +3,23 @@ import {
   DEFAULT_PROVIDER_CITY,
 } from "./providerConstants";
 
-const toCleanText = (value) => String(value || "").trim();
-const toLowerText = (value) => toCleanText(value).toLowerCase();
+const toCleanText = (value) => {
+  return String(value || "").trim();
+};
 
-export const normalizeProviderCategory = (value, fallback = DEFAULT_PROVIDER_CATEGORY) => {
+const toLowerText = (value) => {
+  return toCleanText(value).toLowerCase();
+};
+
+export const normalizeProviderCategory = (
+  value,
+  fallback = DEFAULT_PROVIDER_CATEGORY
+) => {
   const text = toLowerText(value);
 
-  if (!text) return fallback;
+  if (!text) {
+    return fallback;
+  }
 
   if (
     text.includes("plumb") ||
@@ -24,18 +34,41 @@ export const normalizeProviderCategory = (value, fallback = DEFAULT_PROVIDER_CAT
     return "plumber";
   }
 
-  if (text.includes("electric")) return "electrician";
-  if (text.includes("appliance")) return "appliance";
-  if (text.includes("hvac") || text.includes("heating") || text.includes("cooling")) return "hvac";
+  if (text.includes("electric")) {
+    return "electrician";
+  }
+
+  if (text.includes("appliance")) {
+    return "appliance";
+  }
+
+  if (
+    text.includes("hvac") ||
+    text.includes("heating") ||
+    text.includes("cooling")
+  ) {
+    return "hvac";
+  }
 
   return fallback;
 };
 
-export const getAnalysisPayload = (analysisResult) => analysisResult?.analysis || analysisResult || {};
+export const getAnalysisPayload = (analysisResult) => {
+  return analysisResult?.analysis || analysisResult || {};
+};
 
-export const getIssueLabelFromAnalysis = (analysisResult, fallback = "Repair issue") => {
+export const getIssueLabelFromAnalysis = (
+  analysisResult,
+  fallback = "Repair issue"
+) => {
   const result = getAnalysisPayload(analysisResult);
-  return toCleanText(result.detectedIssue || result.issueName || result.problemName || fallback);
+
+  return toCleanText(
+    result.detectedIssue ||
+      result.issueName ||
+      result.problemName ||
+      fallback
+  );
 };
 
 export const getProviderRouteParamsFromIssue = ({
@@ -45,7 +78,11 @@ export const getProviderRouteParamsFromIssue = ({
   title = "Repair issue",
 } = {}) => {
   const result = getAnalysisPayload(analysisResult);
-  const issueLabel = getIssueLabelFromAnalysis(result, title);
+
+  const issueLabel = getIssueLabelFromAnalysis(
+    result,
+    title
+  );
 
   const rawCategory =
     result.recommendedProviderType ||
@@ -54,24 +91,50 @@ export const getProviderRouteParamsFromIssue = ({
     result.category ||
     issueLabel;
 
+  const photoId = toCleanText(
+    analysisResult?.photoId ||
+      analysisResult?.scan?.photoId ||
+      analysisResult?.data?.photoId ||
+      result.photoId ||
+      analysisResult?._id
+  );
+
   return {
-    city: toCleanText(city) || DEFAULT_PROVIDER_CITY,
-    category: normalizeProviderCategory(rawCategory, fallbackCategory),
+    photoId,
+
+    city:
+      toCleanText(city) ||
+      DEFAULT_PROVIDER_CITY,
+
+    category: normalizeProviderCategory(
+      rawCategory,
+      fallbackCategory
+    ),
+
     fromIssue: issueLabel,
-    detectedObject: toCleanText(result.detectedObject),
-    urgency: toCleanText(result.urgency),
+
+    detectedObject: toCleanText(
+      result.detectedObject
+    ),
+
+    urgency: toCleanText(
+      result.urgency
+    ),
+
     estimatedCostRange: toCleanText(
       result.estimatedCostRange ||
         result.costEstimate ||
         result.estimatedCost ||
         result.costRange
     ),
+
     estimatedRepairTime: toCleanText(
       result.estimatedRepairTime ||
         result.repairTimeEstimate ||
         result.estimatedTime ||
         result.repairTime
     ),
+
     providerSource: "issue-analysis",
   };
 };
