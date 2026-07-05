@@ -33,5 +33,19 @@
     "react-native-screens": "~4.16.0",
     "react-native-svg": "15.12.1"
   },
-  "private": true
+  "private": true,
+  "description": "",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/capstoneTeam01/Front-End.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/capstoneTeam01/Front-End/issues"
+  },
+  "homepage": "https://github.com/capstoneTeam01/Front-End#readme"
 }

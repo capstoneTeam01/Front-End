@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {
-  SafeAreaView,
-  ScrollView,
   View,
   Text,
+  ScrollView,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
-import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
+import HomeTopBackground from "./HomeTopBackground.js";
+import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
 import ScanHexButton from "../components/ScanHexButton/ScanHexButton";
 import CategoryCard from "../components/CategoryCard/CategoryCard";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
@@ -22,8 +24,8 @@ import COLORS from "../constants/colors";
 import styles from "./HomeScreenStyle";
 
 const HomeScreen = ({ navigation }) => {
+  const insets = useSafeAreaInsets();
   const [popupVisible, setPopupVisible] = useState(false);
-
   const [location, setLocation] = useState("Vancouver, BC");
 
   useEffect(() => {
@@ -81,7 +83,7 @@ const HomeScreen = ({ navigation }) => {
             subtitle={item.subtitle}
             showDivider={i > 0}
             icon={
-              <Ionicons name={item.icon} size={18} color={COLORS.textPrimary} />
+              <Ionicons name={item.icon} size={18} color={COLORS.honeyBrown} />
             }
             onPress={() =>
               navigation?.navigate("Category", {
@@ -96,32 +98,46 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.safe}>
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        <ScreenHeader
-          onBellPress={() => navigation?.navigate("Notifications")}
-          leading={
+        {/* Twin-hexagon cream background + location/bell row */}
+        <View style={styles.topArea}>
+          <HomeTopBackground style={styles.topBg} />
+          <View style={[styles.topRow, { paddingTop: insets.top + 4 }]}>
             <View style={styles.locationPill}>
               <Ionicons
                 name="location-outline"
-                size={16}
-                color={COLORS.textPrimary}
+                size={18}
+                color={COLORS.secondary}
               />
               <Text style={styles.locationText} numberOfLines={1}>
                 {location}
               </Text>
             </View>
-          }
-        />
 
-        <View style={styles.hero}>
-          <Text style={styles.heroTitle}>What Needs Fixing?</Text>
-          <Text style={styles.heroSubtitle}>
-            Take a photo and let FixBee identify the issue.
-          </Text>
+            <TouchableOpacity
+              onPress={() => navigation?.navigate("Notifications")}
+              hitSlop={8}
+            >
+              <Ionicons
+                name="notifications-outline"
+                size={22}
+                color={COLORS.secondary}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.heroWrap}>
+          <HeroHexagon>
+            <Text style={styles.heroTitle}>What Needs Fixing?</Text>
+            <Text style={styles.heroSubtitle}>
+              Capture the issue and let FixBee analyze it for you.
+            </Text>
+          </HeroHexagon>
         </View>
 
         <View style={styles.scanWrap}>
@@ -163,7 +179,7 @@ const HomeScreen = ({ navigation }) => {
         onClose={() => setPopupVisible(false)}
         onSelectCategory={goToCategory}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -16,8 +16,26 @@ const styles = StyleSheet.create({
 
   scroll: {
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 8,
-    paddingBottom: BOTTOM_NAV_HEIGHT + 24,
+    paddingTop: 0,
+    paddingBottom: BOTTOM_NAV_HEIGHT + 40,
+  },
+
+  // Twin-hexagon cream band. Bleeds to screen edges past the scroll padding.
+  topArea: {
+    marginHorizontal: -SIDE_PADDING,
+    height: 150,
+    justifyContent: "flex-start",
+  },
+
+  topBg: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
+  topRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: SIDE_PADDING,
   },
 
   locationPill: {
@@ -27,14 +45,22 @@ const styles = StyleSheet.create({
   },
 
   locationText: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "500",
-    color: COLORS.textPrimary,
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.secondary,
   },
 
-  hero: {
-    marginTop: SPACING.large,
+  // Hero sits below the cream band with a white gap between them.
+  heroWrap: {
+    marginTop: SPACING.sm,
     alignItems: "center",
+  },
+
+  scanWrap: {
+    alignItems: "center",
+    marginTop: -44,
+    marginBottom: SPACING.large,
+    zIndex: 2,
   },
 
   heroTitle: {
@@ -51,13 +77,7 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     textAlign: "center",
     lineHeight: 22,
-    paddingHorizontal: 24,
-  },
-
-  scanWrap: {
-    alignItems: "center",
-    marginTop: SPACING.large,
-    marginBottom: SPACING.large,
+    paddingHorizontal: 12,
   },
 
   centerSection: {
@@ -110,34 +130,6 @@ const styles = StyleSheet.create({
     fontSize: TYPE.small.fontSize,
     color: COLORS.textMuted,
     textAlign: "center",
-  },
-
-  bottomNav: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: BOTTOM_NAV_HEIGHT,
-    flexDirection: "row",
-    backgroundColor: COLORS.white,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: COLORS.gray500,
-    paddingTop: 10,
-  },
-
-  navItem: {
-    flex: 1,
-    alignItems: "center",
-    gap: 4,
-  },
-
-  navLabel: {
-    fontSize: TYPE.caption.fontSize,
-    color: COLORS.navInactive,
-  },
-
-  navLabelActive: {
-    color: COLORS.navActive,
   },
 });
 

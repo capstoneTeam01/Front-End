@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import HexIconChip from "../HexIconChip/HexIconChip.js";
 import styles from "./RepairListItemStyle";
 import COLORS from "../../constants/colors";
 
@@ -12,7 +13,7 @@ const RepairListItem = ({ icon, title, subtitle, onPress, showDivider }) => {
       activeOpacity={0.7}
     >
       <View style={styles.left}>
-        <View style={styles.iconChip}>{icon}</View>
+        <HexIconChip size={40}>{icon}</HexIconChip>
 
         <View style={styles.text}>
           <Text style={styles.title} numberOfLines={1}>
