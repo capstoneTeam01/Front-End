@@ -3,16 +3,22 @@ import {
   View,
   Text,
   Image,
+  TouchableOpacity,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./RecentScanCardStyle";
+import COLORS from "../../constants/colors";
 
-const RecentScanCard = ({ item }) => {
+const RecentScanCard = ({ item, onPress }) => {
   const hasImage = Boolean(item.imageUrl);
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      activeOpacity={0.9}
+      onPress={onPress}
+    >
       <View style={styles.imageContainer}>
         {hasImage ? (
           <Image
@@ -25,7 +31,7 @@ const RecentScanCard = ({ item }) => {
             <Ionicons
               name="camera-outline"
               size={32}
-              color="#98A2B3"
+             color={COLORS.primary}
             />
           </View>
         )}
@@ -49,7 +55,7 @@ const RecentScanCard = ({ item }) => {
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

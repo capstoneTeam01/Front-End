@@ -33,5 +33,10 @@
     "react-native-screens": "~4.16.0",
     "react-native-svg": "15.12.1"
   },
-  "private": true
+  "private": true,
+  "description": "",
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

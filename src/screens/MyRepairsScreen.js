@@ -4,6 +4,7 @@ import {
   View,
   FlatList,
   Text,
+  TouchableOpacity,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -20,7 +21,7 @@ import COLORS from "../constants/colors";
 import styles from "./MyRepairsScreenStyle";
 
 
-const completedRepairs = [
+const demoCompletedRepairs = [
   {
     id: "1",
     title: "Pipe Leak",
@@ -77,6 +78,7 @@ const MyRepairsScreen = ({ navigation }) => {
   const [recentScans, setRecentScans] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [completedRepairs, setCompletedRepairs] = useState([]);
 
 
   const loadPhotoHistory = async () => {
@@ -115,19 +117,34 @@ const MyRepairsScreen = ({ navigation }) => {
           status = historyItem.analysis.urgency;
         }
 
-        const formattedScan = {
-          id: historyItem.photoId,
-          title: title,
-          date: formatScanDate(historyItem.createdAt),
-          status: status,
-          imageUrl: historyItem.imageUrl,
-          analysis: historyItem.analysis,
-        };
+      const formattedScan = {
+        id: historyItem.photoId,
+        title: title,
+        date: formatScanDate(historyItem.createdAt),
+        status: status,
+        imageUrl: historyItem.imageUrl,
+        analysis: historyItem.analysis,
+
+        repairStatus: historyItem.repairStatus || "open",
+        repairCompletedAt: historyItem.repairCompletedAt || null,
+        providerRequested: historyItem.providerRequested || false,
+        providerAssigned: historyItem.providerAssigned || false,
+        repairFeedback: historyItem.repairFeedback || null,
+      };
 
         formattedScans.push(formattedScan);
       }
 
-      setRecentScans(formattedScans);
+    const openScans = formattedScans.filter(
+  (item) => item.repairStatus !== "completed"
+);
+
+const completedScans = formattedScans.filter(
+  (item) => item.repairStatus === "completed"
+);
+
+setRecentScans(openScans);
+setCompletedRepairs(completedScans);
     } catch (error) {
       setErrorMessage(error.message);
     } finally {
@@ -192,62 +209,74 @@ const MyRepairsScreen = ({ navigation }) => {
   };
 
 
+
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        <ScreenHeader
-          title="My Repairs"
-          onBellPress={() =>
-            navigation?.navigate("Notifications")
+  <SafeAreaView edges={["left", "right", "bottom"]} style={styles.safe}>
+    <View style={styles.header}>
+      <View style={styles.headerSpace} />
+
+      <Text style={styles.headerTitle}>My Repairs</Text>
+
+      <TouchableOpacity onPress={() => navigation?.navigate("Notifications")}>
+        <Ionicons name="notifications-outline" size={24} color={COLORS.textPrimary} />
+      </TouchableOpacity>
+    </View>
+
+    <ScrollView
+      contentContainerStyle={styles.scroll}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.section}>
+        <SectionHeader
+          title="Recent Scans"
+          actionLabel="See All"
+          onActionPress={() =>
+            navigation?.navigate("RecentScans", { scans: recentScans })
           }
         />
 
-        <View style={styles.section}>
-          <SectionHeader
-            title="Recent Scans"
-            actionLabel="See All"
-            onActionPress={() =>
-              navigation?.navigate("RecentScans", {
-                scans: recentScans,
-              })
+        {renderRecentScans()}
+      </View>
+
+      <View style={styles.section}>
+        <SectionHeader
+          title="Completed Repairs"
+          actionLabel="See All"
+          onActionPress={() =>
+  navigation?.navigate("CompletedRepairs", {
+    repairs: completedRepairs,
+  })
+}
+        />
+
+        <View style={styles.completedList}>
+          {completedRepairs.map((item) => (
+            <RepairListItem
+              key={item.id}
+              title={item.title}
+              subtitle={`Plumbing  ${item.date}`}
+              icon={
+                <Ionicons
+                  name="camera-outline"
+                  size={24}
+                  color={COLORS.textMuted}
+                />
               }
-              />
-
-          {renderRecentScans()}
+              onPress={() => {}}
+            />
+          ))}
         </View>
+      </View>
+    </ScrollView>
 
-        <View style={styles.section}>
-          <SectionHeader
-            title="Completed Repairs"
-            actionLabel="See All"
-            onActionPress={() =>
-              {}}
-          />
-
-          <View style={styles.completedList}>
-            {completedRepairs.map((item) => (
-              <RepairListItem
-                key={item.id}
-                title={item.title}
-                subtitle={item.subtitle}
-                icon={
-                  <Ionicons
-                    name="camera-outline"
-                    size={24}
-                    color={COLORS.textMuted}
-                  />
-                }
-                onPress={() => {}}
-              />
-            ))}
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+    <View style={styles.bottomNav}>
+      <Text style={styles.navText}>Home</Text>
+      <Text style={styles.navText}>Scan</Text>
+      <Text style={styles.navActive}>Repairs</Text>
+      <Text style={styles.navText}>Profile</Text>
+    </View>
+  </SafeAreaView>
+);
 };
 
 export default MyRepairsScreen;

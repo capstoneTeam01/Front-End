@@ -7,6 +7,7 @@ import LoginScreen from "../screens/LoginScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
+import CompletedRepairsScreen from "../screens/CompletedRepairsScreen";
 
 import HomeScreen from "../screens/HomeScreen";
 import CategoryScreen from "../screens/CategoryScreen";
@@ -52,6 +53,7 @@ const AppNavigator = () => {
 
         {/* Profile */}
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="CompletedRepairs" component={CompletedRepairsScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>

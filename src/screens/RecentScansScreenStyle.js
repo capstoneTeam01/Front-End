@@ -13,16 +13,66 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
 
+  header: {
+    height: 128,
+    paddingTop: 52,
+    paddingHorizontal: SIDE_PADDING,
+    backgroundColor: COLORS.lightHoney,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: COLORS.secondary,
+  },
+
+  headerSpace: {
+    width: 24,
+  },
+
+  filterRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 20,
+    gap: 18,
+  },
+
+  filterPill: {
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 18,
+  },
+
+  filterPillActive: {
+    backgroundColor: COLORS.primary,
+  },
+
+  filterText: {
+    fontSize: 12,
+    color: COLORS.mediumGrey,
+  },
+
+  filterTextActive: {
+    color: COLORS.secondary,
+    fontWeight: "500",
+  },
+
   list: {
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 24,
-    paddingBottom: 120,
+    paddingTop: 18,
+    paddingBottom: 130,
   },
 
   card: {
     minHeight: 92,
     borderWidth: 1,
-    borderColor: COLORS.gray500,
+    borderColor: COLORS.gray300,
     borderRadius: RADIUS.big,
     backgroundColor: COLORS.white,
     paddingHorizontal: 14,
@@ -42,11 +92,15 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
 
+  cardContent: {
+    flex: 1,
+  },
+
   title: {
     fontSize: TYPE.body.fontSize,
     fontWeight: "500",
     color: COLORS.secondary,
-    marginBottom: 6,
+    marginBottom: 8,
   },
 
   meta: {
@@ -59,11 +113,20 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 
-  backButton: {
+  bottomBar: {
     position: "absolute",
-    left: SIDE_PADDING,
-    right: SIDE_PADDING,
-    bottom: 28,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 26,
+    paddingBottom: 28,
+    backgroundColor: COLORS.warmCream,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+  },
+
+  backButton: {
     height: BUTTON_HEIGHT,
     borderRadius: RADIUS.field,
     backgroundColor: COLORS.primary,

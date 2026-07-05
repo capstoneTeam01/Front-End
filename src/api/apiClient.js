@@ -215,3 +215,9 @@ export const apiPost = (path, json, options = {}) =>
     method: "POST",
     json,
   });
+  export const apiPatch = (path, json, options = {}) =>
+  apiRequest(path, {
+    ...options,
+    method: "PATCH",
+    json,
+  });

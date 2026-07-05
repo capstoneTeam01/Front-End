@@ -8,11 +8,11 @@ import COLORS from "../constants/colors";
 
 const FILTERS = ["All", "DIY", "Emergency", "Service Requested"];
 
-const RecentScansScreen = ({ navigation, route }) => {
-  const scans = route?.params?.scans || [];
-  const [activeFilter, setActiveFilter] = useState("All");
+const CompletedRepairsScreen = ({ navigation, route }) => {
+  const repairs = route?.params?.repairs || [];
+  const [activeFilter, setActiveFilter] = useState("Emergency");
 
-  const filteredScans = scans.filter((item) => {
+  const filteredRepairs = repairs.filter((item) => {
     if (activeFilter === "All") return true;
     if (activeFilter === "DIY") return item.diyGenerationStatus === "completed";
     if (activeFilter === "Emergency") return item.analysis?.urgency === "Critical";
@@ -27,7 +27,7 @@ const RecentScansScreen = ({ navigation, route }) => {
           <Ionicons name="chevron-back" size={24} color={COLORS.textPrimary} />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Recent Scans</Text>
+        <Text style={styles.headerTitle}>Completed Repairs</Text>
 
         <View style={styles.headerSpace} />
       </View>
@@ -55,22 +55,11 @@ const RecentScansScreen = ({ navigation, route }) => {
       </View>
 
       <FlatList
-        data={filteredScans}
+        data={filteredRepairs}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() =>
-              navigation?.navigate("DIYSolution", {
-                analysisResult: {
-                  ...item.analysis,
-                  photoId: item.id,
-                },
-                urgency: item.analysis?.urgency || "Low",
-              })
-            }
-          >
+          <TouchableOpacity style={styles.card}>
             <View style={styles.iconBox}>
               <Ionicons
                 name="camera-outline"
@@ -101,4 +90,4 @@ const RecentScansScreen = ({ navigation, route }) => {
   );
 };
 
-export default RecentScansScreen;
+export default CompletedRepairsScreen;
