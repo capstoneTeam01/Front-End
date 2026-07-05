@@ -3,15 +3,13 @@ import {
   ActivityIndicator,
   Alert,
   Platform,
-  Pressable,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 
+import AppHeader from "../components/AppHeader/AppHeader";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import ProviderHexAvatar from "../components/ProviderHexAvatar";
 import ProviderRating from "../components/ProviderRating";
@@ -19,7 +17,6 @@ import { loadProviderDetails } from "../localDb/businessDirectoryProviderLocalDb
 import { MAX_SELECTED_PROVIDERS } from "../utils/providerConstants";
 import COLORS from "../constants/colors";
 
-const androidTopSpace = Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
 const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
 
 const normalizeSelectedIds = (ids = []) => {
@@ -82,14 +79,8 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={[styles.topBar, { paddingTop: 8 + androidTopSpace }]}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
-          <Text style={styles.backIcon}>‹</Text>
-        </Pressable>
-        <View style={styles.topSpacer} />
-        <View style={styles.topSpacer} />
-      </View>
+    <View style={styles.safe}>
+      <AppHeader title="Experts List" onBack={() => navigation.goBack()} />
 
       {loading ? (
         <View style={styles.centerState}>
@@ -134,7 +125,7 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
           </View>
         </>
       ) : null}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -142,24 +133,6 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: COLORS.white,
-  },
-  topBar: {
-    minHeight: 78,
-    backgroundColor: COLORS.honeyLight,
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
-    paddingHorizontal: 18,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  backIcon: {
-    fontSize: 26,
-    color: COLORS.providerBrown,
-    fontWeight: "500",
-  },
-  topSpacer: {
-    width: 24,
   },
   content: {
     paddingHorizontal: 26,

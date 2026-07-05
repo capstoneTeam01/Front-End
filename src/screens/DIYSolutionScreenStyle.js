@@ -13,27 +13,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
 
-  header: {
-    height: 72,
-    paddingHorizontal: SIDE_PADDING,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: COLORS.lightHoney,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-  },
-
-  headerTitle: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: TYPE.body.fontWeight,
-    color: COLORS.textPrimary,
-  },
-
-  headerSpace: {
-    width: 24,
-  },
-
   scroll: {
     width: 354,
     alignSelf: "center",
@@ -347,11 +326,6 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontSize: 13,
     fontWeight: "500",
-  },
-
-  backIcon: {
-    fontSize: 24,
-    color: COLORS.textPrimary,
   },
 
   stepCheckIcon: {

@@ -1,88 +1,188 @@
-import React, { useState } from "react";
+import React from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
+  Image,
   ScrollView,
-  Alert,
+  Text,
+  View,
 } from "react-native";
-import styles from "./ForgotPasswordScreenStyle";
-import AppTextField from "../components/AppTextField/AppTextField";
-import AuthButton from "../components/AuthButton/AuthButton";
+import { Ionicons } from "@expo/vector-icons";
 
-const ForgotPasswordScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [sent, setSent] = useState(false);
+import AppHeader from "../components/AppHeader/AppHeader";
+import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
+import RecommendedActionsList from "../components/RecommendedActionsList/RecommendedActionsList";
+import UserActionButtons from "../components/UserActionButtons/UserActionButtons";
 
-  const handleSend = async () => {
-    const mail = email.trim();
-    if (!mail) {
-      Alert.alert("Missing email", "Enter the email linked to your account.");
-      return;
-    }
+import {
+  RecommendationImageOverlay,
+} from "../components/shapes/RecommendationShape";
 
-    setSubmitting(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      setSent(true);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+import COLORS from "../constants/colors";
+import styles from "./EmergencyIssueScreenStyle";
+
+const getImmediateActions = (userActions) => {
+  if (!Array.isArray(userActions)) {
+    return [];
+  }
+
+  return userActions
+    .filter((action) => {
+      if (typeof action === "string") {
+        return true;
+      }
+
+      return action?.actionType !== "MARK_RESOLVED";
+    })
+    .map((action) => {
+      if (typeof action === "string") {
+        return action;
+      }
+
+      return (
+        action?.description ||
+        action?.label ||
+        action?.title ||
+        null
+      );
+    })
+    .filter(Boolean);
+};
+
+const EmergencyIssueScreen = ({
+  analysisResult,
+  imageUri,
+  onBack,
+  onFindExpertsPress,
+}) => {
+  const result =
+    analysisResult?.analysis ||
+    analysisResult ||
+    {};
+
+  const displayedImageUri =
+    imageUri ||
+    analysisResult?.uploadedImageUri ||
+    analysisResult?.uploadedImageUrl ||
+    result.imageUrl ||
+    null;
+
+  const displayedIssue =
+    result.detectedIssue ||
+    "Repair Issue Detected";
+
+  const displayedDescription =
+    result.urgencyDescription ||
+    "Avoid interacting with the affected area and contact a qualified professional.";
+
+  const displayedUrgency =
+    result.urgency || "N/A";
+
+  const recommendedActions =
+    Array.isArray(result.recommendedActions)
+      ? result.recommendedActions
+      : [];
+
+  const issuesToFix =
+    Array.isArray(result.issuesToFix)
+      ? result.issuesToFix.filter(Boolean)
+      : [];
+
+  const immediateActions =
+    getImmediateActions(result.userActions);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-      <View style={styles.topShape} />
+    <View style={styles.container}>
+      <AppHeader
+        title="Issue Detected"
+        onBack={onBack}
+        style={styles.headerContainer}
+      />
+
       <ScrollView
-        contentContainerStyle={styles.scroll}
-        keyboardShouldPersistTaps="handled"
+        style={styles.scrollArea}
+        contentContainerStyle={
+          styles.scrollContent
+        }
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Forgot Password</Text>
-        <Text style={styles.subtitle}>
-          Enter your email and we'll send you a link to reset your password.
-        </Text>
+        <View style={styles.heroContainer}>
+          {displayedImageUri ? (
+            <Image
+              source={{
+                uri: displayedImageUri,
+              }}
+              style={styles.heroImage}
+              resizeMode="cover"
+            />
+          ) : (
+            <View style={styles.imagePlaceholder}>
+              <Ionicons
+                name="image-outline"
+                size={42}
+                color={COLORS.greyText}
+              />
 
-        {sent ? (
-          <View style={styles.sentBox}>
-            <Text style={styles.sentTitle}>Check your email</Text>
-            <Text style={styles.sentBody}>
-              If an account exists for {email.trim()}, a reset link is on its way.
+              <Text style={styles.placeholderText}>
+                Image Preview
+              </Text>
+            </View>
+          )}
+
+          <RecommendationImageOverlay
+            style={styles.heroOverlay}
+          />
+
+          <View style={styles.heroTextContainer}>
+            <Text style={styles.issueTitle}>
+              {displayedIssue}
+            </Text>
+
+            <Text style={styles.issueDescription}>
+              {displayedDescription}
             </Text>
           </View>
-        ) : (
-          <>
-            <Text style={styles.fieldLabel}>Email</Text>
-            <AppTextField
-              value={email}
-              onChangeText={setEmail}
-              placeholder="youremail@example.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
+        </View>
+
+        <View style={styles.contentContainer}>
+          <View style={styles.riskBadgePosition}>
+            <UrgencyBadge
+              urgency={displayedUrgency}
             />
+          </View>
 
-            <View style={styles.sendWrap}>
-              <AuthButton label="Send reset link" onPress={handleSend} loading={submitting} />
-            </View>
-          </>
-        )}
+          <RecommendedActionsList
+            title="Recommended Actions"
+            actions={recommendedActions}
+            emptyMessage="Avoid interacting with the issue and contact a qualified professional."
+          />
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Login")}
-          style={styles.backWrap}
-        >
-          <Text style={styles.backText}>Back to login</Text>
-        </TouchableOpacity>
+          {issuesToFix.length > 0 ? (
+            <RecommendedActionsList
+              title="Issues to Fix"
+              actions={issuesToFix}
+              emptyMessage="No specific repair issues were returned."
+            />
+          ) : null}
+
+          <RecommendedActionsList
+            title="Immediate Actions"
+            actions={immediateActions}
+            emptyMessage="Keep away from the affected area and arrange professional assistance."
+          />
+        </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+
+      <View style={styles.bottomActionContainer}>
+        <View style={styles.bottomActionContent}>
+          <UserActionButtons
+            onFindExpertsPress={
+              onFindExpertsPress
+            }
+            showDiy={false}
+          />
+        </View>
+      </View>
+    </View>
   );
 };
 
-export default ForgotPasswordScreen;
+export default EmergencyIssueScreen;

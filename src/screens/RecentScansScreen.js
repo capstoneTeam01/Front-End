@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
+import AppHeader from "../components/AppHeader/AppHeader";
 import styles from "./RecentScansScreenStyle";
 import COLORS from "../constants/colors";
 
@@ -21,16 +21,12 @@ const RecentScansScreen = ({ navigation, route }) => {
   });
 
   return (
-    <SafeAreaView edges={["left", "right", "bottom"]} style={styles.safe}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation?.goBack()}>
-          <Ionicons name="chevron-back" size={24} color={COLORS.textPrimary} />
-        </TouchableOpacity>
-
-        <Text style={styles.headerTitle}>Recent Scans</Text>
-
-        <View style={styles.headerSpace} />
-      </View>
+    <View style={styles.safe}>
+      <AppHeader
+        title="Recent Scans"
+        showBack
+        onBack={() => navigation?.goBack()}
+      />
 
       <View style={styles.filterRow}>
         {FILTERS.map((filter) => (
@@ -82,22 +78,20 @@ const RecentScansScreen = ({ navigation, route }) => {
             <View style={styles.cardContent}>
               <Text style={styles.title}>{item.title}</Text>
               <Text style={styles.meta}>
-                <Text style={styles.categoryText}>Plumbing</Text>  {item.date}
+                <Text style={styles.categoryText}>Plumbing</Text> {item.date}
               </Text>
             </View>
           </TouchableOpacity>
         )}
       />
 
-      <View style={styles.bottomBar}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation?.goBack()}
-        >
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation?.goBack()}
+      >
+        <Text style={styles.backText}>Back</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 

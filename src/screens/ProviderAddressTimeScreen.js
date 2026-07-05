@@ -6,9 +6,7 @@ import {
   Modal,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -16,6 +14,7 @@ import {
 } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
 
+import AppHeader from "../components/AppHeader/AppHeader";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import {
   getCurrentUserDisplayName,
@@ -28,8 +27,6 @@ import COLORS from "../constants/colors";
 
 const clean = (value) => String(value || "").trim();
 
-const androidTopSpace =
-  Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
 const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
 
 const getIssueTitle = (routeParams = {}) =>
@@ -379,18 +376,12 @@ const ProviderAddressTimeScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.safe}>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <View style={[styles.topBar, { paddingTop: 8 + androidTopSpace }]}>
-          <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
-            <Text style={styles.backIcon}>‹</Text>
-          </Pressable>
-          <Text style={styles.topTitle}>Address & Time</Text>
-          <View style={styles.topSpacer} />
-        </View>
+        <AppHeader title="Address & Time" onBack={() => navigation.goBack()} />
 
         <ScrollView
           contentContainerStyle={styles.content}
@@ -609,7 +600,7 @@ const ProviderAddressTimeScreen = ({ navigation, route }) => {
           </Pressable>
         </Pressable>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -620,29 +611,6 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
-  },
-  topBar: {
-    minHeight: 78,
-    backgroundColor: COLORS.honeyLight,
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
-    paddingHorizontal: 18,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  backIcon: {
-    fontSize: 26,
-    color: COLORS.providerBrown,
-    fontWeight: "500",
-  },
-  topTitle: {
-    color: COLORS.providerBrown,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  topSpacer: {
-    width: 24,
   },
   content: {
     paddingHorizontal: 24,

@@ -14,12 +14,9 @@ import {
   Alert,
 } from "react-native";
 
-import {
-  SafeAreaView,
-} from "react-native-safe-area-context";
-
 import { Ionicons } from "@expo/vector-icons";
 
+import AppHeader from "../components/AppHeader/AppHeader";
 import styles from "./DIYSolutionScreenStyle";
 import { getDiyInstructions } from "../api/getDiyInstructions";
 import { updateRepairStatus } from "../api/updateRepairStatus";
@@ -240,44 +237,13 @@ for (
 
   if (loading) {
     return (
-      <SafeAreaView
-        style={styles.safe}
-      >
-        <View
-          style={styles.header}
-        >
-          <TouchableOpacity
-            onPress={() =>
-              navigation?.goBack()
-            }
-          >
-            <Ionicons
-              name="chevron-back"
-              size={
-                styles.backIcon
-                  .fontSize
-              }
-              color={
-                styles.backIcon
-                  .color
-              }
-            />
-          </TouchableOpacity>
-
-          <Text
-            style={
-              styles.headerTitle
-            }
-          >
-            DIY Solution
-          </Text>
-
-          <View
-            style={
-              styles.headerSpace
-            }
-          />
-        </View>
+      <View style={styles.safe}>
+        <AppHeader
+          title="DIY Solution"
+          onBack={() =>
+            navigation?.goBack()
+          }
+        />
 
         <View
           style={
@@ -296,7 +262,7 @@ for (
             {loadingMessage}
           </Text>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -305,44 +271,13 @@ for (
   }
 
   return (
-    <SafeAreaView
-      style={styles.safe}
-    >
-      <View
-        style={styles.header}
-      >
-        <TouchableOpacity
-          onPress={() =>
-            navigation?.goBack()
-          }
-        >
-          <Ionicons
-            name="chevron-back"
-            size={
-              styles.backIcon
-                .fontSize
-            }
-            color={
-              styles.backIcon
-                .color
-            }
-          />
-        </TouchableOpacity>
-
-        <Text
-          style={
-            styles.headerTitle
-          }
-        >
-          DIY Solution
-        </Text>
-
-        <View
-          style={
-            styles.headerSpace
-          }
-        />
-      </View>
+    <View style={styles.safe}>
+      <AppHeader
+        title="DIY Solution"
+        onBack={() =>
+          navigation?.goBack()
+        }
+      />
 
       <ScrollView
         contentContainerStyle={
@@ -753,7 +688,7 @@ for (
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 

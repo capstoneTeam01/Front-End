@@ -31,13 +31,13 @@ const styles = StyleSheet.create({
   },
 
   scroll: {
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: 24,
-    paddingBottom: 130,
+    paddingHorizontal: 24,
+    paddingTop: 8,
+    paddingBottom: 120,
   },
 
   section: {
-    marginBottom: 34,
+    marginTop: 24,
   },
 
   scanList: {

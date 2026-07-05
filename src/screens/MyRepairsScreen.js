@@ -8,9 +8,8 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
+import AppHeader from "../components/AppHeader/AppHeader";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import RecentScanCard from "../components/RecentScanCard/RecentScanCard";
 import RepairListItem from "../components/RepairListItem/RepairListItem";
@@ -211,16 +210,8 @@ setCompletedRepairs(completedScans);
 
 
   return (
-  <SafeAreaView edges={["left", "right", "bottom"]} style={styles.safe}>
-    <View style={styles.header}>
-      <View style={styles.headerSpace} />
-
-      <Text style={styles.headerTitle}>My Repairs</Text>
-
-      <TouchableOpacity onPress={() => navigation?.navigate("Notifications")}>
-        <Ionicons name="notifications-outline" size={24} color={COLORS.textPrimary} />
-      </TouchableOpacity>
-    </View>
+  <View style={styles.safe}>
+    <AppHeader title="My Repairs" />
 
     <ScrollView
       contentContainerStyle={styles.scroll}
@@ -231,7 +222,9 @@ setCompletedRepairs(completedScans);
           title="Recent Scans"
           actionLabel="See All"
           onActionPress={() =>
-            navigation?.navigate("RecentScans", { scans: recentScans })
+            navigation.navigate("RecentScans", {
+              scans: recentScans,
+            })
           }
         />
 
@@ -243,39 +236,36 @@ setCompletedRepairs(completedScans);
           title="Completed Repairs"
           actionLabel="See All"
           onActionPress={() =>
-  navigation?.navigate("CompletedRepairs", {
-    repairs: completedRepairs,
-  })
-}
+            navigation.navigate("CompletedRepairs", {
+              scans: completedRepairs,
+            })
+          }
         />
 
         <View style={styles.completedList}>
-          {completedRepairs.map((item) => (
-            <RepairListItem
-              key={item.id}
-              title={item.title}
-              subtitle={`Plumbing  ${item.date}`}
-              icon={
-                <Ionicons
-                  name="camera-outline"
-                  size={24}
-                  color={COLORS.textMuted}
-                />
-              }
-              onPress={() => {}}
-            />
-          ))}
+          {completedRepairs.length === 0 ? (
+            <Text>No completed repairs.</Text>
+          ) : (
+            completedRepairs.map((item) => (
+              <RepairListItem
+                key={item.id}
+                title={item.title}
+                subtitle={item.date}
+                icon={
+                  <Ionicons
+                    name="checkmark-circle"
+                    size={24}
+                    color={COLORS.success || "green"}
+                  />
+                }
+                onPress={() => {}}
+              />
+            ))
+          )}
         </View>
       </View>
     </ScrollView>
-
-    <View style={styles.bottomNav}>
-      <Text style={styles.navText}>Home</Text>
-      <Text style={styles.navText}>Scan</Text>
-      <Text style={styles.navActive}>Repairs</Text>
-      <Text style={styles.navText}>Profile</Text>
-    </View>
-  </SafeAreaView>
+  </View>
 );
 };
 
