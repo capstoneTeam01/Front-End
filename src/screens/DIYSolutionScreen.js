@@ -37,19 +37,6 @@ const getPhotoId = (analysisResult) => {
 };
 
 
-const handleDiyDone = async () => {
-  try {
-    await updateRepairStatus(photoId, "completed");
-    setModalVisible(true);
-  } catch (error) {
-    Alert.alert(
-      "Unable to update repair",
-      error?.message || "Repair was completed, but the status could not be updated."
-    );
-    setModalVisible(true);
-  }
-};
-
 const wait = (milliseconds) => {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
@@ -234,6 +221,22 @@ for (
       );
     }
   };
+  const handleDiyDone = async () => {
+  try {
+    await updateRepairStatus(photoId, "completed");
+    setModalVisible(true);
+  } catch (error) {
+    console.log("Repair status update error:", error);
+
+    Alert.alert(
+      "Unable to update repair",
+      error?.message ||
+        "Repair was completed, but the status could not be updated."
+    );
+
+    setModalVisible(true);
+  }
+};
 
   if (loading) {
     return (
@@ -619,9 +622,7 @@ for (
 
         <TouchableOpacity
           disabled={!allDone}
-          onPress={() =>
-            setModalVisible(true)
-          }
+            onPress={handleDiyDone}
           style={[
             styles.diyButton,
             allDone
