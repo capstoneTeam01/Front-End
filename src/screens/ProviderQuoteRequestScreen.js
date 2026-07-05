@@ -328,11 +328,21 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         </View>
 
         <View style={styles.imagesHeaderRow}>
-          <Text style={styles.imagesTitle}>Issue photos</Text>
-          <Text style={styles.imagesHint}>Tap honey delete icon to remove</Text>
+          <Text style={styles.imagesTitle}>Attachments</Text>
+          <Text style={styles.imagesHint}>
+            Tap delete icon to remove photos
+          </Text>
         </View>
 
         <View style={styles.imagesRow}>
+          <View style={styles.pdfTile}>
+            <Text style={styles.pdfTileText}>
+              Issue{"\n"}Report{"\n"}PDF
+            </Text>
+
+            <View style={styles.pdfTileAccent} />
+          </View>
+
           {imagePreviewItems.map((image, index) => (
             <View
               key={`${image.thumbnailUri || image.url}-${index}`}
@@ -340,10 +350,13 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
             >
               {image.thumbnailUri || image.url ? (
                 <Image
-                  source={{ uri: image.thumbnailUri || image.url }}
+                  source={{
+                    uri: image.thumbnailUri || image.url,
+                  }}
                   style={styles.thumbnail}
                 />
               ) : null}
+
               <Pressable
                 onPress={() => handleRemoveImage(index)}
                 style={styles.removeImageButton}
@@ -351,8 +364,9 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
               >
                 <Text style={styles.removeImageText}>×</Text>
               </Pressable>
+
               <Text style={styles.imageLabel}>
-                {index === 0 ? "Issue Report" : image.label || "Issue Photo"}
+                {image.label || `Issue Photo ${index + 1}`}
               </Text>
             </View>
           ))}
@@ -552,6 +566,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 22,
     paddingTop: 12,
     backgroundColor: COLORS.honeyCream,
+  },
+  pdfTile: {
+    width: 62,
+    height: 62,
+    borderRadius: 12,
+    backgroundColor: COLORS.honeyCream,
+    paddingHorizontal: 8,
+    paddingTop: 7,
+    position: "relative",
+    overflow: "hidden",
+  },
+
+  pdfTileText: {
+    color: COLORS.providerBrown,
+    fontSize: 9,
+    lineHeight: 13,
+    fontWeight: "700",
+  },
+
+  pdfTileAccent: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 5,
+    backgroundColor: COLORS.riskHigh,
   },
 });
 
