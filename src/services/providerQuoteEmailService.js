@@ -104,6 +104,7 @@ export const buildProviderQuoteEmailDraft = ({
   notes,
   imageUri,
   uploadedImageUrl,
+  photoId,
   requesterName = FIXBEE_REQUESTER_NAME,
   requesterEmail,
   images = [],
@@ -174,7 +175,7 @@ export const buildProviderQuoteEmailDraft = ({
               imageUri ||
               originalImageUrl,
 
-            label: "Issue Photo",
+            label: "Issue Photo 1",
           },
           0
         )
@@ -277,6 +278,7 @@ export const buildProviderQuoteEmailDraft = ({
     images: normalizedImages,
     requesterName,
     requestReference,
+    photoId: clean(photoId),
     providerEmails,
 
     providersMissingEmail:
@@ -345,6 +347,10 @@ export const buildProviderQuoteRequestPayload = ({
       ? draft.images
       : [];
 
+  const resolvedPhotoId =
+    clean(photoId) ||
+    clean(draft?.photoId);
+
   const htmlBody =
     buildHtmlQuoteEmailBody({
       issueTitle:
@@ -381,12 +387,16 @@ export const buildProviderQuoteRequestPayload = ({
     });
 
   return {
-    photoId: clean(photoId),
+    photoId: resolvedPhotoId,
 
     scanType:
       "service-provider-quote-request",
 
     status: "ready-to-send",
+
+    scan: {
+      photoId: resolvedPhotoId,
+    },
 
     issue: {
       title:
@@ -399,6 +409,8 @@ export const buildProviderQuoteRequestPayload = ({
 
       category:
         clean(category),
+
+      photoId: resolvedPhotoId,
     },
 
     serviceRequest: {

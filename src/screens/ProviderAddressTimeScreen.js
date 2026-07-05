@@ -24,6 +24,7 @@ import { loadProvidersByIds } from "../localDb/businessDirectoryProviderLocalDb"
 import { buildProviderQuoteEmailDraft } from "../services/providerQuoteEmailService";
 import { getCurrentCityFromGps } from "../utils/locationHelper";
 import COLORS from "../constants/colors";
+import FONT from "../constants/typography";
 
 const clean = (value) => String(value || "").trim();
 
@@ -336,6 +337,7 @@ const ProviderAddressTimeScreen = ({ navigation, route }) => {
         notes,
         imageUri: route?.params?.uploadedImageUri,
         uploadedImageUrl: route?.params?.uploadedImageUrl,
+        photoId: route?.params?.photoId,
         requesterName,
         requesterEmail,
       });
@@ -618,11 +620,13 @@ const styles = StyleSheet.create({
     paddingBottom: 130,
   },
   title: {
+    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
     fontSize: 18,
     fontWeight: "800",
   },
   subtitle: {
+    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
     fontSize: 12,
     lineHeight: 17,
@@ -630,6 +634,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   label: {
+    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
     fontSize: 14,
     fontWeight: "800",
@@ -637,6 +642,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   smallLabel: {
+    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
     fontSize: 12,
     fontWeight: "700",
@@ -644,6 +650,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   input: {
+    fontFamily: FONT.regular,
     minHeight: 44,
     backgroundColor: COLORS.providerLightGray,
     borderRadius: 13,
@@ -678,6 +685,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   locationText: {
+    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
     fontSize: 15,
     fontWeight: "700",
@@ -700,11 +708,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.honey,
   },
   segmentText: {
+    fontFamily: FONT.semiBold,
     color: COLORS.textPrimary,
     fontSize: 11,
     fontWeight: "600",
   },
   segmentTextActive: {
+    fontFamily: FONT.extraBold,
     color: COLORS.providerBrown,
     fontWeight: "800",
   },
@@ -717,10 +727,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   selectedDateText: {
+    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
     fontSize: 13,
   },
   selectedDateTextActive: {
+    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
     fontWeight: "700",
   },
@@ -737,6 +749,7 @@ const styles = StyleSheet.create({
     gap: 18,
   },
   infoText: {
+    fontFamily: FONT.semiBold,
     flex: 1,
     color: COLORS.textPrimary,
     fontSize: 15,
@@ -780,6 +793,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   calendarTitle: {
+    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
     fontSize: 16,
     fontWeight: "800",
@@ -793,6 +807,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   calendarNavText: {
+    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
     fontSize: 26,
     lineHeight: 28,
@@ -803,6 +818,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   weekDay: {
+    fontFamily: FONT.extraBold,
     flex: 1,
     textAlign: "center",
     color: COLORS.providerMidGray,
@@ -834,11 +850,13 @@ const styles = StyleSheet.create({
     opacity: 0.32,
   },
   dayText: {
+    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
     fontSize: 13,
     fontWeight: "700",
   },
   dayTextSelected: {
+    fontFamily: FONT.extraBold,
     color: COLORS.providerBrown,
     fontWeight: "900",
   },

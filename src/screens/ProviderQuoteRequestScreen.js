@@ -23,6 +23,7 @@ import {
   sendProviderQuoteRequestFromPreview,
 } from "../services/providerQuoteEmailService";
 import COLORS from "../constants/colors";
+import FONT from "../constants/typography";
 
 const clean = (value) => String(value || "").trim();
 const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
@@ -59,7 +60,7 @@ const getInitialQuoteImages = (routeParams = {}) => {
     {
       url: routeParams?.uploadedImageUrl,
       thumbnailUri: routeParams?.uploadedImageUri || routeParams?.imageUri,
-      label: "Issue Photo",
+      label: "Issue Photo 1",
     },
     0,
   );
@@ -132,6 +133,9 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         notes: route?.params?.notes,
         imageUri: route?.params?.uploadedImageUri,
         uploadedImageUrl: route?.params?.uploadedImageUrl,
+        photoId:
+          route?.params?.photoId ||
+          route?.params?.quotePreviewDraft?.photoId,
         requesterName: route?.params?.quotePreviewDraft?.requesterName,
         requesterEmail:
           route?.params?.quotePreviewDraft?.requesterEmail || route?.params?.requesterEmail,
@@ -240,6 +244,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         date: route?.params?.date,
         time: route?.params?.time,
         notes: route?.params?.notes,
+        photoId: route?.params?.photoId,
         editedBody: messageBody,
       });
 
@@ -400,11 +405,13 @@ const styles = StyleSheet.create({
     paddingBottom: 130,
   },
   title: {
+    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
     fontSize: 19,
     fontWeight: "800",
   },
   subtitle: {
+    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
     fontSize: 12,
     lineHeight: 17,
@@ -419,6 +426,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.providerLightGray,
   },
   mailLabel: {
+    fontFamily: FONT.bold,
     color: COLORS.providerMidGray,
     fontSize: 12,
     fontWeight: "700",
@@ -426,23 +434,27 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   mailLink: {
+    fontFamily: FONT.bold,
     color: COLORS.honeyDark,
     fontSize: 13,
     fontWeight: "700",
     marginBottom: 2,
   },
   subject: {
+    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
     fontSize: 13,
     fontWeight: "800",
     marginBottom: 4,
   },
   bodyText: {
+    fontFamily: FONT.regular,
     color: COLORS.textPrimary,
     fontSize: 12,
     lineHeight: 17,
   },
   bodyInput: {
+    fontFamily: FONT.regular,
     minHeight: 250,
     color: COLORS.textPrimary,
     fontSize: 12,
@@ -458,11 +470,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   imagesTitle: {
+    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
     fontSize: 13,
     fontWeight: "800",
   },
   imagesHint: {
+    fontFamily: FONT.bold,
     color: COLORS.providerMidGray,
     fontSize: 10,
     fontWeight: "700",
@@ -498,12 +512,14 @@ const styles = StyleSheet.create({
     borderColor: COLORS.white,
   },
   removeImageText: {
+    fontFamily: FONT.extraBold,
     color: COLORS.providerBrown,
     fontSize: 16,
     lineHeight: 18,
     fontWeight: "900",
   },
   imageLabel: {
+    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
     fontSize: 9,
     fontWeight: "700",
@@ -521,6 +537,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   addImageText: {
+    fontFamily: FONT.regular,
     color: COLORS.honey,
     fontSize: 25,
     fontWeight: "300",
@@ -546,6 +563,7 @@ const styles = StyleSheet.create({
   },
 
   pdfTileText: {
+    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
     fontSize: 9,
     lineHeight: 13,

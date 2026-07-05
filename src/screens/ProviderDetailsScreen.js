@@ -16,6 +16,7 @@ import ProviderRating from "../components/ProviderRating";
 import { loadProviderDetails } from "../localDb/businessDirectoryProviderLocalDb";
 import { MAX_SELECTED_PROVIDERS } from "../utils/providerConstants";
 import COLORS from "../constants/colors";
+import FONT from "../constants/typography";
 
 const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
 
@@ -140,6 +141,7 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
   name: {
+    fontFamily: FONT.extraBold,
     marginTop: 16,
     color: COLORS.textPrimary,
     fontSize: 20,
@@ -157,6 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 13,
   },
   categoryPillText: {
+    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
     fontSize: 12,
     fontWeight: "700",
@@ -168,6 +171,7 @@ const styles = StyleSheet.create({
     borderRadius: 13,
   },
   availabilityPillText: {
+    fontFamily: FONT.extraBold,
     color: COLORS.providerBrown,
     fontSize: 12,
     fontWeight: "800",
@@ -176,12 +180,14 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   sectionTitle: {
+    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
     fontSize: 15,
     fontWeight: "800",
     marginBottom: 8,
   },
   description: {
+    fontFamily: FONT.regular,
     color: COLORS.textPrimary,
     fontSize: 13,
     lineHeight: 20,
@@ -191,12 +197,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   stateTitle: {
+    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
     fontSize: 15,
     fontWeight: "700",
     marginBottom: 8,
   },
   stateText: {
+    fontFamily: FONT.regular,
     color: COLORS.textSecondary,
     fontSize: 12,
     marginTop: 8,

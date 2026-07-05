@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Svg, { Polygon } from "react-native-svg";
 import COLORS from "../constants/colors";
+import FONT from "../constants/typography";
 
 const ProviderHexAvatar = ({ label = "?", size = 40, selected = false }) => {
   const cleanLabel = String(label || "?").trim().charAt(0).toUpperCase();
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   label: {
+    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
     fontSize: 13,
     fontWeight: "700",

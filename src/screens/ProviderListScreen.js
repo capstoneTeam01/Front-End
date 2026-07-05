@@ -27,6 +27,7 @@ import {
   getCurrentCityFromGps,
 } from "../utils/locationHelper";
 import COLORS from "../constants/colors";
+import FONT from "../constants/typography";
 
 const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
 
@@ -339,16 +340,19 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   title: {
+    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
     fontSize: 19,
     fontWeight: "800",
   },
   subtitle: {
+    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
     fontSize: 12,
     marginTop: 4,
   },
   countText: {
+    fontFamily: FONT.semiBold,
     color: COLORS.providerBrown,
     fontSize: 12,
     fontWeight: "600",
@@ -367,12 +371,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   stateTitle: {
+    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
     fontSize: 15,
     fontWeight: "700",
     marginBottom: 8,
   },
   stateText: {
+    fontFamily: FONT.regular,
     color: COLORS.textSecondary,
     fontSize: 12,
     marginTop: 8,
