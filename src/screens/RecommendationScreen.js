@@ -15,9 +15,8 @@ import RecommendedActionsList from "../components/RecommendedActionsList/Recomme
 import UserActionButtons from "../components/UserActionButtons/UserActionButtons";
 
 import {
-  RecommendationImageOverlay,
   RecommendationHeaderShape,
-
+  RecommendationImageOverlay,
 } from "../components/shapes/RecommendationShape";
 
 import COLORS from "../constants/colors";
@@ -43,27 +42,27 @@ const RecommendationScreen = ({
     isLowConfidence
       ? "N/A"
       : getEstimateValue(
-        result.estimatedCostRange,
-        result.costEstimate,
-        result.estimatedCost,
-        result.costRange
-      );
+          result.estimatedCostRange,
+          result.costEstimate,
+          result.estimatedCost,
+          result.costRange
+        );
 
   const estimatedTimeText =
     isLowConfidence
       ? "N/A"
       : getEstimateValue(
-        result.estimatedRepairTime,
-        result.repairTimeEstimate,
-        result.estimatedTime,
-        result.repairTime
-      );
+          result.estimatedRepairTime,
+          result.repairTimeEstimate,
+          result.estimatedTime,
+          result.repairTime
+        );
 
   const displayedIssue =
     isLowConfidence
       ? "Unable to Confirm Repair Issue"
       : result.detectedIssue ||
-      "Possible Repair Issue Detected";
+        "Possible Repair Issue Detected";
 
   const displayedUrgency =
     isLowConfidence
@@ -73,10 +72,10 @@ const RecommendationScreen = ({
   const displayedDescription =
     isLowConfidence
       ? result.userMessage ||
-      "The image is not clear enough for a reliable repair assessment. Please retake the photo."
+        "The image is not clear enough for a reliable repair assessment. Please retake the photo."
       : result.urgencyDescription ||
-      result.confidenceReason ||
-      "FixBee identified a possible repair issue in the uploaded image.";
+        result.confidenceReason ||
+        "FixBee identified a possible repair issue in the uploaded image.";
 
   const displayedImageUri =
     imageUri ||
@@ -84,6 +83,17 @@ const RecommendationScreen = ({
     analysisResult?.uploadedImageUrl ||
     result.imageUrl ||
     null;
+
+  const issuesToFix =
+    !isLowConfidence &&
+    Array.isArray(result.issuesToFix)
+      ? result.issuesToFix.filter((issue) => {
+          return (
+            typeof issue === "string" &&
+            issue.trim() !== ""
+          );
+        })
+      : [];
 
   const getPhotoId = () => {
     return (
@@ -140,7 +150,9 @@ const RecommendationScreen = ({
 
       <ScrollView
         style={styles.scrollArea}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={
+          styles.scrollContent
+        }
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.heroContainer}>
@@ -200,11 +212,29 @@ const RecommendationScreen = ({
             />
           </View>
 
-          <View style={styles.repairEstimateContainer}>
+          {issuesToFix.length > 0 ? (
+            <View style={styles.sectionContainer}>
+              <RecommendedActionsList
+                title="Issues to Fix"
+                actions={issuesToFix}
+                emptyMessage="No specific repair issues were returned."
+              />
+            </View>
+          ) : null}
+
+          <View
+            style={
+              styles.repairEstimateContainer
+            }
+          >
             <RepairEstimateSection
               urgency={displayedUrgency}
-              estimatedCostRange={estimatedCostText}
-              estimatedRepairTime={estimatedTimeText}
+              estimatedCostRange={
+                estimatedCostText
+              }
+              estimatedRepairTime={
+                estimatedTimeText
+              }
             />
           </View>
         </View>
@@ -213,7 +243,9 @@ const RecommendationScreen = ({
       <View style={styles.bottomActionContainer}>
         <View style={styles.bottomActionContent}>
           <UserActionButtons
-            onFindExpertsPress={onFindExpertsPress}
+            onFindExpertsPress={
+              onFindExpertsPress
+            }
             onDiyPress={handleDiyPress}
             showDiy={!isLowConfidence}
           />
