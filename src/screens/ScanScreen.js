@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
 import ImageUpload from "../components/ImageUpload";
@@ -24,10 +29,20 @@ const STEP = {
 };
 
 const isEmergencyIssue = (analysisResult) => {
-  const result = analysisResult?.analysis || analysisResult || {};
-  const urgency = String(result.urgency || "").toLowerCase();
-  const issue = String(result.detectedIssue || "").toLowerCase();
-  const description = String(result.urgencyDescription || "").toLowerCase();
+  const result =
+    analysisResult?.analysis || analysisResult || {};
+
+  const urgency = String(
+    result.urgency || ""
+  ).toLowerCase();
+
+  const issue = String(
+    result.detectedIssue || ""
+  ).toLowerCase();
+
+  const description = String(
+    result.urgencyDescription || ""
+  ).toLowerCase();
 
   return (
     urgency.includes("high") ||
@@ -42,49 +57,99 @@ const isEmergencyIssue = (analysisResult) => {
 };
 
 const ScanScreen = ({ navigation, route }) => {
-  const title = route?.params?.title || "Start New Scan";
-  const subtitle = route?.params?.subtitle;
-  const openCamera = route?.params?.openCamera ?? true;
+  const title =
+    route?.params?.title || "Start New Scan";
 
+  const subtitle = route?.params?.subtitle;
+
+  const openCamera =
+    route?.params?.openCamera ?? true;
 
   const [step, setStep] = useState(STEP.UPLOAD);
-  const [analysisResult, setAnalysisResult] = useState(null);
-  const [imageUri, setImageUri] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
-  const [prefetchedLocationInfo, setPrefetchedLocationInfo] = useState(null);
-  const [resolvingProviderCity, setResolvingProviderCity] = useState(false);
+
+  const [analysisResult, setAnalysisResult] =
+    useState(null);
+
+  const [imageUri, setImageUri] =
+    useState(null);
+
+  const [uploadedImageUrl, setUploadedImageUrl] =
+    useState(null);
+
+  const [
+    prefetchedLocationInfo,
+    setPrefetchedLocationInfo,
+  ] = useState(null);
+
+  const [
+    resolvingProviderCity,
+    setResolvingProviderCity,
+  ] = useState(false);
+
+  const showUploadHeader =
+    step === STEP.UPLOAD;
+
+  const isResultScreen =
+    step === STEP.RECOMMENDATION ||
+    step === STEP.EMERGENCY;
+
+  const safeAreaEdges = isResultScreen
+    ? ["top"]
+    : ["top", "bottom"];
 
   const handleAnalysisStart = (uri) => {
     setImageUri(uri);
     setStep(STEP.ANALYZING);
 
-    // Start the city lookup during upload/AI time so Find Experts feels faster.
-    prefetchCurrentLocation({ reason: "image-upload-analysis" }).then((location) => {
-      if (!location) return;
+    prefetchCurrentLocation({
+      reason: "image-upload-analysis",
+    }).then((location) => {
+      if (!location) {
+        return;
+      }
+
       setPrefetchedLocationInfo(location);
-      console.log("[FixBee][Scan] location prefetched during image processing", {
-        city: location.city,
-        streetAddress: location.streetAddress,
-        source: location.source,
-      });
+
+      console.log(
+        "[FixBee][Scan] location prefetched during image processing",
+        {
+          city: location.city,
+          streetAddress: location.streetAddress,
+          source: location.source,
+        }
+      );
     });
   };
 
- const handleAnalysisComplete = (result) => {
-  setAnalysisResult(result);
-  setUploadedImageUrl(
-    result?.uploadedImageUrl || result?.analysis?.uploadedImageUrl || null
-  );
+  const handleAnalysisComplete = (result) => {
+    setAnalysisResult(result);
 
-  if (result?.uploadedImageUri && !imageUri) {
-    setImageUri(result.uploadedImageUri);
-  }
+    setUploadedImageUrl(
+      result?.uploadedImageUrl ||
+        result?.analysis?.uploadedImageUrl ||
+        null
+    );
 
-  setStep(isEmergencyIssue(result) ? STEP.EMERGENCY : STEP.RECOMMENDATION);
-};
+    if (
+      result?.uploadedImageUri &&
+      !imageUri
+    ) {
+      setImageUri(result.uploadedImageUri);
+    }
+
+    const nextStep = isEmergencyIssue(result)
+      ? STEP.EMERGENCY
+      : STEP.RECOMMENDATION;
+
+    setStep(nextStep);
+  };
 
   const handleAnalysisError = (error) => {
-    console.warn("[FixBee][Scan] analysis failed", error?.message || error);
+    console.warn(
+      "[FixBee][Scan] analysis failed",
+      error?.message || error
+    );
+
     setStep(STEP.UPLOAD);
   };
 
@@ -98,7 +163,9 @@ const ScanScreen = ({ navigation, route }) => {
   };
 
   const handleFindExpertsPress = async () => {
-    if (resolvingProviderCity) return;
+    if (resolvingProviderCity) {
+      return;
+    }
 
     setResolvingProviderCity(true);
 
@@ -112,75 +179,145 @@ const ScanScreen = ({ navigation, route }) => {
           preferCached: true,
           cacheReason: "find-experts",
         }));
-      providerCity = locationInfo?.city || DEFAULT_PROVIDER_CITY;
-      console.log("[FixBee][ProviderRoute] provider city resolved", {
-        providerCity,
-        source: locationInfo?.providerCitySource || locationInfo?.source,
-      });
+
+      providerCity =
+        locationInfo?.city ||
+        DEFAULT_PROVIDER_CITY;
+
+      console.log(
+        "[FixBee][ProviderRoute] provider city resolved",
+        {
+          providerCity,
+          source:
+            locationInfo?.providerCitySource ||
+            locationInfo?.source,
+        }
+      );
     } catch (error) {
-      console.log("[FixBee][ProviderRoute] city fallback used", {
-        fallbackCity: DEFAULT_PROVIDER_CITY,
-        error: error?.message,
-      });
+      console.log(
+        "[FixBee][ProviderRoute] city fallback used",
+        {
+          fallbackCity: DEFAULT_PROVIDER_CITY,
+          error: error?.message,
+        }
+      );
     }
 
-    const providerRouteParams = getProviderRouteParamsFromIssue({
-      analysisResult,
-      city: providerCity,
-      title,
-    });
+    const providerRouteParams =
+      getProviderRouteParamsFromIssue({
+        analysisResult,
+        city: providerCity,
+        title,
+      });
 
-    providerRouteParams.uploadedImageUri = imageUri || analysisResult?.uploadedImageUri;
-    providerRouteParams.uploadedImageUrl = uploadedImageUrl || analysisResult?.uploadedImageUrl;
-    Object.assign(providerRouteParams, buildLocationRouteParams(locationInfo));
-    providerRouteParams.detectedUserCity = providerCity;
+    providerRouteParams.uploadedImageUri =
+      imageUri ||
+      analysisResult?.uploadedImageUri;
+
+    providerRouteParams.uploadedImageUrl =
+      uploadedImageUrl ||
+      analysisResult?.uploadedImageUrl;
+
+    Object.assign(
+      providerRouteParams,
+      buildLocationRouteParams(locationInfo)
+    );
+
+    providerRouteParams.detectedUserCity =
+      providerCity;
 
     setResolvingProviderCity(false);
-    navigation?.navigate("ProviderList", providerRouteParams);
+
+    navigation?.navigate(
+      "ProviderList",
+      providerRouteParams
+    );
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.header}>
-        <ScreenHeader
-          title={title}
-          showBack
-          onBack={handleBack}
-          onBellPress={() => navigation?.navigate("Notifications")}
-        />
-        {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
-      </View>
+    <SafeAreaView
+      style={[
+        styles.safe,
+        isResultScreen
+          ? styles.resultScreenSafeArea
+          : null,
+      ]}
+      edges={safeAreaEdges}
+    >
+      {showUploadHeader ? (
+        <View style={styles.header}>
+          <ScreenHeader
+            title={title}
+            showBack
+            onBack={handleBack}
+            onBellPress={() =>
+              navigation?.navigate(
+                "Notifications"
+              )
+            }
+          />
 
-      {step === STEP.UPLOAD && (
+          {subtitle ? (
+            <Text style={styles.subtitle}>
+              {subtitle}
+            </Text>
+          ) : null}
+        </View>
+      ) : null}
+
+      {step === STEP.UPLOAD ? (
         <ImageUpload
           autoOpenCamera={openCamera}
-          onAnalysisStart={handleAnalysisStart}
-          onAnalysisComplete={handleAnalysisComplete}
-          onAnalysisError={handleAnalysisError}
-          onDismiss={() => navigation?.goBack()}
+          onAnalysisStart={
+            handleAnalysisStart
+          }
+          onAnalysisComplete={
+            handleAnalysisComplete
+          }
+          onAnalysisError={
+            handleAnalysisError
+          }
+          onDismiss={() =>
+            navigation?.goBack()
+          }
         />
-      )}
+      ) : null}
 
-      {step === STEP.ANALYZING && <AnalyzingScreen onCancel={() => setStep(STEP.UPLOAD)} />}
+      {step === STEP.ANALYZING ? (
+        <AnalyzingScreen
+          onCancel={() =>
+            setStep(STEP.UPLOAD)
+          }
+        />
+      ) : null}
 
-      {step === STEP.RECOMMENDATION && (
+      {step === STEP.RECOMMENDATION ? (
         <RecommendationScreen
           analysisResult={analysisResult}
           imageUri={imageUri}
-          onFindExpertsPress={handleFindExpertsPress}
- onDiyPress={(diyParams) =>
-  navigation?.navigate("DIYSolution", diyParams)
-}
+          onBack={handleBack}
+          onFindExpertsPress={
+            handleFindExpertsPress
+          }
+          onDiyPress={(diyParams) =>
+            navigation?.navigate(
+              "DIYSolution",
+              diyParams
+            )
+          }
         />
-      )}
+      ) : null}
 
-      {step === STEP.EMERGENCY && (
+      {step === STEP.EMERGENCY ? (
         <EmergencyIssueScreen
           analysisResult={analysisResult}
           imageUri={imageUri}
-          onFindExpertsPress={handleFindExpertsPress}
+          onBack={handleBack}
+          onFindExpertsPress={
+            handleFindExpertsPress
+          }
         />
-      )}
+      ) : null}
     </SafeAreaView>
   );
 };
@@ -190,10 +327,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
   },
+
+  resultScreenSafeArea: {
+    backgroundColor: COLORS.lightHoney,
+  },
+
   header: {
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 8,
   },
+
   subtitle: {
     marginTop: 4,
     marginBottom: 8,
