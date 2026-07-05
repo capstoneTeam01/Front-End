@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
-  SafeAreaView,
   ScrollView,
   View,
   Text,
@@ -10,7 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
+import AppHeader from "../components/AppHeader/AppHeader";
 import {
   getNotifications,
   markNotificationRead,
@@ -19,56 +18,49 @@ import {
 import COLORS from "../constants/colors";
 import styles from "./NotificationsScreenStyle";
 
-const DEMO_NOTIFICATIONS = [
-  {
-    _id: "demo-1",
-    message:
-      "Your appointment with ABC Plumbing is confirmed for tomorrow at 10 AM.",
-    type: "appointment_confirmed",
-    isRead: false,
-    createdAt: "Just now",
-  },
-  {
-    _id: "demo-2",
-    message: "Reminder: Electrician visit scheduled for Friday.",
-    type: "appointment_reminder",
-    isRead: false,
-    createdAt: "2h ago",
-  },
-  {
-    _id: "demo-3",
-    message: "Welcome to FixBee! Snap a photo to get started.",
-    type: "general",
-    isRead: true,
-    createdAt: "Yesterday",
-  },
-];
-
 const ICON_FOR_TYPE = {
   appointment_confirmed: "checkmark-circle-outline",
   appointment_reminder: "alarm-outline",
   general: "information-circle-outline",
 };
 
+// Turns a backend timestamp into a short relative label.
+// Falls back to the raw value if it's already a friendly string.
+const formatTime = (value) => {
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+
+  const diffMs = Date.now() - date.getTime();
+  const min = Math.floor(diffMs / 60000);
+
+  if (min < 1) return "Just now";
+  if (min < 60) return `${min}m ago`;
+
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+
+  const days = Math.floor(hr / 24);
+  if (days === 1) return "Yesterday";
+  if (days < 7) return `${days}d ago`;
+
+  return date.toLocaleDateString();
+};
+
 const NotificationsScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [items, setItems] = useState([]);
-  const [isDemo, setIsDemo] = useState(false);
+  const [error, setError] = useState("");
 
   const load = useCallback(async () => {
     try {
       const data = await getNotifications();
-      if (Array.isArray(data) && data.length) {
-        setItems(data.filter((n) => !n.isDeleted));
-        setIsDemo(false);
-      } else {
-        setItems(DEMO_NOTIFICATIONS);
-        setIsDemo(true);
-      }
-    } catch {
-      setItems(DEMO_NOTIFICATIONS);
-      setIsDemo(true);
+      setItems(data.filter((n) => !n.isDeleted));
+      setError("");
+    } catch (e) {
+      setError(e?.message || "Couldn't load notifications.");
     }
   }, []);
 
@@ -95,7 +87,6 @@ const NotificationsScreen = ({ navigation }) => {
     setItems((prev) =>
       prev.map((n) => (n._id === id ? { ...n, isRead: true } : n)),
     );
-    if (isDemo) return;
     try {
       await markNotificationRead(id);
     } catch {
@@ -109,7 +100,6 @@ const NotificationsScreen = ({ navigation }) => {
   const markAll = async () => {
     const snapshot = items;
     setItems((prev) => prev.map((n) => ({ ...n, isRead: true })));
-    if (isDemo) return;
     try {
       await markAllNotificationsRead();
     } catch {
@@ -117,38 +107,34 @@ const NotificationsScreen = ({ navigation }) => {
     }
   };
 
-  return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.headerWrap}>
-        <View style={styles.headerLeft}>
-          <ScreenHeader
-            title="Notifications"
-            showBack
-            onBack={() => navigation?.goBack()}
-          />
-          {isDemo ? (
-            <View style={styles.demoTag}>
-              <Text style={styles.demoTagText}>Demo</Text>
-            </View>
-          ) : null}
-        </View>
-      </View>
-
-      {hasUnread ? (
-        <TouchableOpacity
-          style={styles.markAllBtn}
-          onPress={markAll}
-          hitSlop={8}
-        >
-          <Text style={styles.markAllText}>Mark all read</Text>
-        </TouchableOpacity>
-      ) : null}
-
-      {loading ? (
+  const renderBody = () => {
+    if (loading) {
+      return (
         <View style={styles.stateBox}>
           <ActivityIndicator color={COLORS.textMuted} />
         </View>
-      ) : items.length === 0 ? (
+      );
+    }
+
+    if (error) {
+      return (
+        <View style={styles.stateBox}>
+          <Ionicons
+            name="cloud-offline-outline"
+            size={28}
+            color={COLORS.textMuted}
+          />
+          <Text style={styles.emptyTitle}>Something went wrong</Text>
+          <Text style={styles.emptyText}>{error}</Text>
+          <TouchableOpacity style={styles.retryBtn} onPress={onRefresh}>
+            <Text style={styles.retryText}>Try again</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    if (items.length === 0) {
+      return (
         <View style={styles.stateBox}>
           <Ionicons
             name="notifications-off-outline"
@@ -158,41 +144,61 @@ const NotificationsScreen = ({ navigation }) => {
           <Text style={styles.emptyTitle}>No notifications</Text>
           <Text style={styles.emptyText}>You're all caught up.</Text>
         </View>
-      ) : (
-        <ScrollView
-          contentContainerStyle={styles.list}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+      );
+    }
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {items.map((n) => (
+          <TouchableOpacity
+            key={n._id}
+            activeOpacity={0.7}
+            disabled={n.isRead}
+            onPress={() => markOne(n._id)}
+            style={[styles.row, !n.isRead && styles.rowUnread]}
+          >
+            <View style={styles.iconChip}>
+              <Ionicons
+                name={ICON_FOR_TYPE[n.type] || "notifications-outline"}
+                size={18}
+                color={COLORS.honeyBrown}
+              />
+            </View>
+            <View style={styles.body}>
+              <Text style={styles.message}>{n.message}</Text>
+              {n.createdAt ? (
+                <Text style={styles.time}>{formatTime(n.createdAt)}</Text>
+              ) : null}
+            </View>
+            {!n.isRead ? <View style={styles.dot} /> : null}
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
+
+  return (
+    <View style={styles.safe}>
+      <AppHeader title="Notifications" onBack={() => navigation?.goBack()} />
+
+      {hasUnread && !loading && !error ? (
+        <TouchableOpacity
+          style={styles.markAllBtn}
+          onPress={markAll}
+          hitSlop={8}
         >
-          {items.map((n) => (
-            <TouchableOpacity
-              key={n._id}
-              activeOpacity={0.7}
-              disabled={n.isRead}
-              onPress={() => markOne(n._id)}
-              style={[styles.row, !n.isRead && styles.rowUnread]}
-            >
-              <View style={styles.iconChip}>
-                <Ionicons
-                  name={ICON_FOR_TYPE[n.type] || "notifications-outline"}
-                  size={18}
-                  color={COLORS.textPrimary}
-                />
-              </View>
-              <View style={styles.body}>
-                <Text style={styles.message}>{n.message}</Text>
-                {n.createdAt ? (
-                  <Text style={styles.time}>{String(n.createdAt)}</Text>
-                ) : null}
-              </View>
-              {!n.isRead ? <View style={styles.dot} /> : null}
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      )}
-    </SafeAreaView>
+          <Text style={styles.markAllText}>Mark all read</Text>
+        </TouchableOpacity>
+      ) : null}
+
+      {renderBody()}
+    </View>
   );
 };
 

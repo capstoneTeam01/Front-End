@@ -8,23 +8,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
 
-  headerWrap: {
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: 8,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  headerLeft: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
   markAllBtn: {
     alignSelf: "flex-end",
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 8,
+    paddingTop: 12,
     paddingBottom: 4,
   },
 
@@ -32,20 +19,6 @@ const styles = StyleSheet.create({
     fontSize: TYPE.small.fontSize,
     fontWeight: "600",
     color: COLORS.textPrimary,
-  },
-
-  demoTag: {
-    marginLeft: 8,
-    backgroundColor: COLORS.surface,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-  },
-
-  demoTagText: {
-    fontSize: 11,
-    fontWeight: "600",
-    color: COLORS.textSecondary,
   },
 
   list: {
@@ -67,14 +40,14 @@ const styles = StyleSheet.create({
   },
 
   rowUnread: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: COLORS.warmCream,
   },
 
   iconChip: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.lightHoney,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -99,7 +72,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: COLORS.surfaceDark,
+    backgroundColor: COLORS.primary,
   },
 
   stateBox: {
@@ -107,6 +80,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
+    paddingTop: 80,
+    paddingHorizontal: SIDE_PADDING,
   },
 
   emptyTitle: {
@@ -119,6 +94,21 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: TYPE.small.fontSize,
     color: COLORS.textMuted,
+    textAlign: "center",
+  },
+
+  retryBtn: {
+    marginTop: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: RADIUS.medium,
+    backgroundColor: COLORS.lightHoney,
+  },
+
+  retryText: {
+    fontSize: TYPE.small.fontSize,
+    fontWeight: "600",
+    color: COLORS.secondary,
   },
 });
 

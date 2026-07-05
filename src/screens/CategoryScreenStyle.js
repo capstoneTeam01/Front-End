@@ -1,11 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import {
-  SIDE_PADDING,
-  SPACING,
-  RADIUS,
-  TYPE,
-} from "../constants/layout";
+import { SIDE_PADDING, SPACING, RADIUS, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   safe: {
@@ -15,12 +10,12 @@ const styles = StyleSheet.create({
 
   scroll: {
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 8,
+    paddingTop: SPACING.card,
     paddingBottom: 40,
   },
 
   banner: {
-    marginTop: SPACING.large,
+    marginTop: SPACING.card,
     alignItems: "center",
     paddingHorizontal: 16,
   },
