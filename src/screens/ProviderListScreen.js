@@ -3,10 +3,12 @@ import {
   ActivityIndicator,
   Alert,
   Platform,
+  Pressable,
   RefreshControl,
   SafeAreaView,
   ScrollView,
   StatusBar,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -22,9 +24,15 @@ import {
   MAX_SELECTED_PROVIDERS,
 } from "../utils/providerConstants";
 import { resolveProviderCity } from "../utils/providerCityResolver";
+import {
+  buildLocationRouteParams,
+  getCurrentCityFromGps,
+} from "../utils/locationHelper";
+import COLORS from "../constants/colors";
 
-const androidTopSpace = Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
-const bottomButtonSpace = Platform.OS === "android" ? 72 : 20;
+const androidTopSpace =
+  Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
+const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
 
 const normalizeSelectedIds = (ids = []) => {
   if (!Array.isArray(ids)) return [];
@@ -32,19 +40,24 @@ const normalizeSelectedIds = (ids = []) => {
 };
 
 const ProviderListScreen = ({ navigation, route }) => {
-  const city = useMemo(() => {
+  const initialCity = useMemo(() => {
     const resolved = resolveProviderCity({
-      city: route?.params?.city || route?.params?.detectedUserCity || DEFAULT_PROVIDER_CITY,
+      city:
+        route?.params?.detectedUserCity ||
+        route?.params?.city ||
+        DEFAULT_PROVIDER_CITY,
       latitude: route?.params?.detectedLatitude,
       longitude: route?.params?.detectedLongitude,
       fallback: DEFAULT_PROVIDER_CITY,
-      preferCoordinates: Boolean(route?.params?.detectedLatitude && route?.params?.detectedLongitude),
+      preferCoordinates: Boolean(
+        route?.params?.detectedLatitude && route?.params?.detectedLongitude,
+      ),
     });
 
     console.log("[FixBee][ProviderList] request city", {
       city: resolved.city,
       source: resolved.source,
-      rawCity: route?.params?.city || route?.params?.detectedUserCity,
+      rawCity: route?.params?.detectedUserCity || route?.params?.city,
     });
 
     return resolved.city;
@@ -55,25 +68,90 @@ const ProviderListScreen = ({ navigation, route }) => {
     route?.params?.detectedLongitude,
   ]);
 
+  const [city, setCity] = useState(initialCity);
+  const [confirmedLocationParams, setConfirmedLocationParams] = useState({});
+
+  useEffect(() => {
+    setCity(initialCity);
+    setConfirmedLocationParams({});
+  }, [initialCity]);
+
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      try {
+        const location = await getCurrentCityFromGps({
+          preferCached: true,
+          cacheReason: "provider-list-city-check",
+          highAccuracy: false,
+        });
+
+        if (!active || !location) return;
+
+        const resolved = resolveProviderCity({
+          city: location.city,
+          latitude: location.latitude,
+          longitude: location.longitude,
+          fallback: initialCity,
+          preferCoordinates: true,
+        });
+
+        setConfirmedLocationParams(buildLocationRouteParams(location));
+
+        if (resolved.city && resolved.city !== initialCity) {
+          console.log(
+            "[FixBee][ProviderList] corrected provider city from GPS",
+            {
+              previousCity: initialCity,
+              nextCity: resolved.city,
+              source: location.providerCitySource || location.source,
+              streetAddress: location.streetAddress,
+            },
+          );
+          setCity(resolved.city);
+        }
+      } catch (error) {
+        console.log("[FixBee][ProviderList] GPS city check skipped", {
+          city: initialCity,
+          error: error?.message,
+        });
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [initialCity]);
+
   const category = useMemo(() => {
     if (route?.params?.fromIssue) return DEFAULT_PROVIDER_CATEGORY;
-    return normalizeProviderCategory(route?.params?.category, DEFAULT_PROVIDER_CATEGORY);
+    return normalizeProviderCategory(
+      route?.params?.category,
+      DEFAULT_PROVIDER_CATEGORY,
+    );
   }, [route?.params?.category, route?.params?.fromIssue]);
 
   const [selectedIds, setSelectedIds] = useState(() =>
-    normalizeSelectedIds(route?.params?.selectedProviderIds)
+    normalizeSelectedIds(route?.params?.selectedProviderIds),
   );
 
-  const { providers, loading, reloadProviders } = useBusinessDirectoryProviderList({ city, category });
-  const { syncing, syncProviders, syncError } = useBusinessDirectoryProviderSync({ city, category, limit: 20 });
+  const { providers, loading, reloadProviders } =
+    useBusinessDirectoryProviderList({ city, category });
+  const { syncing, syncProviders, syncError } =
+    useBusinessDirectoryProviderSync({ city, category, limit: 20 });
 
   const selectedProviders = useMemo(
     () => providers.filter((provider) => selectedIds.includes(provider.id)),
-    [providers, selectedIds]
+    [providers, selectedIds],
   );
 
   const syncAndReload = async ({ force = false } = {}) => {
-    console.log("[FixBee][ProviderList] sync requested", { city, category, force });
+    console.log("[FixBee][ProviderList] sync requested", {
+      city,
+      category,
+      force,
+    });
     const result = await syncProviders({ force });
     const rows = await reloadProviders();
     console.log("[FixBee][ProviderList] UI reloaded from SQLite", {
@@ -104,27 +182,40 @@ const ProviderListScreen = ({ navigation, route }) => {
   }, [city, category]);
 
   useEffect(() => {
-    const incomingIds = normalizeSelectedIds(route?.params?.selectedProviderIds);
+    const incomingIds = normalizeSelectedIds(
+      route?.params?.selectedProviderIds,
+    );
     if (!incomingIds.length) return;
 
-    setSelectedIds((current) => normalizeSelectedIds([...current, ...incomingIds]));
+    setSelectedIds((current) =>
+      normalizeSelectedIds([...current, ...incomingIds]),
+    );
   }, [route?.params?.selectedProviderIds]);
 
   const toggleProvider = (providerId) => {
     setSelectedIds((current) => {
       if (current.includes(providerId)) {
         const next = current.filter((id) => id !== providerId);
-        console.log("[FixBee][ProviderList] provider unselected", { providerId, count: next.length });
+        console.log("[FixBee][ProviderList] provider unselected", {
+          providerId,
+          count: next.length,
+        });
         return next;
       }
 
       if (current.length >= MAX_SELECTED_PROVIDERS) {
-        Alert.alert("Selection limit", `You can select up to ${MAX_SELECTED_PROVIDERS} providers.`);
+        Alert.alert(
+          "Selection limit",
+          `You can select up to ${MAX_SELECTED_PROVIDERS} providers.`,
+        );
         return current;
       }
 
       const next = [...current, providerId];
-      console.log("[FixBee][ProviderList] provider selected", { providerId, count: next.length });
+      console.log("[FixBee][ProviderList] provider selected", {
+        providerId,
+        count: next.length,
+      });
       return next;
     });
   };
@@ -132,8 +223,10 @@ const ProviderListScreen = ({ navigation, route }) => {
   const openProvider = (provider) => {
     navigation.navigate("ProviderDetails", {
       ...route.params,
+      ...confirmedLocationParams,
       providerId: provider.id,
       city,
+      detectedUserCity: confirmedLocationParams.detectedUserCity || city,
       category,
       selectedProviderIds: selectedIds,
       selectedProviderNames: selectedProviders.map((item) => item.businessName),
@@ -142,7 +235,10 @@ const ProviderListScreen = ({ navigation, route }) => {
 
   const handleNext = () => {
     if (!selectedProviders.length) {
-      Alert.alert("Choose a provider", "Select at least one provider before continuing.");
+      Alert.alert(
+        "Choose a provider",
+        "Select at least one provider before continuing.",
+      );
       return;
     }
 
@@ -154,42 +250,69 @@ const ProviderListScreen = ({ navigation, route }) => {
 
     navigation.navigate("ProviderAddressTime", {
       ...route.params,
+      ...confirmedLocationParams,
       city,
+      detectedUserCity: confirmedLocationParams.detectedUserCity || city,
       category,
       selectedProviderIds: selectedProviders.map((provider) => provider.id),
-      selectedProviderNames: selectedProviders.map((provider) => provider.businessName),
+      selectedProviderNames: selectedProviders.map(
+        (provider) => provider.businessName,
+      ),
     });
   };
 
   const initialLoading = (loading || syncing) && providers.length === 0;
+  const selectedSummary = selectedIds.length
+    ? `Mail to ${selectedIds.length} selected request expert${selectedIds.length > 1 ? "s" : ""}.`
+    : "Select up to 10 request experts.";
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ padding: 12, paddingTop: 12 + androidTopSpace }}>
-        <ProviderPlainButton title="Back" onPress={() => navigation.goBack()} />
-        <Text>Find Experts</Text>
-        <Text>City: {city}</Text>
-        <Text>Category: {category}</Text>
-        <Text>Selected: {selectedIds.length}/{MAX_SELECTED_PROVIDERS}</Text>
+    <SafeAreaView style={styles.safe}>
+      <View style={[styles.topBar, { paddingTop: 8 + androidTopSpace }]}>
+        <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
+          <Text style={styles.backIcon}>‹</Text>
+        </Pressable>
+        <Text style={styles.topTitle}>Experts List</Text>
+        <View style={styles.topSpacer} />
+      </View>
+
+      <View style={styles.headerBlock}>
+        <Text style={styles.title}>Repair Experts</Text>
+        <Text style={styles.subtitle}>
+          Nearby professionals recommended by FixBee.
+        </Text>
+        <Text style={styles.countText}>{selectedSummary}</Text>
       </View>
 
       <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ padding: 12, paddingBottom: 24 }}
-        refreshControl={<RefreshControl refreshing={syncing} onRefresh={() => syncAndReload({ force: true })} />}
+        style={styles.list}
+        contentContainerStyle={styles.listContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={syncing}
+            onRefresh={() => syncAndReload({ force: true })}
+          />
+        }
       >
         {initialLoading ? (
-          <View style={{ padding: 12 }}>
+          <View style={styles.centerState}>
             <ActivityIndicator />
-            <Text>Loading providers from SQLite...</Text>
+            <Text style={styles.stateText}>
+              Loading providers from SQLite...
+            </Text>
           </View>
         ) : null}
 
         {!initialLoading && providers.length === 0 ? (
-          <View style={{ padding: 12 }}>
-            <Text>No providers found.</Text>
-            {syncError ? <Text>{syncError}</Text> : null}
-            <ProviderPlainButton title="Try Again" onPress={() => syncAndReload({ force: true })} />
+          <View style={styles.centerState}>
+            <Text style={styles.stateTitle}>No providers found.</Text>
+            {syncError ? (
+              <Text style={styles.stateText}>{syncError}</Text>
+            ) : null}
+            <ProviderPlainButton
+              title="Try Again"
+              onPress={() => syncAndReload({ force: true })}
+            />
           </View>
         ) : null}
 
@@ -204,11 +327,99 @@ const ProviderListScreen = ({ navigation, route }) => {
         ))}
       </ScrollView>
 
-      <View style={{ padding: 12, paddingBottom: bottomButtonSpace }}>
-        <ProviderPlainButton title="Next" onPress={handleNext} />
+      <View style={[styles.bottomCta, { paddingBottom: bottomButtonSpace }]}>
+        <ProviderPlainButton
+          title="Next"
+          onPress={handleNext}
+          disabled={!selectedProviders.length}
+        />
       </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  topBar: {
+    minHeight: 78,
+    backgroundColor: COLORS.honeyLight,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
+    paddingHorizontal: 18,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  backIcon: {
+    fontSize: 26,
+    color: COLORS.providerBrown,
+    fontWeight: "500",
+  },
+  topTitle: {
+    color: COLORS.providerBrown,
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  topSpacer: {
+    width: 24,
+  },
+  headerBlock: {
+    paddingHorizontal: 22,
+    paddingTop: 20,
+    paddingBottom: 8,
+  },
+  title: {
+    color: COLORS.textPrimary,
+    fontSize: 19,
+    fontWeight: "800",
+  },
+  subtitle: {
+    color: COLORS.providerMidGray,
+    fontSize: 12,
+    marginTop: 4,
+  },
+  countText: {
+    color: COLORS.providerBrown,
+    fontSize: 12,
+    fontWeight: "600",
+    marginTop: 9,
+  },
+  list: {
+    flex: 1,
+  },
+  listContent: {
+    paddingHorizontal: 22,
+    paddingTop: 8,
+    paddingBottom: 110,
+  },
+  centerState: {
+    padding: 18,
+    alignItems: "center",
+  },
+  stateTitle: {
+    color: COLORS.textPrimary,
+    fontSize: 15,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  stateText: {
+    color: COLORS.textSecondary,
+    fontSize: 12,
+    marginTop: 8,
+    textAlign: "center",
+  },
+  bottomCta: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 22,
+    paddingTop: 12,
+    backgroundColor: COLORS.honeyCream,
+  },
+});
 
 export default ProviderListScreen;

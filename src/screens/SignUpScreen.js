@@ -12,7 +12,11 @@ import styles from "./SignUpScreenStyle";
 import AppTextField from "../components/AppTextField/AppTextField";
 import AuthButton from "../components/AuthButton/AuthButton";
 import GoogleButton from "../components/GoogleButton/GoogleButton";
-import { registerUser } from "../features/auth/services/authSessionService";
+import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
+import {
+  registerUser,
+  loginWithGoogleToken,
+} from "../features/auth/services/authSessionService";
 
 const MIN_PASSWORD = 8;
 
@@ -23,6 +27,8 @@ const SignUpScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const { signIn: googleSignIn } = useGoogleAuth();
 
   const handleCreate = async () => {
     const fName = firstName.trim();
@@ -70,8 +76,27 @@ const SignUpScreen = ({ navigation }) => {
     }
   };
 
-  const handleGoogle = () => {
-    Alert.alert("Google service is temoprary disable");
+  const handleGoogle = async () => {
+    setGoogleLoading(true);
+    try {
+      const result = await googleSignIn();
+      if (result?.cancelled) return;
+
+      const { user } = await loginWithGoogleToken(result.idToken);
+
+      const hasLocation = !!user?.location;
+      navigation.reset({
+        index: 0,
+        routes: [{ name: hasLocation ? "Home" : "Onboarding" }],
+      });
+    } catch (error) {
+      Alert.alert(
+        "Google sign-in failed",
+        error?.message || "Please try again.",
+      );
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
   return (
@@ -145,7 +170,11 @@ const SignUpScreen = ({ navigation }) => {
           <View style={styles.orLine} />
         </View>
 
-        <GoogleButton label="Sign In using Google" onPress={handleGoogle} />
+        <GoogleButton
+          label="Sign In using Google"
+          onPress={handleGoogle}
+          loading={googleLoading}
+        />
 
         <View style={styles.footerRow}>
           <Text style={styles.footerText}>Already have an account? </Text>

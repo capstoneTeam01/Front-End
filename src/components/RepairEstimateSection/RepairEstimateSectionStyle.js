@@ -2,52 +2,76 @@ import { StyleSheet } from "react-native";
 
 import COLORS from "../../constants/colors";
 import {
-  RADIUS,
   SPACING,
   TYPE,
 } from "../../constants/layout";
 
 const styles = StyleSheet.create({
+  sectionContainer: {
+    width: "100%",
+  },
+
   sectionTitle: {
     ...TYPE.sectionTitle,
-    color: COLORS.textPrimary,
+    color: COLORS.secondary,
     textAlign: "center",
-    marginBottom: 10,
+    marginBottom: SPACING.card,
   },
 
   estimateRow: {
+    width: "100%",
     flexDirection: "row",
-    gap: 10,
-    marginBottom: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: SPACING.sm,
   },
 
-  estimateBox: {
-    flex: 1,
-    minHeight: 86,
-    backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: COLORS.gray500,
-    borderRadius: RADIUS.medium,
-    paddingVertical: 14,
-    paddingHorizontal: SPACING.sm,
+  estimateTile: {
     alignItems: "center",
     justifyContent: "center",
   },
 
-  estimateLabel: {
-    ...TYPE.caption,
+  estimateContent: {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 6,
+    paddingVertical: 8,
+  },
+
+  dollarIcon: {
+    fontSize: 25,
     fontWeight: "400",
-    color: COLORS.textSecondary,
+    lineHeight: 27,
+    color: COLORS.secondary,
     textAlign: "center",
-    marginBottom: SPACING.sm,
+  },
+
+  iconContainer: {
+    height: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 2,
+  },
+
+  estimateLabel: {
+    fontSize: 12,
+    fontWeight: "400",
+    color: COLORS.honeyBrown,
+    textAlign: "center",
+    lineHeight: 15,
+    marginBottom: 3,
   },
 
   estimateValue: {
-    ...TYPE.small,
-    fontWeight: "700",
-    color: COLORS.textPrimary,
+    fontSize: 14,
+    fontWeight: "500",
+    color: COLORS.secondary,
     textAlign: "center",
-    flexShrink: 1,
+    lineHeight: 18,
+    width: "100%",
+    paddingHorizontal: 2,
   },
 });
 

@@ -9,6 +9,15 @@ import {
 
 const clean = (value) => String(value || "").trim();
 
+const buildQuoteRequestReference = () => {
+  const date = new Date();
+  const timestamp = date
+    .toISOString()
+    .replace(/[-:TZ.]/g, "")
+    .slice(0, 12);
+  return `FB-${timestamp}`;
+};
+
 const uniqueEmails = (providers = []) => {
   const seen = new Set();
 
@@ -75,6 +84,7 @@ export const buildProviderQuoteEmailDraft = ({
 
   const [to = "", ...bccList] = providerEmails;
   const issueTitle = normalizeQuoteIssueTitle(issue);
+  const requestReference = buildQuoteRequestReference();
   const fullAddress = buildFullServiceAddress({ address, unit, city });
   const originalImageUrl = getPublicImageUrl({ uploadedImageUrl, imageUri });
   const suppliedImages = Array.isArray(images)
@@ -113,6 +123,7 @@ export const buildProviderQuoteEmailDraft = ({
     imageUrl,
     requesterName,
     requesterEmail,
+    requestReference,
   });
   const htmlBody = buildHtmlQuoteEmailBody({
     issueTitle,
@@ -128,6 +139,7 @@ export const buildProviderQuoteEmailDraft = ({
     images: normalizedImages,
     requesterName,
     requesterEmail,
+    requestReference,
   });
 
   return {
@@ -136,12 +148,13 @@ export const buildProviderQuoteEmailDraft = ({
     requesterEmail: clean(requesterEmail),
     bcc: bccList.join(","),
     bccList,
-    subject: `Service Request: ${issueTitle}`.slice(0, 110),
+    subject: `Service Request: ${issueTitle} (${requestReference})`.slice(0, 110),
     body: plainBody,
     htmlBody,
     imageUrl,
     images: normalizedImages,
     requesterName,
+    requestReference,
     providerEmails,
     providersMissingEmail: providers
       .filter((provider) => !clean(provider.email))
@@ -171,46 +184,67 @@ export const buildProviderQuoteRequestPayload = ({
   date,
   time,
   notes,
-}) => ({
-  scanType: "service-provider-quote-request",
-  status: "ready-to-send",
-  issue: {
-    title: normalizeQuoteIssueTitle(issue),
+  editedBody,
+}) => {
+  const body = clean(editedBody) || draft?.body;
+  const images = Array.isArray(draft?.images) ? draft.images : [];
+  const htmlBody = buildHtmlQuoteEmailBody({
+    issueTitle: normalizeQuoteIssueTitle(issue),
     detectedObject: clean(detectedObject),
-    category: clean(category),
-  },
-  serviceRequest: {
-    address: clean(address),
-    unit: clean(unit),
-    city: clean(city),
-    preferredDate: clean(date),
-    preferredTime: clean(time),
+    fullAddress: buildFullServiceAddress({ address, unit, city }),
+    date,
+    time,
     notes: clean(notes),
-  },
-  providers: providers.map(mapProviderForRequest),
-  images: Array.isArray(draft?.images) ? draft.images : [],
-  requester: {
-    email: clean(draft?.requesterEmail),
-    name: clean(draft?.requesterName),
-  },
-  email: {
-    to: draft?.to,
-    cc: draft?.cc,
-    bcc: draft?.bcc,
-    subject: draft?.subject,
-    body: draft?.body,
-    htmlBody: draft?.htmlBody,
     imageUrl: draft?.imageUrl,
-    providerEmails: draft?.providerEmails || [],
-  },
-  preview: {
-    subject: draft?.subject,
-    body: draft?.body,
-    to: draft?.to,
-    cc: draft?.cc,
-    bcc: draft?.bcc,
-  },
-});
+    images,
+    requesterName: draft?.requesterName,
+    requesterEmail: draft?.requesterEmail,
+    requestReference: draft?.requestReference,
+    editedBody: body,
+  });
+
+  return {
+    scanType: "service-provider-quote-request",
+    status: "ready-to-send",
+    issue: {
+      title: normalizeQuoteIssueTitle(issue),
+      detectedObject: clean(detectedObject),
+      category: clean(category),
+    },
+    serviceRequest: {
+      address: clean(address),
+      unit: clean(unit),
+      city: clean(city),
+      preferredDate: clean(date),
+      preferredTime: clean(time),
+      notes: clean(notes),
+    },
+    providers: providers.map(mapProviderForRequest),
+    images,
+    requester: {
+      email: clean(draft?.requesterEmail),
+      name: clean(draft?.requesterName),
+    },
+    email: {
+      to: draft?.to,
+      cc: draft?.cc,
+      bcc: draft?.bcc,
+      subject: draft?.subject,
+      body,
+      htmlBody,
+      imageUrl: draft?.imageUrl,
+      providerEmails: draft?.providerEmails || [],
+      requestReference: draft?.requestReference,
+    },
+    preview: {
+      subject: draft?.subject,
+      body,
+      to: draft?.to,
+      cc: draft?.cc,
+      bcc: draft?.bcc,
+    },
+  };
+};
 
 export const sendProviderQuoteRequestFromPreview = async (payload) => {
   console.log("[FixBee][QuoteRequest] sending official backend quote request", {

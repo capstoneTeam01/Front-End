@@ -1,38 +1,45 @@
 import { Pressable, Text, View } from "react-native";
+
 import styles from "./UserActionButtonsStyle";
 
-const UserActionButtons = (props) => {
-  const onFindExpertsPress = props.onFindExpertsPress;
-  const onDiyPress = props.onDiyPress;
-  const showDiy = props.showDiy;
-
-  let diyButton = null;
-
-  if (showDiy === true) {
-    diyButton = (
-      <Pressable
-        style={styles.secondaryButton}
-        onPress={onDiyPress}
-      >
-        <Text style={styles.secondaryButtonText}>
-          DIY
-        </Text>
-      </Pressable>
-    );
-  }
+const UserActionButtons = ({
+  onFindExpertsPress,
+  onDiyPress,
+  showDiy = false,
+}) => {
+  const findExpertsStyle = showDiy
+    ? styles.findExpertsWithDiyButton
+    : styles.findExpertsSingleButton;
 
   return (
     <View style={styles.buttonRow}>
       <Pressable
-        style={styles.primaryButton}
         onPress={onFindExpertsPress}
+        style={({ pressed }) => [
+          styles.button,
+          findExpertsStyle,
+          pressed ? styles.buttonPressed : null,
+        ]}
       >
-        <Text style={styles.primaryButtonText}>
+        <Text style={styles.buttonText}>
           Find Experts
         </Text>
       </Pressable>
 
-      {diyButton}
+      {showDiy ? (
+        <Pressable
+          onPress={onDiyPress}
+          style={({ pressed }) => [
+            styles.button,
+            styles.diyButton,
+            pressed ? styles.buttonPressed : null,
+          ]}
+        >
+          <Text style={styles.buttonText}>
+            DIY
+          </Text>
+        </Pressable>
+      ) : null}
     </View>
   );
 };
