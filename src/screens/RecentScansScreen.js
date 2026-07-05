@@ -12,13 +12,28 @@ const RecentScansScreen = ({ navigation, route }) => {
   const scans = route?.params?.scans || [];
   const [activeFilter, setActiveFilter] = useState("All");
 
-  const filteredScans = scans.filter((item) => {
-    if (activeFilter === "All") return true;
-    if (activeFilter === "DIY") return item.diyGenerationStatus === "completed";
-    if (activeFilter === "Emergency") return item.analysis?.urgency === "Critical";
-    if (activeFilter === "Service Requested") return item.providerRequested;
+ const filteredScans = scans.filter((item) => {
+  const urgency = String(item.analysis?.urgency || "").toLowerCase();
+  const diyStatus = String(item.diyGenerationStatus || "").toLowerCase();
+
+  if (activeFilter === "All") {
     return true;
-  });
+  }
+
+  if (activeFilter === "DIY") {
+    return diyStatus === "completed";
+  }
+
+  if (activeFilter === "Emergency") {
+    return urgency === "critical" || urgency === "high";
+  }
+
+  if (activeFilter === "Service Requested") {
+    return item.providerRequested === true;
+  }
+
+  return true;
+});
 
   return (
     <View style={styles.safe}>

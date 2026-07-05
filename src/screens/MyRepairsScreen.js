@@ -117,20 +117,21 @@ const MyRepairsScreen = ({ navigation }) => {
           status = historyItem.analysis.urgency;
         }
 
-      const formattedScan = {
-        id: historyItem.photoId,
-        title: title,
-        date: formatScanDate(historyItem.createdAt),
-        status: status,
-        imageUrl: historyItem.imageUrl,
-        analysis: historyItem.analysis,
+    const formattedScan = {
+      id: historyItem.photoId,
+      title,
+      date: formatScanDate(historyItem.createdAt),
+      status,
+      imageUrl: historyItem.imageUrl,
+      analysis: historyItem.analysis,
 
-        repairStatus: historyItem.repairStatus || "open",
-        repairCompletedAt: historyItem.repairCompletedAt || null,
-        providerRequested: historyItem.providerRequested || false,
-        providerAssigned: historyItem.providerAssigned || false,
-        repairFeedback: historyItem.repairFeedback || null,
-      };
+      diyGenerationStatus: historyItem.diyGenerationStatus || "not_started",
+      repairStatus: historyItem.repairStatus || "open",
+      repairCompletedAt: historyItem.repairCompletedAt || null,
+      providerRequested: historyItem.providerRequested || false,
+      providerAssigned: historyItem.providerAssigned || false,
+      repairFeedback: historyItem.repairFeedback || null
+    };
 
         formattedScans.push(formattedScan);
       }

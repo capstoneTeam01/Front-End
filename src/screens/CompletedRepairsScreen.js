@@ -13,21 +13,52 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
   const [activeFilter, setActiveFilter] = useState("All");
 
   const filteredRepairs = repairs.filter((item) => {
-    if (activeFilter === "All") return true;
-    if (activeFilter === "DIY") return item.diyGenerationStatus === "completed";
-    if (activeFilter === "Emergency") return item.analysis?.urgency === "Critical";
-    if (activeFilter === "Service Requested") return item.providerRequested;
-    return true;
+    const urgency = String(
+      item.analysis?.urgency || ""
+    ).toLowerCase();
+
+    const diyStatus = String(
+      item.diyGenerationStatus || ""
+    ).toLowerCase();
+
+    switch (activeFilter) {
+      case "DIY":
+        return diyStatus === "completed";
+
+      case "Emergency":
+        return (
+          urgency === "critical" ||
+          urgency === "high"
+        );
+
+      case "Service Requested":
+        return item.providerRequested === true;
+
+      case "All":
+      default:
+        return true;
+    }
   });
 
   return (
-    <SafeAreaView edges={["left", "right", "bottom"]} style={styles.safe}>
+    <SafeAreaView
+      edges={["left", "right", "bottom"]}
+      style={styles.safe}
+    >
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation?.goBack()}>
-          <Ionicons name="chevron-back" size={24} color={COLORS.textPrimary} />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons
+            name="chevron-back"
+            size={24}
+            color={COLORS.textPrimary}
+          />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Completed Repairs</Text>
+        <Text style={styles.headerTitle}>
+          Completed Repairs
+        </Text>
 
         <View style={styles.headerSpace} />
       </View>
@@ -38,14 +69,18 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
             key={filter}
             style={[
               styles.filterPill,
-              activeFilter === filter && styles.filterPillActive,
+              activeFilter === filter &&
+                styles.filterPillActive,
             ]}
-            onPress={() => setActiveFilter(filter)}
+            onPress={() =>
+              setActiveFilter(filter)
+            }
           >
             <Text
               style={[
                 styles.filterText,
-                activeFilter === filter && styles.filterTextActive,
+                activeFilter === filter &&
+                  styles.filterTextActive,
               ]}
             >
               {filter}
@@ -58,8 +93,15 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
         data={filteredRepairs}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>
+            No completed repairs found.
+          </Text>
+        }
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card}>
+          <TouchableOpacity
+            style={styles.card}
+          >
             <View style={styles.iconBox}>
               <Ionicons
                 name="camera-outline"
@@ -69,9 +111,16 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
             </View>
 
             <View style={styles.cardContent}>
-              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.title}>
+                {item.title}
+              </Text>
+
               <Text style={styles.meta}>
-                <Text style={styles.categoryText}>Plumbing</Text>  {item.date}
+                <Text style={styles.categoryText}>
+                  {item.analysis?.category ||
+                    "Repair"}
+                </Text>{" "}
+                • {item.date}
               </Text>
             </View>
           </TouchableOpacity>
@@ -81,9 +130,11 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
       <View style={styles.bottomBar}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation?.goBack()}
+          onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backText}>Back</Text>
+          <Text style={styles.backText}>
+            Back
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
