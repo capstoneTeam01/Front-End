@@ -31,6 +31,13 @@ const COLORS = {
   mediumGrey: "#A8A8A8", // Medium-Grey
   greyText: "#C1C1C1", // Grey-Text (input border stroke)
 
+  // Urgency badge colours
+  riskLow: "#2FA51B",
+  riskMedium: "#FBB800",
+  riskHigh: "#D90429",
+  riskCritical: "#9F001C",
+  riskUnknown: "#A8A8A8",
+
   //Translucent white overlays used on the yellow auth screens.
   whiteOverlayStrong: "rgba(255, 255, 255, 0.85)",
   whiteOverlayHalf: "rgba(255, 255, 255, 0.5)",

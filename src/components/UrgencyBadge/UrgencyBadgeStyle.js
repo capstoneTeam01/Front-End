@@ -1,20 +1,44 @@
 import { StyleSheet } from "react-native";
+
 import COLORS from "../../constants/colors";
-import { RADIUS, SPACING, TYPE } from "../../constants/layout";
+import { TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
-  badge: {
-    alignSelf: "flex-start",
-    backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.big,
-    paddingVertical: SPACING.sm,
-    paddingHorizontal: SPACING.card,
+  badgeContainer: {
+    width: 96,
+    height: 104,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  badgeContent: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 6,
+    paddingTop: 10,
+    paddingBottom: 9,
+  },
+
+  iconContainer: {
+    height: 32,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 2,
   },
 
   badgeText: {
     ...TYPE.caption,
-    color: COLORS.textPrimary,
-    textTransform: "capitalize",
+    textAlign: "center",
+    lineHeight: 15,
+  },
+
+  darkText: {
+    color: COLORS.secondary,
+  },
+
+  lightText: {
+    color: COLORS.white,
   },
 });
 
