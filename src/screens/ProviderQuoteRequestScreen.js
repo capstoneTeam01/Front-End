@@ -232,6 +232,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
 
     try {
       const payload = buildProviderQuoteRequestPayload({
+        photoId: route?.params?.photoId,
         draft,
         providers,
         issue: getIssueTitle(route?.params),
