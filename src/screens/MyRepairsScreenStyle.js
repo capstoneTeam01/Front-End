@@ -8,12 +8,12 @@ const styles = StyleSheet.create({
 
   scroll: {
     paddingHorizontal: 24,
-    paddingTop: 16,
+    paddingTop: 8,
     paddingBottom: 120,
   },
 
   section: {
-    marginTop: 32,
+    marginTop: 24,
   },
 
   scanList: {

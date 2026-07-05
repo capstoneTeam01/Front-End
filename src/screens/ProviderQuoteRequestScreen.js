@@ -5,9 +5,7 @@ import {
   Image,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -15,6 +13,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
+import AppHeader from "../components/AppHeader/AppHeader";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import { uploadPhoto } from "../api/uploadPhoto";
 import { loadProvidersByIds } from "../localDb/businessDirectoryProviderLocalDb";
@@ -26,8 +25,6 @@ import {
 import COLORS from "../constants/colors";
 
 const clean = (value) => String(value || "").trim();
-const androidTopSpace =
-  Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
 const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
 
 const getIssueTitle = (routeParams = {}) =>
@@ -232,7 +229,6 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
 
     try {
       const payload = buildProviderQuoteRequestPayload({
-        photoId: route?.params?.photoId,
         draft,
         providers,
         issue: getIssueTitle(route?.params),
@@ -274,14 +270,8 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={[styles.topBar, { paddingTop: 8 + androidTopSpace }]}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
-          <Text style={styles.backIcon}>‹</Text>
-        </Pressable>
-        <Text style={styles.topTitle}>Preview</Text>
-        <View style={styles.topSpacer} />
-      </View>
+    <View style={styles.safe}>
+      <AppHeader title="Preview" onBack={() => navigation.goBack()} />
 
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Request Summary</Text>
@@ -395,7 +385,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
           />
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -403,29 +393,6 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: COLORS.white,
-  },
-  topBar: {
-    minHeight: 78,
-    backgroundColor: COLORS.honeyLight,
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
-    paddingHorizontal: 18,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  backIcon: {
-    fontSize: 26,
-    color: COLORS.providerBrown,
-    fontWeight: "500",
-  },
-  topTitle: {
-    color: COLORS.providerBrown,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  topSpacer: {
-    width: 24,
   },
   content: {
     paddingHorizontal: 24,

@@ -27,43 +27,16 @@ const styles = StyleSheet.create({
   },
 
   /*
-   * Issue Detected header
+   * Issue Detected header (shared AppHeader shape).
+   * Floats over the hero image so the photo bleeds to the very
+   * top of the screen and shows through the cut bottom corners.
    */
   headerContainer: {
-    height: 84,
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    paddingBottom: 22,
-    marginBottom: -16,
-    backgroundColor: "transparent",
-    zIndex: 5,
-  },
-
-  headerShape: {
-    ...StyleSheet.absoluteFillObject,
-  },
-
-  backButton: {
     position: "absolute",
-    left: SIDE_PADDING,
-    bottom: 12,
-    width: 44,
-    height: 44,
-    alignItems: "flex-start",
-    justifyContent: "center",
-    zIndex: 2,
-  },
-
-  backButtonPressed: {
-    opacity: 0.55,
-  },
-
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "500",
-    color: COLORS.secondary,
-    textAlign: "center",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 5,
   },
 
   /*
@@ -71,7 +44,9 @@ const styles = StyleSheet.create({
    */
   heroContainer: {
     width: "100%",
-    height: 360,
+    // Starts at the very top of the screen (under the floating
+    // header), so the height includes the area behind the header.
+    height: 400,
     position: "relative",
     backgroundColor: COLORS.charcoal,
     overflow: "hidden",

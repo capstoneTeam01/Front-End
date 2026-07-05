@@ -16,26 +16,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    minHeight: 136,
-    justifyContent: "flex-end",
-    paddingHorizontal: 16,
-    paddingBottom: 30,
-  },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  headerBack: {
-    width: 32,
-    alignItems: "flex-start",
-    justifyContent: "center",
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: TYPE.cardTitle.fontSize,
-    fontWeight: "600",
-    color: COLORS.secondary,
   },
   actionBar: {
     position: "absolute",
