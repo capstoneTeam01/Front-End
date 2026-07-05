@@ -5,7 +5,12 @@ import COLORS from "../../constants/colors";
 
 const ScanHexButton = ({ onPress, size = 96 }) => {
   return (
-    <HexTile size={size} fill={COLORS.surfaceDark} onPress={onPress}>
+    <HexTile
+      size={size}
+      fill={COLORS.primary}
+      onPress={onPress}
+      flatTop={false}
+    >
       <Ionicons name="scan-outline" size={size * 0.4} color={COLORS.white} />
     </HexTile>
   );

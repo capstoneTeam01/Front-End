@@ -1,10 +1,7 @@
-// Static content populated from the wireframes.
-// icon = Ionicons name (from @expo/vector-icons).
-
 export const CATEGORIES = [
   { id: "plumbing", label: "Plumbing", icon: "water-outline" },
   { id: "electrical", label: "Electrical", icon: "flash-outline" },
-  { id: "appliances", label: "Appiances", icon: "thermometer-outline" },
+  { id: "appliances", label: "Appliances", icon: "thermometer-outline" },
 ];
 
 // Home screen "Popular Repairs"

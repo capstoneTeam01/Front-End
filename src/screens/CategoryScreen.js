@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { SafeAreaView, ScrollView, View, Text } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
+import AppHeader from "../components/AppHeader/AppHeader";
 import ScanHexButton from "../components/ScanHexButton/ScanHexButton";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import RepairListItem from "../components/RepairListItem/RepairListItem";
@@ -37,18 +37,24 @@ const CategoryScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.safe}>
+      <AppHeader
+        title={headerTitle}
+        onBack={() => navigation?.goBack()}
+        right={
+          <Ionicons
+            name="notifications-outline"
+            size={22}
+            color={COLORS.secondary}
+            onPress={() => navigation?.navigate("Notifications")}
+          />
+        }
+      />
+
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        <ScreenHeader
-          title={headerTitle}
-          showBack
-          onBack={() => navigation?.goBack()}
-          onBellPress={() => navigation?.navigate("Notifications")}
-        />
-
         <View style={styles.banner}>
           <Text style={styles.bannerTitle}>{detail.title}</Text>
           <Text style={styles.bannerSubtitle}>{detail.description}</Text>
@@ -77,7 +83,7 @@ const CategoryScreen = ({ navigation, route }) => {
                 <Ionicons
                   name={item.icon}
                   size={18}
-                  color={COLORS.textPrimary}
+                  color={COLORS.honeyBrown}
                 />
               }
               onPress={() => openCapturePopup(item.id)}
@@ -91,7 +97,7 @@ const CategoryScreen = ({ navigation, route }) => {
         onClose={() => setCapturePopupVisible(false)}
         onScanNow={handleScanNow}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

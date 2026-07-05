@@ -36,7 +36,16 @@
   "private": true,
   "description": "",
   "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/capstoneTeam01/Front-End.git"
+  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/capstoneTeam01/Front-End/issues"
+  },
+  "homepage": "https://github.com/capstoneTeam01/Front-End#readme"
 }
