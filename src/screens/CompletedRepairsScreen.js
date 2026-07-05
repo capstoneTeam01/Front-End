@@ -10,7 +10,7 @@ const FILTERS = ["All", "DIY", "Emergency", "Service Requested"];
 
 const CompletedRepairsScreen = ({ navigation, route }) => {
   const repairs = route?.params?.repairs || [];
-  const [activeFilter, setActiveFilter] = useState("Emergency");
+  const [activeFilter, setActiveFilter] = useState("All");
 
   const filteredRepairs = repairs.filter((item) => {
     if (activeFilter === "All") return true;

@@ -13,6 +13,7 @@ import AppHeader from "../components/AppHeader/AppHeader";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import RecentScanCard from "../components/RecentScanCard/RecentScanCard";
 import RepairListItem from "../components/RepairListItem/RepairListItem";
+import BottomNav from "../components/BottomNav/BottomNav";
 
 import { getPhotoHistory } from "../api/getPhotoHistory";
 
@@ -237,7 +238,7 @@ setCompletedRepairs(completedScans);
           actionLabel="See All"
           onActionPress={() =>
             navigation.navigate("CompletedRepairs", {
-              scans: completedRepairs,
+              repairs: completedRepairs,
             })
           }
         />
@@ -265,6 +266,13 @@ setCompletedRepairs(completedScans);
         </View>
       </View>
     </ScrollView>
+    <BottomNav
+  active="Repairs"
+  onHomePress={() => navigation?.navigate("Home")}
+  onScanPress={() => navigation?.navigate("Scan")}
+  onRepairsPress={() => navigation?.navigate("MyRepairs")}
+  onProfilePress={() => navigation?.navigate("Profile")}
+/>
   </View>
 );
 };
