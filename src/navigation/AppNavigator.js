@@ -73,10 +73,6 @@ const AppNavigator = () => {
 
         {/* Profile */}
         <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen
-          name="CompletedRepairs"
-          component={CompletedRepairsScreen}
-        />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
