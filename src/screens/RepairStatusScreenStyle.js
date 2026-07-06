@@ -140,6 +140,43 @@ const styles = StyleSheet.create({
     fontWeight: TYPE.button.fontWeight,
     color: COLORS.secondary,
   },
+  modalOverlay: {
+  flex: 1,
+  backgroundColor: "rgba(0,0,0,0.35)",
+  justifyContent: "flex-end",
+},
+
+feedbackModal: {
+  backgroundColor: COLORS.white,
+  borderTopLeftRadius: 24,
+  borderTopRightRadius: 24,
+  padding: 24,
+},
+
+modalTitle: {
+  fontSize: 18,
+  fontWeight: "600",
+  color: COLORS.textPrimary,
+  marginBottom: 16,
+  textAlign: "center",
+},
+
+starRow: {
+  flexDirection: "row",
+  justifyContent: "center",
+  gap: 10,
+  marginBottom: 20,
+},
+
+feedbackInput: {
+  minHeight: 90,
+  borderWidth: 1,
+  borderColor: COLORS.gray300,
+  borderRadius: 14,
+  padding: 14,
+  marginBottom: 18,
+  color: COLORS.textPrimary,
+},
 });
 
 export default styles;

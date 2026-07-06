@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Modal,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { submitRepairFeedback } from "../api/submitRepairFeedback";
 import { updateChosenProvider } from "../api/updateChosenProvider";
 
 import AppHeader from "../components/AppHeader/AppHeader";
@@ -31,9 +34,42 @@ const RepairStatusScreen = ({ navigation, route }) => {
     route?.params?.relatedId ||
     route?.params?.notification?.relatedId;
 
-  const [loading, setLoading] = useState(true);
-  const [scan, setScan] = useState(null);
-  const [selectedProviderIndex, setSelectedProviderIndex] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [scan, setScan] = useState(null);
+    const [selectedProviderIndex, setSelectedProviderIndex] = useState(null);
+    const [feedbackVisible, setFeedbackVisible] = useState(false);
+    const [rating, setRating] = useState(5);
+    const [feedbackNote, setFeedbackNote] = useState("");
+    const [submittingFeedback, setSubmittingFeedback] = useState(false);
+
+
+    const handleSubmitFeedback = async () => {
+  try {
+    setSubmittingFeedback(true);
+
+    await submitRepairFeedback(photoId, rating, feedbackNote);
+
+    setFeedbackVisible(false);
+
+    Alert.alert(
+      "Feedback submitted",
+      "Thanks! This repair has been marked as completed.",
+      [
+        {
+          text: "Done",
+          onPress: () => navigation.navigate("MyRepairs"),
+        },
+      ]
+    );
+  } catch (error) {
+    Alert.alert(
+      "Unable to submit feedback",
+      error?.message || "Please try again."
+    );
+  } finally {
+    setSubmittingFeedback(false);
+  }
+};
 
   const loadRepair = async () => {
     if (!photoId) {
@@ -85,18 +121,7 @@ const RepairStatusScreen = ({ navigation, route }) => {
       providerReplyStatus: "replied",
     }));
 
-    Alert.alert(
-      "Provider saved",
-      `${getProviderName(chosenProvider)} has been saved for this repair.`,
-      [
-    {
-      text: "Continue",
-      onPress: () => {
-        navigation.navigate("MyRepairs");
-      },
-    },
-  ]
-    );
+   setFeedbackVisible(true);
   } catch (error) {
     Alert.alert(
       "Unable to save provider",
@@ -201,6 +226,43 @@ const RepairStatusScreen = ({ navigation, route }) => {
           <Text style={styles.primaryButtonText}>Confirm Provider</Text>
         </TouchableOpacity>
       </ScrollView>
+      <Modal transparent visible={feedbackVisible} animationType="slide">
+  <View style={styles.modalOverlay}>
+    <View style={styles.feedbackModal}>
+      <Text style={styles.modalTitle}>How was the repair?</Text>
+
+      <View style={styles.starRow}>
+        {[1, 2, 3, 4, 5].map((value) => (
+          <TouchableOpacity key={value} onPress={() => setRating(value)}>
+            <Ionicons
+              name={value <= rating ? "star" : "star-outline"}
+              size={30}
+              color={COLORS.primary}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <TextInput
+        value={feedbackNote}
+        onChangeText={setFeedbackNote}
+        placeholder="Add a note optional"
+        style={styles.feedbackInput}
+        multiline
+      />
+
+      <TouchableOpacity
+        style={styles.primaryButton}
+        onPress={handleSubmitFeedback}
+        disabled={submittingFeedback}
+      >
+        <Text style={styles.primaryButtonText}>
+          {submittingFeedback ? "Submitting..." : "Submit Feedback"}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
     </View>
   );
 };

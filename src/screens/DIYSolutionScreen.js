@@ -15,6 +15,7 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import { getProviderRouteParamsFromIssue } from "../utils/issueProviderRouteMapper";
 
 import AppHeader from "../components/AppHeader/AppHeader";
 import styles from "./DIYSolutionScreenStyle";
@@ -537,20 +538,26 @@ for (
         }
       >
         <TouchableOpacity
-          style={
-            styles.secondaryButton
-          }
-          onPress={() =>
-            navigation?.navigate(
-              "ProviderList"
-            )
-          }
-        >
-          <Text
-            style={
-              styles.secondaryText
-            }
+          style={styles.secondaryButton}
+  onPress={() => {
+    const providerRouteParams =
+      getProviderRouteParamsFromIssue({
+        analysisResult,
+      });
+
+    providerRouteParams.photoId = photoId;
+    providerRouteParams.uploadedImageUri = analysisResult?.uploadedImageUri;
+    providerRouteParams.uploadedImageUrl =
+      analysisResult?.uploadedImageUrl ||
+      analysisResult?.analysis?.uploadedImageUrl;
+
+    navigation.navigate(
+      "ProviderList",
+      providerRouteParams
+    );
+  }}
           >
+             <Text style={styles.secondaryText}>
             Find Experts
           </Text>
         </TouchableOpacity>
