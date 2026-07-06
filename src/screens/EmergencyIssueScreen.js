@@ -1,19 +1,18 @@
 import React from "react";
 import {
   Image,
-  Pressable,
   ScrollView,
   Text,
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import AppHeader from "../components/AppHeader/AppHeader";
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
 import RecommendedActionsList from "../components/RecommendedActionsList/RecommendedActionsList";
 import UserActionButtons from "../components/UserActionButtons/UserActionButtons";
 
 import {
-  RecommendationHeaderShape,
   RecommendationImageOverlay,
 } from "../components/shapes/RecommendationShape";
 
@@ -92,33 +91,6 @@ const EmergencyIssueScreen = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <RecommendationHeaderShape
-          style={styles.headerShape}
-        />
-
-        <Pressable
-          onPress={onBack}
-          hitSlop={12}
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed
-              ? styles.backButtonPressed
-              : null,
-          ]}
-        >
-          <Ionicons
-            name="chevron-back"
-            size={28}
-            color={COLORS.secondary}
-          />
-        </Pressable>
-
-        <Text style={styles.headerTitle}>
-          Issue Detected
-        </Text>
-      </View>
-
       <ScrollView
         style={styles.scrollArea}
         contentContainerStyle={
@@ -192,6 +164,12 @@ const EmergencyIssueScreen = ({
           />
         </View>
       </ScrollView>
+
+      <AppHeader
+        title="Issue Detected"
+        onBack={onBack}
+        style={styles.headerContainer}
+      />
 
       <View style={styles.bottomActionContainer}>
         <View style={styles.bottomActionContent}>
