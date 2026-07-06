@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
-  SafeAreaView,
-  ScrollView,
   View,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -12,6 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import AppHeader, { ShapedBackground } from "../components/AppHeader/AppHeader";
 import HexAvatar from "../components/HexAvatar/HexAvatar";
 import CityPickerSheet from "../components/CityPickerSheet/CityPickerSheet";
 import { getMe } from "../api/getMe";
@@ -27,6 +27,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [location, setLocation] = useState("");
   const [cityOpen, setCityOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [footerSize, setFooterSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     (async () => {
@@ -66,14 +67,8 @@ const EditProfileScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={COLORS.textPrimary} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Edit Profile</Text>
-        <View style={styles.backBtn} />
-      </View>
+    <View style={styles.safe}>
+      <AppHeader title="Edit Profile" onBack={() => navigation.goBack()} />
 
       <KeyboardAvoidingView
         style={styles.flex}
@@ -133,14 +128,24 @@ const EditProfileScreen = ({ navigation }) => {
             onPress={() => setCityOpen(true)}
             activeOpacity={0.8}
           >
-            <Text style={[styles.cityText, !location && styles.cityPlaceholder]}>
+            <Text
+              style={[styles.cityText, !location && styles.cityPlaceholder]}
+            >
               {location || "Select a city"}
             </Text>
-            <Ionicons name="chevron-down" size={18} color={COLORS.surfaceDark} />
+            <Ionicons
+              name="chevron-down"
+              size={18}
+              color={COLORS.surfaceDark}
+            />
           </TouchableOpacity>
         </ScrollView>
 
-        <View style={styles.footer}>
+        <View
+          style={styles.footer}
+          onLayout={(e) => setFooterSize(e.nativeEvent.layout)}
+        >
+          <ShapedBackground size={footerSize} fill={COLORS.warmCream} flipped />
           <TouchableOpacity
             style={[styles.footerBtn, styles.cancelBtn]}
             onPress={() => navigation.goBack()}
@@ -154,7 +159,9 @@ const EditProfileScreen = ({ navigation }) => {
             activeOpacity={0.85}
             disabled={saving}
           >
-            <Text style={styles.saveLabel}>{saving ? "Saving..." : "Save"}</Text>
+            <Text style={styles.saveLabel}>
+              {saving ? "Saving..." : "Save"}
+            </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -168,7 +175,7 @@ const EditProfileScreen = ({ navigation }) => {
         }}
         onClose={() => setCityOpen(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

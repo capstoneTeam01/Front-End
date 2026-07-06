@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   avatarWrap: {
-    alignItems: "center",
+    alignItems: "left",
     marginVertical: 16,
   },
   label: {
@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 12,
     paddingHorizontal: SIDE_PADDING,
-    paddingVertical: 16,
-    backgroundColor: COLORS.warmCream,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   footerBtn: {
     flex: 1,
