@@ -21,6 +21,7 @@ import styles from "./NotificationsScreenStyle";
 const ICON_FOR_TYPE = {
   appointment_confirmed: "checkmark-circle-outline",
   appointment_reminder: "alarm-outline",
+  provider_reply: "chatbubble-ellipses-outline",
   general: "information-circle-outline",
 };
 
@@ -107,6 +108,20 @@ const NotificationsScreen = ({ navigation }) => {
     }
   };
 
+  const handleNotificationPress = async (notification) => {
+  await markOne(notification._id);
+
+  if (notification.type === "provider_reply") {
+    navigation.navigate("RepairStatus", {
+      photoId: notification.relatedId,
+      notificationId: notification._id,
+      selectedProviders: notification.selectedProviders || [],
+    });
+
+    return;
+  }
+};
+
   const renderBody = () => {
     if (loading) {
       return (
@@ -157,11 +172,10 @@ const NotificationsScreen = ({ navigation }) => {
       >
         {items.map((n) => (
           <TouchableOpacity
-            key={n._id}
-            activeOpacity={0.7}
-            disabled={n.isRead}
-            onPress={() => markOne(n._id)}
-            style={[styles.row, !n.isRead && styles.rowUnread]}
+                key={n._id}
+                activeOpacity={0.7}
+                onPress={() => handleNotificationPress(n)}
+                style={[styles.row, !n.isRead && styles.rowUnread]}
           >
             <View style={styles.iconChip}>
               <Ionicons

@@ -8,6 +8,7 @@ import SignUpScreen from "../screens/SignUpScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import CompletedRepairsScreen from "../screens/CompletedRepairsScreen";
+import RepairStatusScreen from "../screens/RepairStatusScreen";
 
 import HomeScreen from "../screens/HomeScreen";
 import CategoryScreen from "../screens/CategoryScreen";
@@ -50,10 +51,11 @@ const AppNavigator = () => {
         <Stack.Screen name="ProviderQuoteRequest" component={ProviderQuoteRequestScreen} />
         <Stack.Screen name="ProviderConfirmation" component={ProviderConfirmationScreen} />
         <Stack.Screen name="RecentScans" component={RecentScansScreen} />
+        <Stack.Screen name="RepairStatus" component={RepairStatusScreen} />
+        <Stack.Screen name="CompletedRepairs" component={CompletedRepairsScreen} />
 
         {/* Profile */}
         <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="CompletedRepairs" component={CompletedRepairsScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
