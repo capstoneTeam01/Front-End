@@ -172,7 +172,7 @@ const HomeScreen = ({ navigation }) => {
         {renderRepairs()}
       </ScrollView>
 
-      <BottomNav active="Home" onScanPress={() => setPopupVisible(true)} />
+      <BottomNav active="Home" />
 
       <CategoryPopup
         visible={popupVisible}

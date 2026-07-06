@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Svg, { Path } from "react-native-svg";
 import { Ionicons } from "@expo/vector-icons";
 
+import { ShapedBackground } from "../AppHeader/AppHeader";
+import CategoryPopup from "../CategoryPopup/CategoryPopup";
 import COLORS from "../../constants/colors";
 import styles from "./BottomNavStyle";
 
@@ -39,81 +40,71 @@ const TABS = [
   },
 ];
 
-// Floating cream nav bar with a notched (angled) top-right corner.
-const NavShape = () => (
-  <Svg
-    style={styles.shape}
-    viewBox="0 0 100 100"
-    preserveAspectRatio="none"
-    pointerEvents="none"
-  >
-    <Path
-      d="
-        M18 0
-        H76
-        C84 0 90 4 95 12
-        L99 20
-        C100 22 100 24 100 28
-        V82
-        C100 92 92 100 82 100
-        H18
-        C8 100 0 92 0 82
-        V18
-        C0 8 8 0 18 0
-        Z
-      "
-      fill={COLORS.lightHoney}
-    />
-  </Svg>
-);
-
-const BottomNav = ({ active, onScanPress }) => {
+// Shared bottom tab bar. Owns the category popup so the Scan tab
+// always opens category selection first (never jumps to the camera),
+// on every screen that renders BottomNav.
+const BottomNav = ({ active }) => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const [barSize, setBarSize] = useState({ width: 0, height: 0 });
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const handlePress = (tab) => {
-    if (tab.key === active) return;
-
-    if (tab.key === "Scan" && typeof onScanPress === "function") {
-      onScanPress();
+    if (tab.key === "Scan") {
+      setPopupVisible(true);
       return;
     }
+
+    if (tab.key === active) return;
 
     navigation.navigate(tab.route);
   };
 
-  return (
-    <View
-      style={[styles.floatWrap, { paddingBottom: Math.max(insets.bottom, 12) }]}
-      pointerEvents="box-none"
-    >
-      <View style={styles.bar}>
-        <NavShape />
+  const goToCategory = (cat) => {
+    setPopupVisible(false);
+    navigation.navigate("Category", { categoryId: cat.id, title: cat.label });
+  };
 
-        {TABS.map((tab) => {
-          const isActive = tab.key === active;
-          return (
-            <TouchableOpacity
-              key={tab.key}
-              style={styles.navItem}
-              onPress={() => handlePress(tab)}
-              activeOpacity={0.7}
-            >
-              <Ionicons
-                name={isActive ? tab.iconActive : tab.icon}
-                size={22}
-                color={isActive ? COLORS.primary : COLORS.mediumGrey}
-              />
-              <Text
-                style={[styles.navLabel, isActive && styles.navLabelActive]}
+  return (
+    <>
+      <View style={styles.floatWrap} pointerEvents="box-none">
+        <View
+          style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 12) }]}
+          onLayout={(e) => setBarSize(e.nativeEvent.layout)}
+        >
+          <ShapedBackground size={barSize} fill={COLORS.lightHoney} flipped />
+
+          {TABS.map((tab) => {
+            const isActive = tab.key === active;
+            return (
+              <TouchableOpacity
+                key={tab.key}
+                style={styles.navItem}
+                onPress={() => handlePress(tab)}
+                activeOpacity={0.7}
               >
-                {tab.label}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+                <Ionicons
+                  name={isActive ? tab.iconActive : tab.icon}
+                  size={22}
+                  color={isActive ? COLORS.primary : COLORS.mediumGrey}
+                />
+                <Text
+                  style={[styles.navLabel, isActive && styles.navLabelActive]}
+                >
+                  {tab.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </View>
-    </View>
+
+      <CategoryPopup
+        visible={popupVisible}
+        onClose={() => setPopupVisible(false)}
+        onSelectCategory={goToCategory}
+      />
+    </>
   );
 };
 
