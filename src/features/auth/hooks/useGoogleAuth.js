@@ -1,72 +1,51 @@
 import { useCallback } from "react";
-import { Platform } from "react-native";
-import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
 
 WebBrowser.maybeCompleteAuthSession();
 
-const GOOGLE_CLIENT_IDS = {
-  android: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
-  ios: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
-  web: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-};
+// The backend serves the Google sign-in page and verifies the returned idToken.
+const AUTH_PAGE_URL =
+  "https://backend-production-6ace.up.railway.app/google-auth.html";
 
-const FALLBACK_GOOGLE_CLIENT_ID = "missing-google-client-id.apps.googleusercontent.com";
+// Deep link the page redirects back to: fixbee://google-auth?id_token=...
+const REDIRECT_URL = Linking.createURL("google-auth");
 
-const getCurrentPlatformClientId = () => {
-  if (Platform.OS === "android") return GOOGLE_CLIENT_IDS.android;
-  if (Platform.OS === "ios") return GOOGLE_CLIENT_IDS.ios;
-  return GOOGLE_CLIENT_IDS.web;
+const extractIdToken = (url) => {
+  if (!url) return null;
+  try {
+    const { queryParams } = Linking.parse(url);
+    return queryParams?.id_token || null;
+  } catch (error) {
+    console.log("[FixBee][Auth] could not parse redirect url", error?.message);
+    return null;
+  }
 };
 
 const useGoogleAuth = () => {
-  const configuredClientId = getCurrentPlatformClientId();
-  const isConfigured = Boolean(configuredClientId);
-
-  if (!isConfigured) {
-    console.log("[FixBee][Auth] Google sign-in client id missing", {
-      platform: Platform.OS,
-    });
-  }
-
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    androidClientId:
-      GOOGLE_CLIENT_IDS.android ||
-      GOOGLE_CLIENT_IDS.web ||
-      FALLBACK_GOOGLE_CLIENT_ID,
-    iosClientId:
-      GOOGLE_CLIENT_IDS.ios || GOOGLE_CLIENT_IDS.web || FALLBACK_GOOGLE_CLIENT_ID,
-    webClientId: GOOGLE_CLIENT_IDS.web || FALLBACK_GOOGLE_CLIENT_ID,
-  });
-
   const signIn = useCallback(async () => {
-    if (!isConfigured) {
-      throw new Error(
-        Platform.OS === "android"
-          ? "Google sign-in is missing EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID."
-          : "Google sign-in is not configured for this platform.",
-      );
-    }
+    const result = await WebBrowser.openAuthSessionAsync(
+      AUTH_PAGE_URL,
+      REDIRECT_URL,
+    );
 
-    const result = await promptAsync();
-
-    if (result?.type === "cancel" || result?.type === "dismiss") {
+    if (result.type === "cancel" || result.type === "dismiss") {
       return { cancelled: true };
     }
 
-    if (result?.type !== "success") {
-      throw new Error(result?.error?.message || "Google sign-in failed.");
+    if (result.type !== "success" || !result.url) {
+      throw new Error("Google sign-in was interrupted. Please try again.");
     }
 
-    const idToken = result?.params?.id_token || result?.authentication?.idToken;
+    const idToken = extractIdToken(result.url);
     if (!idToken) {
       throw new Error("Google sign-in did not return an ID token.");
     }
 
     return { idToken };
-  }, [isConfigured, promptAsync]);
+  }, []);
 
-  return { signIn, ready: isConfigured && !!request };
+  return { signIn, ready: true };
 };
 
 export default useGoogleAuth;
