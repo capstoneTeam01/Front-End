@@ -11,6 +11,11 @@ import styles from "./OnboardingScreenStyle";
 import AuthButton from "../components/AuthButton/AuthButton";
 import CityPickerSheet from "../components/CityPickerSheet/CityPickerSheet";
 import { updateMyCity } from "../api/updateMyCity";
+import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
+import Onboarding1 from "../components/Mascot/Onboarding1.svg";
+import Onboarding2 from "../components/Mascot/Onboarding2.svg";
+import Onboarding3 from "../components/Mascot/Onboarding3.svg";
+import Welcome from "../components/Mascot/Welcome.svg";
 
 const { width } = Dimensions.get("window");
 
@@ -19,22 +24,26 @@ const SLIDES = [
     key: "spot",
     title: "Spot The Problem",
     body: "Take a photo of an issue and let FixBee identify what's wrong.",
+    Mascot: Onboarding1,
   },
   {
     key: "solution",
     title: "Get Smart Solution",
     body: "Receive issue details, DIY guidance, and estimated repair costs instantly.",
+    Mascot: Onboarding2,
   },
   {
     key: "trusted",
     title: "Find Trusted Help",
     body: "Connect with trusted professionals when the repair needs expert attention.",
+    Mascot: Onboarding3,
   },
   {
     key: "city",
     title: "Select Your City",
     body: "Choose your city so we can match you with nearby professionals.",
     isCity: true,
+    Mascot: Welcome,
   },
 ];
 
@@ -68,7 +77,10 @@ const OnboardingScreen = ({ navigation }) => {
       await updateMyCity(city);
       navigation.reset({ index: 0, routes: [{ name: "Home" }] });
     } catch (error) {
-      Alert.alert("Couldn't save your city", error?.message || "Please try again.");
+      Alert.alert(
+        "Couldn't save your city",
+        error?.message || "Please try again.",
+      );
     } finally {
       setSaving(false);
     }
@@ -94,7 +106,11 @@ const OnboardingScreen = ({ navigation }) => {
         {SLIDES.map((slide) => (
           <View key={slide.key} style={[styles.slide, { width }]}>
             <View style={styles.hexHero}>
-              <View style={styles.beePlaceholder} />
+              <HeroHexagon flatTop width={280}>
+                {slide.Mascot ? (
+                  <slide.Mascot width={150} height={150} />
+                ) : null}
+              </HeroHexagon>
             </View>
 
             <View style={styles.textBlock}>
@@ -107,7 +123,9 @@ const OnboardingScreen = ({ navigation }) => {
                   onPress={() => setSheetOpen(true)}
                   activeOpacity={0.8}
                 >
-                  <Text style={[styles.cityText, !city && styles.cityPlaceholder]}>
+                  <Text
+                    style={[styles.cityText, !city && styles.cityPlaceholder]}
+                  >
                     {city || "Select a city"}
                   </Text>
                   <Text style={styles.chevron}>▾</Text>
@@ -120,16 +138,15 @@ const OnboardingScreen = ({ navigation }) => {
 
       <View style={styles.dotsRow}>
         {SLIDES.map((s, i) => (
-          <View key={s.key} style={[styles.dot, i === index && styles.dotActive]} />
+          <View
+            key={s.key}
+            style={[styles.dot, i === index && styles.dotActive]}
+          />
         ))}
       </View>
 
       <View style={styles.footer}>
-        <AuthButton
-          label={isLast ? "Get Started" : "Next"}
-          onPress={handleNext}
-          loading={saving}
-        />
+        <AuthButton label="Next" onPress={handleNext} loading={saving} />
       </View>
 
       <CityPickerSheet

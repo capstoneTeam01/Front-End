@@ -26,7 +26,7 @@ const SplashScreen = ({ navigation }) => {
         if (!isMounted) return;
         navigation.reset({
           index: 0,
-          routes: [{ name: token ? "Home" : "Login" }],
+          routes: [{ name: token ? "Home" : "Welcome" }],
         });
       }, wait);
     };

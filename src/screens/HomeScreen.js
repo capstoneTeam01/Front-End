@@ -151,11 +151,7 @@ const HomeScreen = ({ navigation }) => {
               key={cat.id}
               label={cat.label}
               icon={
-                <Ionicons
-                  name={cat.icon}
-                  size={24}
-                  color={COLORS.textPrimary}
-                />
+                <Ionicons name={cat.icon} size={24} color={COLORS.primary} />
               }
               onPress={() => goToCategory(cat)}
             />
