@@ -1,35 +1,61 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import { SIDE_PADDING, BOTTOM_NAV_HEIGHT, TYPE } from "../constants/layout";
+import {
+  SIDE_PADDING,
+  BOTTOM_NAV_HEIGHT,
+  TYPE,
+  RADIUS,
+} from "../constants/layout";
 
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: COLORS.white,
   },
+
   scroll: {
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 24,
-    paddingBottom: BOTTOM_NAV_HEIGHT + 24,
+    paddingTop: 0,
+    paddingBottom: BOTTOM_NAV_HEIGHT + 40,
   },
-  hero: {
+
+  // Twin-hexagon cream band, bleeds to screen edges.
+  topArea: {
+    marginHorizontal: -SIDE_PADDING,
+    height: 110,
+  },
+
+  topBg: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
+  // Hero overlaps up into the cream band slightly.
+  heroWrap: {
+    marginTop: -8,
     alignItems: "center",
-    paddingVertical: 24,
   },
+
+  avatarHex: {
+    marginBottom: 16,
+  },
+
   name: {
     fontSize: TYPE.sectionTitle.fontSize,
     fontWeight: "700",
     color: COLORS.textPrimary,
-    marginTop: 16,
+    textAlign: "center",
   },
+
   email: {
     fontSize: TYPE.body.fontSize,
-    color: COLORS.textMuted,
-    marginTop: 4,
+    color: COLORS.honeyBrown,
+    marginTop: 6,
+    textAlign: "center",
   },
+
   menuCard: {
-    marginTop: 16,
-    borderRadius: 16,
+    marginTop: 24,
+    borderRadius: RADIUS.big,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.divider,
     backgroundColor: COLORS.white,

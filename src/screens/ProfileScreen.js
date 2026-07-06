@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { SafeAreaView, ScrollView, View, Text, Alert } from "react-native";
+import { ScrollView, View, Text, Alert } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 
-import HexAvatar from "../components/HexAvatar/HexAvatar";
+import HomeTopBackground from "./HomeTopBackground";
+import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
+import HexTile from "../components/HexTile/HexTile";
 import ProfileMenuRow from "../components/ProfileMenuRow/ProfileMenuRow";
 import ConfirmPopup from "../components/ConfirmPopup/ConfirmPopup";
 import NotificationSettingsModal from "../components/NotificationSettingsModal/NotificationSettingsModal";
@@ -10,12 +14,17 @@ import BottomNav from "../components/BottomNav/BottomNav";
 import { getMe } from "../api/getMe";
 import { deleteAccount, updateNotificationSetting } from "../api/profileApi";
 import { logoutUser } from "../features/auth/services/authSessionService";
+import COLORS from "../constants/colors";
 import styles from "./ProfileScreenStyle";
 
 const ProfileScreen = ({ navigation }) => {
+  const insets = useSafeAreaInsets();
   const [displayName, setDisplayName] = useState("User Name");
   const [email, setEmail] = useState("");
-  const [notif, setNotif] = useState({ push: true, appointmentReminders: true });
+  const [notif, setNotif] = useState({
+    push: true,
+    appointmentReminders: true,
+  });
 
   const [logoutVisible, setLogoutVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
@@ -30,7 +39,8 @@ const ProfileScreen = ({ navigation }) => {
       if (user?.notificationSettings) {
         setNotif({
           push: user.notificationSettings.push !== false,
-          appointmentReminders: user.notificationSettings.appointmentReminders !== false,
+          appointmentReminders:
+            user.notificationSettings.appointmentReminders !== false,
         });
       }
     } catch (error) {
@@ -56,7 +66,10 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleDelete = async (password) => {
     if (!password) {
-      Alert.alert("Password required", "Enter your password to delete your account.");
+      Alert.alert(
+        "Password required",
+        "Enter your password to delete your account.",
+      );
       return;
     }
     setDeleting(true);
@@ -66,7 +79,10 @@ const ProfileScreen = ({ navigation }) => {
       setDeleteVisible(false);
       goToLogin();
     } catch (error) {
-      Alert.alert("Couldn't delete account", error?.message || "Please try again.");
+      Alert.alert(
+        "Couldn't delete account",
+        error?.message || "Please try again.",
+      );
     } finally {
       setDeleting(false);
     }
@@ -78,20 +94,40 @@ const ProfileScreen = ({ navigation }) => {
       await updateNotificationSetting(key, value);
     } catch (error) {
       setNotif((prev) => ({ ...prev, [key]: !value }));
-      Alert.alert("Couldn't update setting", error?.message || "Please try again.");
+      Alert.alert(
+        "Couldn't update setting",
+        error?.message || "Please try again.",
+      );
     }
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.safe}>
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.hero}>
-          <HexAvatar size={130} />
-          <Text style={styles.name}>{displayName}</Text>
-          <Text style={styles.email}>{email || "—"}</Text>
+        {/* Twin-hexagon cream background behind the status bar */}
+        <View style={styles.topArea}>
+          <HomeTopBackground style={styles.topBg} />
+          <View style={{ height: insets.top }} />
+        </View>
+
+        {/* Outlined hero hexagon holding avatar + name + email */}
+        <View style={styles.heroWrap}>
+          <HeroHexagon>
+            <View style={styles.avatarHex}>
+              <HexTile size={92} flatTop={false} fill={COLORS.lightHoney}>
+                <Ionicons
+                  name="person-outline"
+                  size={40}
+                  color={COLORS.secondary}
+                />
+              </HexTile>
+            </View>
+            <Text style={styles.name}>{displayName}</Text>
+            <Text style={styles.email}>{email || "—"}</Text>
+          </HeroHexagon>
         </View>
 
         <View style={styles.menuCard}>
@@ -153,7 +189,7 @@ const ProfileScreen = ({ navigation }) => {
         onToggle={handleToggleNotif}
         onClose={() => setNotifVisible(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
