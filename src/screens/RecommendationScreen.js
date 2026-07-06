@@ -120,12 +120,6 @@ const RecommendationScreen = ({
 
   return (
     <View style={styles.container}>
-      <AppHeader
-        title="Issue Detected"
-        onBack={onBack}
-        style={styles.headerContainer}
-      />
-
       <ScrollView
         style={styles.scrollArea}
         contentContainerStyle={
@@ -217,6 +211,12 @@ const RecommendationScreen = ({
           </View>
         </View>
       </ScrollView>
+
+      <AppHeader
+        title="Issue Detected"
+        onBack={onBack}
+        style={styles.headerContainer}
+      />
 
       <View style={styles.bottomActionContainer}>
         <View style={styles.bottomActionContent}>
