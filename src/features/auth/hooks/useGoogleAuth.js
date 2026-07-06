@@ -4,11 +4,9 @@ import * as Linking from "expo-linking";
 
 WebBrowser.maybeCompleteAuthSession();
 
-// The backend serves the Google sign-in page and verifies the returned idToken.
 const AUTH_PAGE_URL =
   "https://backend-production-6ace.up.railway.app/google-auth.html";
 
-// Deep link the page redirects back to: fixbee://google-auth?id_token=...
 const REDIRECT_URL = Linking.createURL("google-auth");
 
 const extractIdToken = (url) => {
@@ -24,10 +22,10 @@ const extractIdToken = (url) => {
 
 const useGoogleAuth = () => {
   const signIn = useCallback(async () => {
-    const result = await WebBrowser.openAuthSessionAsync(
-      AUTH_PAGE_URL,
-      REDIRECT_URL,
-    );
+    const returnUrl = REDIRECT_URL;
+    const authUrl = `${AUTH_PAGE_URL}?redirect_uri=${encodeURIComponent(returnUrl)}`;
+
+    const result = await WebBrowser.openAuthSessionAsync(authUrl, returnUrl);
 
     if (result.type === "cancel" || result.type === "dismiss") {
       return { cancelled: true };
