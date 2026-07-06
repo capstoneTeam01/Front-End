@@ -23,6 +23,7 @@ const MIN_PASSWORD = 8;
 const SignUpScreen = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -63,6 +64,8 @@ const SignUpScreen = ({ navigation }) => {
 
     setSubmitting(true);
     try {
+      // FIXBEE-XXX: `phone` captured in state but not sent yet — wire into
+      // registerUser payload + backend Zod schema once backend adds the field.
       await registerUser({ name, email: mail, password });
 
       navigation.reset({
@@ -124,6 +127,16 @@ const SignUpScreen = ({ navigation }) => {
           value={lastName}
           onChangeText={setLastName}
           placeholder="Enter your last name"
+        />
+
+        <Text style={styles.fieldLabel}>Phone</Text>
+        <AppTextField
+          value={phone}
+          onChangeText={setPhone}
+          placeholder="Enter Your Phone No"
+          keyboardType="phone-pad"
+          autoCapitalize="none"
+          autoCorrect={false}
         />
 
         <Text style={styles.fieldLabel}>Email</Text>

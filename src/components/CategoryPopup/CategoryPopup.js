@@ -36,6 +36,7 @@ const CategoryPopup = ({ visible, onClose, onSelectCategory }) => {
                 <CategoryCard
                   key={cat.id}
                   label={cat.label}
+                  fill={COLORS.lightHoney}
                   icon={
                     <Ionicons
                       name={cat.icon}
