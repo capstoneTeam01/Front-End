@@ -11,21 +11,12 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     alignItems: "center",
   },
-  hexHero: {
-    width: 300,
-    height: 320,
-    borderRadius: 32,
-    backgroundColor: COLORS.whiteOverlaySoft,
-    alignItems: "center",
-    justifyContent: "center",
+hexHero: {
+    marginTop: 40,
     marginBottom: 48,
+    alignItems: "center",
   },
-  beePlaceholder: {
-    width: 150,
-    height: 150,
-    borderRadius: 24,
-    backgroundColor: COLORS.whiteOverlayHalf,
-  },
+
   textBlock: {
     paddingHorizontal: 32,
     alignItems: "center",

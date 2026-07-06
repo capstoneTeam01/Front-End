@@ -15,7 +15,7 @@ import GoogleButton from "../components/GoogleButton/GoogleButton";
 import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
 import {
   loginUser,
-  loginWithGoogloginWithGoogleTokenle,
+  loginWithGoogleToken,
 } from "../features/auth/services/authSessionService";
 
 const LoginScreen = ({ navigation }) => {

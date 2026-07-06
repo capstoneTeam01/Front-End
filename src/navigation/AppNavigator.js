@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import SplashScreen from "../screens/SplashScreen";
+import WelcomeScreen from "../screens/WelcomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
@@ -29,9 +30,13 @@ const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        initialRouteName="Splash"
+        screenOptions={{ headerShown: false }}
+      >
         {/* Auth & onboarding flow */}
         <Stack.Screen name="Splash" component={SplashScreen} />
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
@@ -45,15 +50,30 @@ const AppNavigator = () => {
         <Stack.Screen name="MyRepairs" component={MyRepairsScreen} />
         <Stack.Screen name="DIYSolution" component={DIYSolutionScreen} />
         <Stack.Screen name="ProviderList" component={ProviderListScreen} />
-        <Stack.Screen name="ProviderDetails" component={ProviderDetailsScreen} />
-        <Stack.Screen name="ProviderAddressTime" component={ProviderAddressTimeScreen} />
-        <Stack.Screen name="ProviderQuoteRequest" component={ProviderQuoteRequestScreen} />
-        <Stack.Screen name="ProviderConfirmation" component={ProviderConfirmationScreen} />
+        <Stack.Screen
+          name="ProviderDetails"
+          component={ProviderDetailsScreen}
+        />
+        <Stack.Screen
+          name="ProviderAddressTime"
+          component={ProviderAddressTimeScreen}
+        />
+        <Stack.Screen
+          name="ProviderQuoteRequest"
+          component={ProviderQuoteRequestScreen}
+        />
+        <Stack.Screen
+          name="ProviderConfirmation"
+          component={ProviderConfirmationScreen}
+        />
         <Stack.Screen name="RecentScans" component={RecentScansScreen} />
 
         {/* Profile */}
         <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="CompletedRepairs" component={CompletedRepairsScreen} />
+        <Stack.Screen
+          name="CompletedRepairs"
+          component={CompletedRepairsScreen}
+        />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
