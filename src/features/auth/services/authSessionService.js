@@ -131,13 +131,8 @@ export const getTokenForRequest = async ({
 } = {}) => {
   if (!forceRefresh) {
     const savedToken = await getSavedToken();
-
-    if (savedToken && !tokenNeedsRefresh(savedToken)) {
-      return savedToken;
-    }
-
     if (savedToken) {
-      await clearAuthToken({ keepUserProfile: true });
+      return savedToken;
     }
   }
 
