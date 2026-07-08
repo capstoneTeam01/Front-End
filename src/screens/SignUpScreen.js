@@ -12,6 +12,7 @@ import styles from "./SignUpScreenStyle";
 import AppTextField from "../components/AppTextField/AppTextField";
 import AuthButton from "../components/AuthButton/AuthButton";
 import GoogleButton from "../components/GoogleButton/GoogleButton";
+import HoneycombBackground from "../components/HoneycombBackground";
 import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
 import {
   registerUser,
@@ -107,7 +108,7 @@ const SignUpScreen = ({ navigation }) => {
       style={styles.flex}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <View style={styles.topShape} />
+      <HoneycombBackground variant="login" style={styles.topShape} />
       <ScrollView
         contentContainerStyle={styles.scroll}
         keyboardShouldPersistTaps="handled"
@@ -120,6 +121,7 @@ const SignUpScreen = ({ navigation }) => {
           value={firstName}
           onChangeText={setFirstName}
           placeholder="Enter your first name"
+          containerStyle={styles.field}
         />
 
         <Text style={styles.fieldLabel}>Last Name</Text>
@@ -127,6 +129,18 @@ const SignUpScreen = ({ navigation }) => {
           value={lastName}
           onChangeText={setLastName}
           placeholder="Enter your last name"
+          containerStyle={styles.field}
+        />
+
+        <Text style={styles.fieldLabel}>Email</Text>
+        <AppTextField
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Your Email Goes Here"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          containerStyle={styles.field}
         />
 
         <Text style={styles.fieldLabel}>Phone</Text>
@@ -137,16 +151,7 @@ const SignUpScreen = ({ navigation }) => {
           keyboardType="phone-pad"
           autoCapitalize="none"
           autoCorrect={false}
-        />
-
-        <Text style={styles.fieldLabel}>Email</Text>
-        <AppTextField
-          value={email}
-          onChangeText={setEmail}
-          placeholder="youremail@example.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
+          containerStyle={styles.field}
         />
 
         <Text style={styles.fieldLabel}>Password</Text>
@@ -157,6 +162,7 @@ const SignUpScreen = ({ navigation }) => {
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
+          containerStyle={styles.field}
         />
 
         <Text style={styles.fieldLabel}>Confirm Password</Text>
@@ -167,6 +173,7 @@ const SignUpScreen = ({ navigation }) => {
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
+          containerStyle={styles.field}
         />
 
         <View style={styles.createWrap}>
@@ -174,6 +181,8 @@ const SignUpScreen = ({ navigation }) => {
             label="Create"
             onPress={handleCreate}
             loading={submitting}
+            style={styles.formButton}
+            labelStyle={styles.formButtonLabel}
           />
         </View>
 
@@ -187,6 +196,8 @@ const SignUpScreen = ({ navigation }) => {
           label="Sign In using Google"
           onPress={handleGoogle}
           loading={googleLoading}
+          style={styles.formButton}
+          labelStyle={styles.formButtonLabel}
         />
 
         <View style={styles.footerRow}>

@@ -7,12 +7,14 @@ const GoogleButton = ({
   onPress,
   loading = false,
   disabled = false,
+  style,
+  labelStyle,
 }) => {
   const isDisabled = disabled || loading;
 
   return (
     <TouchableOpacity
-      style={[styles.button, isDisabled && styles.buttonDisabled]}
+      style={[styles.button, isDisabled && styles.buttonDisabled, style]}
       onPress={onPress}
       activeOpacity={0.85}
       disabled={isDisabled}
@@ -22,7 +24,7 @@ const GoogleButton = ({
       ) : (
         <View style={styles.content}>
           <Text style={styles.googleG}>G</Text>
-          <Text style={styles.label}>{label}</Text>
+          <Text style={[styles.label, labelStyle]}>{label}</Text>
         </View>
       )}
     </TouchableOpacity>
