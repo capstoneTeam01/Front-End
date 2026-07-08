@@ -2,6 +2,8 @@ import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import Svg, { Polygon } from "react-native-svg";
 
+import PolygonAsset, { getPolygonAssetSize } from "../PolygonAsset";
+
 const buildPoints = (w, h, flatTop) => {
   if (flatTop) {
     return [
@@ -33,8 +35,27 @@ const HexTile = ({
   style,
   flatTop = true,
 }) => {
+  if (!flatTop) {
+    const dimensions = getPolygonAssetSize("polygon4", size);
+
+    return (
+      <PolygonAsset
+        variant="polygon4"
+        width={size}
+        height={dimensions.height}
+        fill={fill}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        onPress={onPress}
+        style={style}
+      >
+        {children}
+      </PolygonAsset>
+    );
+  }
+
   const w = size;
-  const h = flatTop ? size * 0.92 : size * 1.08;
+  const h = size * 0.92;
 
   const points = buildPoints(w, h, flatTop)
     .map((p) => p.join(","))

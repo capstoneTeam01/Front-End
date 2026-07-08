@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import { RADIUS, SIDE_PADDING, TYPE } from "../../constants/layout";
+import { SIDE_PADDING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   backdrop: {
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 28,
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 12,
-    paddingBottom: 40,
+    paddingBottom: 32,
     alignItems: "center",
   },
 
@@ -23,22 +23,24 @@ const styles = StyleSheet.create({
     width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: COLORS.gray500,
-    marginBottom: 20,
+    backgroundColor: COLORS.gray700,
+    marginBottom: 16,
   },
 
   title: {
     fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "600",
+    lineHeight: 28,
+    fontWeight: "400",
     color: COLORS.textPrimary,
-    marginBottom: 6,
+    marginBottom: 8,
   },
 
   subtitle: {
     fontSize: TYPE.small.fontSize,
+    lineHeight: 18,
     fontWeight: "400",
-    color: COLORS.textSecondary,
-    marginBottom: 24,
+    color: COLORS.mediumGrey,
+    marginBottom: 16,
   },
 
   grid: {
@@ -48,10 +50,11 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    marginTop: 24,
-    fontSize: TYPE.caption.fontSize,
+    marginTop: 16,
+    fontSize: TYPE.small.fontSize,
+    lineHeight: 18,
     fontWeight: "400",
-    color: COLORS.textMuted,
+    color: COLORS.mediumGrey,
   },
 });
 

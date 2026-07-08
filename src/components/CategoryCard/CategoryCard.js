@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
-import HexTile from "../HexTile/HexTile";
+
+import PolygonAsset from "../PolygonAsset";
 import styles from "./CategoryCardStyle";
 import COLORS from "../../constants/colors";
 
@@ -8,19 +9,26 @@ const CategoryCard = ({
   label,
   icon,
   onPress,
-  size = 104,
+  size = 107.33,
   fill = COLORS.surface,
 }) => {
   return (
     <View style={styles.wrap}>
-      <HexTile size={size} fill={fill} onPress={onPress} flatTop={false}>
+      <PolygonAsset
+        variant="polygon5"
+        width={size}
+        height={(size * 120.69) / 107.33}
+        fill={fill}
+        onPress={onPress}
+        preserveAspectRatio="none"
+      >
         <View style={styles.content}>
           <View style={styles.iconWrap}>{icon}</View>
           <Text style={styles.label} numberOfLines={1}>
             {label}
           </Text>
         </View>
-      </HexTile>
+      </PolygonAsset>
     </View>
   );
 };

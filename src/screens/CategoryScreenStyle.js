@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import { SIDE_PADDING, SPACING, RADIUS, TYPE } from "../constants/layout";
+import { SIDE_PADDING } from "../constants/layout";
 
 const styles = StyleSheet.create({
   safe: {
@@ -10,45 +10,95 @@ const styles = StyleSheet.create({
 
   scroll: {
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: SPACING.card,
     paddingBottom: 40,
   },
 
-  banner: {
-    marginTop: SPACING.card,
+  topArea: {
+    position: "relative",
+    marginHorizontal: -SIDE_PADDING,
+  },
+
+  topBg: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
+  topRow: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    paddingHorizontal: SIDE_PADDING,
+    flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
+    justifyContent: "space-between",
+  },
+
+  headerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+
+  headerTitle: {
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: "400",
+    color: COLORS.honeyBrown,
+  },
+
+  headerButton: {
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  heroWrap: {
+    alignItems: "center",
   },
 
   bannerTitle: {
-    fontSize: TYPE.screenTitle.fontSize,
-    fontWeight: TYPE.screenTitle.fontWeight,
-    color: COLORS.textPrimary,
+    fontSize: 28,
+    lineHeight: 33,
+    fontWeight: "400",
+    color: COLORS.secondary,
     textAlign: "center",
-    marginBottom: 12,
+    marginBottom: 16,
   },
 
   bannerSubtitle: {
-    fontSize: TYPE.body.fontSize,
+    fontSize: 16,
+    lineHeight: 20,
     fontWeight: "400",
-    color: COLORS.textSecondary,
+    color: COLORS.honeyBrown,
     textAlign: "center",
-    lineHeight: 22,
-    paddingHorizontal: 24,
   },
 
   scanWrap: {
     alignItems: "center",
-    marginTop: SPACING.large,
-    marginBottom: SPACING.large,
+    zIndex: 2,
   },
 
   popularHeader: {
-    marginBottom: SPACING.card,
+    marginTop: 7,
+    marginBottom: 20,
+  },
+
+  popularTitle: {
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: "400",
+    color: COLORS.textPrimary,
+  },
+
+  popularAction: {
+    fontSize: 14,
+    lineHeight: 18,
+    fontWeight: "400",
+    color: COLORS.goldenHoney,
   },
 
   repairsCard: {
-    borderRadius: RADIUS.big,
+    borderRadius: 24,
     backgroundColor: COLORS.white,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.divider,

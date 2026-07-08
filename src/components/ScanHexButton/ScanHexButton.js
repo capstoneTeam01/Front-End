@@ -1,18 +1,20 @@
 import React from "react";
-import { Ionicons } from "@expo/vector-icons";
-import HexTile from "../HexTile/HexTile";
-import COLORS from "../../constants/colors";
 
-const ScanHexButton = ({ onPress, size = 96 }) => {
+import ScanIcon from "../../../assets/icons/Scan_Icon.svg";
+import COLORS from "../../constants/colors";
+import PolygonAsset from "../PolygonAsset";
+
+const ScanHexButton = ({ onPress, size = 87 }) => {
   return (
-    <HexTile
-      size={size}
+    <PolygonAsset
+      variant="polygon4"
+      width={size}
       fill={COLORS.primary}
       onPress={onPress}
-      flatTop={false}
+      accessibilityLabel="Scan an issue"
     >
-      <Ionicons name="scan-outline" size={size * 0.4} color={COLORS.white} />
-    </HexTile>
+      <ScanIcon width={24} height={24} color={COLORS.secondary} />
+    </PolygonAsset>
   );
 };
 

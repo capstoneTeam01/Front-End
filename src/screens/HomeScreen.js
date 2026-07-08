@@ -5,8 +5,8 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import HomeTopBackground from "./HomeTopBackground.js";
@@ -17,6 +17,7 @@ import SectionHeader from "../components/SectionHeader/SectionHeader";
 import RepairListItem from "../components/RepairListItem/RepairListItem";
 import CategoryPopup from "../components/CategoryPopup/CategoryPopup";
 import BottomNav from "../components/BottomNav/BottomNav";
+import CategoryIcon from "../components/CategoryIcon";
 
 import { CATEGORIES, POPULAR_REPAIRS } from "../data/repairData";
 import { getMe } from "../api/getMe";
@@ -24,9 +25,10 @@ import COLORS from "../constants/colors";
 import styles from "./HomeScreenStyle";
 
 const HomeScreen = ({ navigation }) => {
-  const insets = useSafeAreaInsets();
+  const { width: screenWidth } = useWindowDimensions();
+  const layoutScale = screenWidth / 402;
   const [popupVisible, setPopupVisible] = useState(false);
-  const [location, setLocation] = useState("Vancouver, BC");
+  const [location, setLocation] = useState("Vancouver");
 
   useEffect(() => {
     let active = true;
@@ -83,7 +85,11 @@ const HomeScreen = ({ navigation }) => {
             subtitle={item.subtitle}
             showDivider={i > 0}
             icon={
-              <Ionicons name={item.icon} size={18} color={COLORS.honeyBrown} />
+              <CategoryIcon
+                categoryId={item.subtitle}
+                size={18}
+                color={COLORS.secondary}
+              />
             }
             onPress={() =>
               navigation?.navigate("Category", {
@@ -103,10 +109,19 @@ const HomeScreen = ({ navigation }) => {
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        {/* Twin-hexagon cream background + location/bell row */}
-        <View style={styles.topArea}>
+        <View
+          style={[styles.topArea, { height: 116 * layoutScale }]}
+        >
           <HomeTopBackground style={styles.topBg} />
-          <View style={[styles.topRow, { paddingTop: insets.top + 4 }]}>
+          <View
+            style={[
+              styles.topRow,
+              {
+                top: 48 * layoutScale,
+                height: 68 * layoutScale,
+              },
+            ]}
+          >
             <View style={styles.locationPill}>
               <Ionicons
                 name="location-outline"
@@ -132,7 +147,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.heroWrap}>
-          <HeroHexagon>
+          <HeroHexagon width={354 * layoutScale}>
             <Text style={styles.heroTitle}>What Needs Fixing?</Text>
             <Text style={styles.heroSubtitle}>
               Capture the issue and let FixBee analyze it for you.
@@ -140,18 +155,28 @@ const HomeScreen = ({ navigation }) => {
           </HeroHexagon>
         </View>
 
-        <View style={styles.scanWrap}>
-          <ScanHexButton onPress={() => setPopupVisible(true)} />
+        <View
+          style={[styles.scanWrap, { marginTop: -50 * layoutScale }]}
+        >
+          <ScanHexButton
+            size={87 * layoutScale}
+            onPress={() => setPopupVisible(true)}
+          />
         </View>
 
         <Text style={styles.centerSection}>Repair Categories</Text>
-        <View style={styles.grid}>
+        <View style={[styles.grid, { gap: 16 * layoutScale }]}>
           {CATEGORIES.map((cat) => (
             <CategoryCard
               key={cat.id}
               label={cat.label}
+              size={107.33 * layoutScale}
               icon={
-                <Ionicons name={cat.icon} size={24} color={COLORS.primary} />
+                <CategoryIcon
+                  categoryId={cat.id}
+                  size={24}
+                  color={COLORS.primary}
+                />
               }
               onPress={() => goToCategory(cat)}
             />
@@ -163,6 +188,8 @@ const HomeScreen = ({ navigation }) => {
             title="Popular Repairs"
             actionLabel="See All"
             onActionPress={() => {}}
+            titleStyle={styles.popularTitle}
+            actionStyle={styles.popularAction}
           />
         </View>
         {renderRepairs()}
