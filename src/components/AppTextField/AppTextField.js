@@ -13,11 +13,13 @@ const AppTextField = ({
   autoCorrect = true,
   returnKeyType,
   onSubmitEditing,
+  containerStyle,
+  inputStyle,
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, inputStyle]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
