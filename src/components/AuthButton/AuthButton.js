@@ -2,7 +2,15 @@ import React from "react";
 import { Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import styles from "./AuthButtonStyle";
 
-const AuthButton = ({ label, onPress, loading = false, disabled = false, variant = "primary" }) => {
+const AuthButton = ({
+  label,
+  onPress,
+  loading = false,
+  disabled = false,
+  variant = "primary",
+  style,
+  labelStyle,
+}) => {
   const isDisabled = disabled || loading;
 
   return (
@@ -11,6 +19,7 @@ const AuthButton = ({ label, onPress, loading = false, disabled = false, variant
         styles.button,
         variant === "secondary" && styles.buttonSecondary,
         isDisabled && styles.buttonDisabled,
+        style,
       ]}
       onPress={onPress}
       activeOpacity={0.85}
@@ -19,7 +28,7 @@ const AuthButton = ({ label, onPress, loading = false, disabled = false, variant
       {loading ? (
         <ActivityIndicator color="#0A0A0A" />
       ) : (
-        <Text style={styles.label}>{label}</Text>
+        <Text style={[styles.label, labelStyle]}>{label}</Text>
       )}
     </TouchableOpacity>
   );

@@ -12,6 +12,7 @@ import styles from "./LoginScreenStyle";
 import AppTextField from "../components/AppTextField/AppTextField";
 import AuthButton from "../components/AuthButton/AuthButton";
 import GoogleButton from "../components/GoogleButton/GoogleButton";
+import HoneycombBackground from "../components/HoneycombBackground";
 import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
 import {
   loginUser,
@@ -82,7 +83,7 @@ const LoginScreen = ({ navigation }) => {
       style={styles.flex}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <View style={styles.topShape} />
+      <HoneycombBackground variant="login" style={styles.topShape} />
       <ScrollView
         contentContainerStyle={styles.scroll}
         keyboardShouldPersistTaps="handled"
