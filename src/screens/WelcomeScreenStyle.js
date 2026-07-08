@@ -7,27 +7,31 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   heroWrap: {
-    marginTop: 100,
+    marginTop: 88,
     alignItems: "center",
+  },
+  heroContent: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   textBlock: {
     flex: 1,
-    paddingHorizontal: 32,
-    marginTop: 40,
+    paddingHorizontal: 24,
+    marginTop: 52,
     alignItems: "center",
   },
   title: {
-    fontSize: 26,
-    fontWeight: "800",
-    color: COLORS.textPrimary,
-    marginBottom: 12,
+    fontSize: 27,
+    fontWeight: "400",
+    color: COLORS.secondary,
+    marginBottom: 18,
     textAlign: "center",
   },
   body: {
-    fontSize: 15,
-    color: COLORS.surfaceDark,
+    fontSize: 16,
+    color: COLORS.secondary,
     textAlign: "center",
-    lineHeight: 22,
+    lineHeight: 24,
   },
   buttonRow: {
     flexDirection: "row",
@@ -35,6 +39,15 @@ const styles = StyleSheet.create({
   },
   buttonHalf: {
     flex: 1,
+  },
+  welcomeButton: {
+    height: 47,
+    borderRadius: 14,
+    backgroundColor: COLORS.primary,
+  },
+  welcomeButtonLabel: {
+    color: COLORS.secondary,
+    fontWeight: "400",
   },
 });
 

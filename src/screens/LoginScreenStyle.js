@@ -8,30 +8,27 @@ const styles = StyleSheet.create({
   },
   topShape: {
     position: "absolute",
-    top: -60,
-    right: -40,
-    width: 260,
-    height: 260,
-    borderRadius: 40,
-    backgroundColor: COLORS.whiteOverlayFaint,
-    transform: [{ rotate: "18deg" }],
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 250,
   },
   scroll: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 260,
+    paddingTop: 286,
     paddingBottom: 40,
   },
   title: {
     fontSize: 30,
-    fontWeight: "800",
-    color: COLORS.textPrimary,
+    fontWeight: "400",
+    color: COLORS.secondary,
     marginBottom: 24,
   },
   fieldLabel: {
     fontSize: 15,
     fontWeight: "500",
-    color: COLORS.surfaceDark,
+    color: COLORS.honeyBrown,
     marginBottom: 8,
     marginTop: 16,
   },
@@ -41,7 +38,7 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     fontSize: 15,
-    color: COLORS.surfaceDark,
+    color: COLORS.honeyBrown,
     fontWeight: "500",
   },
   orRow: {
@@ -52,7 +49,7 @@ const styles = StyleSheet.create({
   orLine: {
     flex: 1,
     height: 1,
-    backgroundColor: COLORS.whiteOverlayHalf,
+    backgroundColor: "rgba(138, 86, 17, 0.22)",
   },
   orText: {
     marginHorizontal: 12,
@@ -68,7 +65,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: COLORS.surfaceDark,
+    color: COLORS.honeyBrown,
   },
   footerLink: {
     fontSize: 14,
