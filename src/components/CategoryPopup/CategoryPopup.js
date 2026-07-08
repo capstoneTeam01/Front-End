@@ -6,7 +6,8 @@ import {
   Pressable,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+
+import CategoryIcon from "../CategoryIcon";
 import CategoryCard from "../CategoryCard/CategoryCard";
 import { CATEGORIES } from "../../data/repairData";
 import styles from "./CategoryPopupStyle";
@@ -38,10 +39,10 @@ const CategoryPopup = ({ visible, onClose, onSelectCategory }) => {
                   label={cat.label}
                   fill={COLORS.lightHoney}
                   icon={
-                    <Ionicons
-                      name={cat.icon}
+                    <CategoryIcon
+                      categoryId={cat.id}
                       size={24}
-                      color={COLORS.textPrimary}
+                      color={COLORS.secondary}
                     />
                   }
                   onPress={() => onSelectCategory?.(cat)}

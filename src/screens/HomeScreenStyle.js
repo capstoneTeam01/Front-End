@@ -2,8 +2,6 @@ import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 import {
   SIDE_PADDING,
-  SPACING,
-  RADIUS,
   TYPE,
   BOTTOM_NAV_HEIGHT,
 } from "../constants/layout";
@@ -20,11 +18,9 @@ const styles = StyleSheet.create({
     paddingBottom: BOTTOM_NAV_HEIGHT + 40,
   },
 
-  // Twin-hexagon cream band. Bleeds to screen edges past the scroll padding.
   topArea: {
     marginHorizontal: -SIDE_PADDING,
-    height: 150,
-    justifyContent: "flex-start",
+    position: "relative",
   },
 
   topBg: {
@@ -32,6 +28,9 @@ const styles = StyleSheet.create({
   },
 
   topRow: {
+    position: "absolute",
+    left: 0,
+    right: 0,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -46,60 +45,73 @@ const styles = StyleSheet.create({
 
   locationText: {
     fontSize: 16,
-    fontWeight: "600",
-    color: COLORS.secondary,
+    lineHeight: 20,
+    fontWeight: "400",
+    color: COLORS.honeyBrown,
   },
 
-  // Hero sits below the cream band with a white gap between them.
   heroWrap: {
-    marginTop: SPACING.sm,
     alignItems: "center",
   },
 
   scanWrap: {
     alignItems: "center",
-    marginTop: -44,
-    marginBottom: SPACING.large,
     zIndex: 2,
   },
 
   heroTitle: {
-    fontSize: TYPE.screenTitle.fontSize,
-    fontWeight: TYPE.screenTitle.fontWeight,
-    color: COLORS.textPrimary,
-    marginBottom: 12,
+    fontSize: 28,
+    lineHeight: 33,
+    fontWeight: "400",
+    color: COLORS.secondary,
+    marginBottom: 16,
     textAlign: "center",
   },
 
   heroSubtitle: {
-    fontSize: TYPE.body.fontSize,
+    fontSize: 16,
+    lineHeight: 20,
     fontWeight: "400",
-    color: COLORS.textSecondary,
+    color: COLORS.honeyBrown,
     textAlign: "center",
-    lineHeight: 22,
-    paddingHorizontal: 12,
   },
 
   centerSection: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "600",
-    color: COLORS.textPrimary,
+    marginTop: 15,
+    marginBottom: 16,
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: "400",
+    color: COLORS.honeyBrown,
     textAlign: "center",
-    marginBottom: SPACING.section,
   },
 
   grid: {
     flexDirection: "row",
-    gap: 12,
-    marginBottom: SPACING.large,
+    alignSelf: "center",
   },
 
   popularHeader: {
-    marginBottom: SPACING.card,
+    paddingTop: 24,
+    marginBottom: 20,
+  },
+
+  popularTitle: {
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: "400",
+    color: COLORS.textPrimary,
+  },
+
+  popularAction: {
+    fontSize: 14,
+    lineHeight: 18,
+    fontWeight: "400",
+    color: COLORS.goldenHoney,
   },
 
   repairsCard: {
-    borderRadius: RADIUS.big,
+    borderRadius: 24,
     backgroundColor: COLORS.white,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.divider,

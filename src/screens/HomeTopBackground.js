@@ -1,34 +1,44 @@
 import React from "react";
-import Svg, { Path } from "react-native-svg";
+import { View, useWindowDimensions } from "react-native";
+
 import COLORS from "../constants/colors";
+import PolygonAsset from "../components/PolygonAsset";
 
 const HomeTopBackground = ({ style }) => {
-  return (
-    <Svg
-      style={style}
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      pointerEvents="none"
-    >
-      <Path d="M0 0 H100 V100 H0 Z" fill={COLORS.warmCream} />
+  const { width: screenWidth } = useWindowDimensions();
+  const scale = screenWidth / 402;
+  const polygonWidth = 346.41 * scale;
+  const polygonHeight = 393.81 * scale;
 
-      <Path
-        d="
-          M38 0
-          H62
-          V38
-          C62 52 68 62 78 70
-          L100 88
-          V100
-          H0
-          V88
-          L22 70
-          C32 62 38 52 38 38
-          Z
-        "
-        fill={COLORS.white}
+  return (
+    <View style={style} pointerEvents="none">
+      <PolygonAsset
+        variant="polygon8"
+        width={polygonWidth}
+        height={polygonHeight}
+        fill={COLORS.warmCream}
+        stroke="transparent"
+        style={{
+          position: "absolute",
+          left: -157.21 * scale,
+          top: -195.91 * scale,
+        }}
+        preserveAspectRatio="none"
       />
-    </Svg>
+      <PolygonAsset
+        variant="polygon8"
+        width={polygonWidth}
+        height={polygonHeight}
+        fill={COLORS.warmCream}
+        stroke="transparent"
+        style={{
+          position: "absolute",
+          left: 215.79 * scale,
+          top: -195.91 * scale,
+        }}
+        preserveAspectRatio="none"
+      />
+    </View>
   );
 };
 
