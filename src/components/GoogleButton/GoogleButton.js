@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
+import GoogleIcon from "../../../assets/icons/Google.svg";
 import styles from "./GoogleButtonStyle";
 
 const GoogleButton = ({
@@ -23,7 +24,7 @@ const GoogleButton = ({
         <ActivityIndicator color="#0A0A0A" />
       ) : (
         <View style={styles.content}>
-          <Text style={styles.googleG}>G</Text>
+          <GoogleIcon width={20} height={20} style={styles.googleIcon} />
           <Text style={[styles.label, labelStyle]}>{label}</Text>
         </View>
       )}

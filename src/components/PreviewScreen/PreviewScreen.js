@@ -11,6 +11,21 @@ import AuthFooterTray from "../AuthFooterTray/AuthFooterTray";
 import COLORS from "../../constants/colors";
 import styles from "./PreviewScreenStyle";
 
+const renderPreviewHeader = ({
+  onRetake,
+  isConfirming,
+}) => (
+  <View style={styles.headerLayer} pointerEvents="box-none">
+    <View style={styles.headerStatusFill} pointerEvents="none" />
+    <AppHeader
+      title="Preview"
+      onBack={onRetake}
+      backDisabled={isConfirming}
+      style={styles.header}
+    />
+  </View>
+);
+
 const PreviewScreen = ({ photo, onRetake, onConfirm, isConfirming = false }) => {
   if (!photo?.uri) {
     return null;
@@ -20,12 +35,10 @@ const PreviewScreen = ({ photo, onRetake, onConfirm, isConfirming = false }) => 
     <View style={styles.container}>
       <Image source={{ uri: photo.uri }} style={styles.image} resizeMode="cover" />
 
-      <AppHeader
-        title="Preview"
-        onBack={onRetake}
-        backDisabled={isConfirming}
-        style={styles.header}
-      />
+      {renderPreviewHeader({
+        onRetake,
+        isConfirming,
+      })}
 
       <View style={styles.actionBar}>
         <AuthFooterTray fill={COLORS.warmCream}>

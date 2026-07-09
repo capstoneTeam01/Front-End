@@ -16,13 +16,9 @@ const ProviderHexAvatar = ({ label = "?", size = 60, selected = false }) => {
         width={polygonWidth}
         height={size}
         fill={selected ? COLORS.honey : COLORS.honeyLight}
-        stroke={selected ? COLORS.providerBrown : COLORS.honeyLight}
-        strokeWidth={selected ? 1.5 : 0}
         style={styles.polygon}
       />
-      <Text style={[styles.label, selected ? styles.selectedLabel : null]}>
-        {cleanLabel}
-      </Text>
+      <Text style={styles.label}>{cleanLabel}</Text>
     </View>
   );
 };
@@ -38,9 +34,6 @@ const styles = StyleSheet.create({
   label: {
     color: COLORS.providerBrown,
     ...TYPE.caption,
-  },
-  selectedLabel: {
-    color: COLORS.providerBrown,
   },
 });
 

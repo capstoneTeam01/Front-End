@@ -17,8 +17,11 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { getProviderRouteParamsFromIssue } from "../utils/issueProviderRouteMapper";
 
+import HazardIcon from "../../assets/icons/Hazard_Icon.svg";
+import RepairIcon from "../../assets/icons/Repair_Icon.svg";
 import AppHeader from "../components/AppHeader/AppHeader";
 import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
+import PolygonAsset from "../components/PolygonAsset";
 import COLORS from "../constants/colors";
 import styles from "./DIYSolutionScreenStyle";
 import { getDiyInstructions } from "../api/getDiyInstructions";
@@ -26,6 +29,14 @@ import { updateRepairStatus } from "../api/updateRepairStatus";
 
 const MAX_PENDING_CHECKS = 30;
 const PENDING_CHECK_DELAY = 500;
+const STEP_MARKER_BACK_SIZE = {
+  width: 48,
+  height: 54,
+};
+const STEP_MARKER_FRONT_SIZE = {
+  width: 40,
+  height: 45,
+};
 
 const getPhotoId = (analysisResult) => {
   return (
@@ -41,6 +52,73 @@ const wait = (milliseconds) => {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
   });
+};
+
+const StepMarker = ({
+  index,
+  active,
+  completed,
+}) => {
+  if (active) {
+    return (
+      <View style={styles.stepMarkerLayer}>
+        <PolygonAsset
+          variant="polygon6"
+          width={STEP_MARKER_BACK_SIZE.width}
+          height={STEP_MARKER_BACK_SIZE.height}
+          fill={COLORS.lightHoney}
+          style={styles.stepMarkerBack}
+        />
+
+        <PolygonAsset
+          variant="polygon5"
+          width={STEP_MARKER_FRONT_SIZE.width}
+          height={STEP_MARKER_FRONT_SIZE.height}
+          fill={COLORS.primary}
+          style={styles.stepMarkerFront}
+        >
+          <Text
+            style={[
+              styles.stepNumber,
+              styles.stepNumberActive,
+            ]}
+          >
+            {index + 1}
+          </Text>
+        </PolygonAsset>
+      </View>
+    );
+  }
+
+  return (
+    <PolygonAsset
+      variant="polygon5"
+      width={STEP_MARKER_FRONT_SIZE.width}
+      height={STEP_MARKER_FRONT_SIZE.height}
+      fill={
+        completed
+          ? COLORS.primary
+          : COLORS.lightHoney
+      }
+      style={styles.stepMarker}
+    >
+      {completed ? (
+        <Ionicons
+          name="checkmark"
+          size={
+            styles.stepCheckIcon.fontSize
+          }
+          color={
+            styles.stepCheckIcon.color
+          }
+        />
+      ) : (
+        <Text style={styles.stepNumber}>
+          {index + 1}
+        </Text>
+      )}
+    </PolygonAsset>
+  );
 };
 
 const DIYSolutionScreen = ({
@@ -329,9 +407,22 @@ for (
               >
                 <View
                   style={
-                    styles.hexIcon
+                    styles.toolIcon
                   }
-                />
+                >
+                  <PolygonAsset
+                    variant="polygon9"
+                    width={42}
+                    height={47}
+                    fill={COLORS.lightHoney}
+                  >
+                    <RepairIcon
+                      width={20}
+                      height={20}
+                      color={COLORS.secondary}
+                    />
+                  </PolygonAsset>
+                </View>
 
                 <Text
                   style={
@@ -391,39 +482,11 @@ for (
                       styles.stepLeft
                     }
                   >
-                    <View
-                      style={[
-                        styles.stepCircle,
-                        active &&
-                          styles.stepCircleActive,
-                        completed &&
-                          styles.stepCircleDone,
-                      ]}
-                    >
-                      {completed ? (
-                        <Ionicons
-                          name="checkmark"
-                          size={
-                            styles
-                              .stepCheckIcon
-                              .fontSize
-                          }
-                          color={
-                            styles
-                              .stepCheckIcon
-                              .color
-                          }
-                        />
-                      ) : (
-                        <Text
-                          style={
-                            styles.stepNumber
-                          }
-                        >
-                          {index + 1}
-                        </Text>
-                      )}
-                    </View>
+                    <StepMarker
+                      index={index}
+                      active={active}
+                      completed={completed}
+                    />
 
                     {index !==
                       repairSteps.length -
@@ -483,19 +546,17 @@ for (
               styles.warningIcon
             }
           >
-            <Ionicons
-              name="warning-outline"
-              size={
-                styles
-                  .warningIconStyle
-                  .fontSize
-              }
-              color={
-                styles
-                  .warningIconStyle
-                  .color
-              }
-            />
+            <PolygonAsset
+              variant="polygon9"
+              width={64}
+              height={71}
+              fill={COLORS.primary}
+            >
+              <HazardIcon
+                width={28}
+                height={28}
+              />
+            </PolygonAsset>
           </View>
 
           <Text
@@ -600,19 +661,26 @@ for (
                 styles.modalIcon
               }
             >
-              <Ionicons
-                name="checkmark"
-                size={
-                  styles
-                    .modalCheckIcon
-                    .fontSize
-                }
-                color={
-                  styles
-                    .modalCheckIcon
-                    .color
-                }
-              />
+              <PolygonAsset
+                variant="polygon9"
+                width={78}
+                height={87}
+                fill={COLORS.lightHoney}
+              >
+                <Ionicons
+                  name="checkmark-sharp"
+                  size={
+                    styles
+                      .modalCheckIcon
+                      .fontSize
+                  }
+                  color={
+                    styles
+                      .modalCheckIcon
+                      .color
+                  }
+                />
+              </PolygonAsset>
             </View>
 
             <Text
@@ -620,7 +688,7 @@ for (
                 styles.modalTitle
               }
             >
-              Repair Completed
+              Great Job!
             </Text>
 
             <Text
@@ -628,9 +696,7 @@ for (
                 styles.modalText
               }
             >
-              Continue monitoring
-              the issue over the
-              next few hours.
+              The repair has been marked as completed.
             </Text>
 
             <View
@@ -656,6 +722,9 @@ for (
                   style={
                     styles.modalDarkText
                   }
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.85}
                 >
                   Recent Scans
                 </Text>
@@ -679,6 +748,7 @@ for (
                   style={
                     styles.modalLightText
                   }
+                  numberOfLines={1}
                 >
                   Home
                 </Text>

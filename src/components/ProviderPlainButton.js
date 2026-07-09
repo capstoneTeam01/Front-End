@@ -18,7 +18,12 @@ const ProviderPlainButton = ({ title, onPress, disabled = false, variant = "prim
         style,
       ]}
     >
-      <Text style={[styles.buttonText, isSecondary ? styles.secondaryButtonText : null]}>
+      <Text
+        style={[styles.buttonText, isSecondary ? styles.secondaryButtonText : null]}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.85}
+      >
         {String(title || "Button")}
       </Text>
     </Pressable>

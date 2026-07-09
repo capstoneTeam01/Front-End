@@ -9,7 +9,16 @@ const selectedTick = require("../../assets/serviceProvider/provider-selected-tic
 
 const ProviderCard = ({ provider, selected = false, onPress, onToggle }) => {
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.card, pressed ? styles.pressed : null]}>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      style={({ pressed }) => [
+        styles.card,
+        selected ? styles.cardSelected : null,
+        pressed ? styles.pressed : null,
+      ]}
+    >
       <ProviderHexAvatar label={provider.businessName} selected={selected} />
 
       <View style={styles.content}>
@@ -41,6 +50,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 1,
     borderColor: COLORS.providerLightGray,
+  },
+  cardSelected: {
+    backgroundColor: COLORS.warmCream,
+    borderColor: COLORS.goldenHoney,
+    borderWidth: 1.5,
   },
   pressed: {
     opacity: 0.82,

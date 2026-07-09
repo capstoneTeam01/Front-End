@@ -13,7 +13,7 @@ const ScanHexButton = ({ onPress, size = 87 }) => {
       onPress={onPress}
       accessibilityLabel="Scan an issue"
     >
-      <ScanIcon width={20} height={20} color={COLORS.secondary} />
+      <ScanIcon width={26} height={26} color={COLORS.secondary} />
     </PolygonAsset>
   );
 };

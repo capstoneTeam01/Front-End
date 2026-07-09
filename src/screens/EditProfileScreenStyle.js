@@ -33,16 +33,16 @@ const styles = StyleSheet.create({
   },
   scroll: {
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 16,
-    paddingBottom: 120,
+    paddingTop: 24,
+    paddingBottom: 132,
   },
   avatarWrap: {
-    alignItems: "left",
-    marginVertical: 16,
+    alignItems: "flex-start",
+    marginBottom: 22,
   },
   label: {
     color: COLORS.textPrimary,
-    marginTop: 18,
+    marginTop: 16,
     marginBottom: 8,
     ...TYPE.body,
   },
@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
     ...TYPE.body,
   },
   inputDisabled: {
-    backgroundColor: COLORS.surface,
     color: COLORS.textMuted,
   },
   cityField: {
@@ -84,12 +83,12 @@ const styles = StyleSheet.create({
   },
   footerRow: {
     flexDirection: "row",
-    gap: 12,
+    gap: 20,
   },
   footerBtn: {
     flex: 1,
-    height: 46,
-    borderRadius: 14,
+    height: 52,
+    borderRadius: RADIUS.field,
     alignItems: "center",
     justifyContent: "center",
   },

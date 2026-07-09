@@ -4,6 +4,7 @@ import Svg, { Path } from "react-native-svg";
 
 import Polygon4 from "../../assets/icons/Polygon 4.svg";
 import Polygon5 from "../../assets/icons/Polygon 5.svg";
+import Polygon6 from "../../assets/icons/Polygon 6.svg";
 import Polygon8 from "../../assets/icons/Polygon 8.svg";
 import Polygon9 from "../../assets/icons/Polygon 9.svg";
 import Polygon10 from "../../assets/icons/Polygon 10.svg";
@@ -26,6 +27,15 @@ export const POLYGON_ASSETS = {
     viewBox: "0 0 354 403",
     path:
       "M167.268 2.60948C173.29 -0.869829 180.71 -0.869826 186.732 2.60948L344.267 93.6208C350.29 97.1001 354 103.53 354 110.489V292.511C354 299.47 350.29 305.9 344.267 309.379L186.732 400.391C180.71 403.87 173.29 403.87 167.268 400.391L9.73247 309.379C3.70999 305.9 0 299.47 0 292.511V110.489C0 103.53 3.71 97.1001 9.73247 93.6208L167.268 2.60948Z",
+    fill: "#FDE68A",
+  },
+  polygon6: {
+    Component: Polygon6,
+    width: 39,
+    height: 43,
+    viewBox: "0 0 39 43",
+    path:
+      "M16.5525 0.669938C18.0995 -0.223226 20.0055 -0.223226 21.5525 0.669938L35.605 8.78319C37.1521 9.67635 38.105 11.327 38.105 13.1133V29.3398C38.105 31.1261 37.1521 32.7768 35.605 33.6699L21.5525 41.7832C20.0055 42.6763 18.0995 42.6763 16.5525 41.7832L2.49993 33.6699C0.952926 32.7768 -6.86646e-05 31.1261 -6.86646e-05 29.3398V13.1133C-6.86646e-05 11.327 0.952926 9.67635 2.49993 8.78319L16.5525 0.669938Z",
     fill: "#FDE68A",
   },
   polygon8: {

@@ -18,7 +18,7 @@ import styles from "./CaptureInstructionsPopupStyle";
 
 const TIPS = [
   { Icon: BulbIcon, label: "Ensure good lighting" },
-  { Icon: FocusIcon, label: "Capture the full area" },
+  { Icon: FocusIcon, label: "Capture the full area", iconSize: 24 },
   { Icon: WrongImageIcon, label: "Avoid blurry photos" },
   { Icon: TargetIcon, label: "Keep the issue centered" },
 ];
@@ -56,13 +56,13 @@ const CaptureInstructionsPopup = ({ visible, onClose, onScanNow }) => {
                   >
                     <View style={styles.tipIconWrap}>
                       <HexTile
-                        size={40}
+                        size={44}
                         flatTop={false}
                         fill={COLORS.lightHoney}
                       >
                         <tip.Icon
-                          width={20}
-                          height={20}
+                          width={tip.iconSize || 22}
+                          height={tip.iconSize || 22}
                           color={COLORS.secondary}
                         />
                       </HexTile>

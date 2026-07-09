@@ -19,10 +19,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  googleG: {
-    color: "#EA4335",
+  googleIcon: {
     marginRight: 10,
-    ...TYPE.cardTitle,
   },
   label: {
     color: COLORS.textPrimary,
