@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 import { SIDE_PADDING, RADIUS, TYPE } from "../constants/layout";
+import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   safe: {
@@ -94,17 +95,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightHoney,
   },
   cancelLabel: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...HEADER_FOOTER.footerButton,
   },
   saveBtn: {
     backgroundColor: COLORS.primary,
   },
   saveLabel: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import COLORS from "../../constants/colors";
-import { RADIUS, TYPE } from "../../constants/layout";
+import { HEADER_FOOTER } from "../../constants/typography";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,8 +22,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: 24,
-    paddingTop: 34,
   },
   actionRow: {
     flexDirection: "row",
@@ -31,21 +29,20 @@ const styles = StyleSheet.create({
   },
   retakeButton: {
     flex: 1,
-    height: 52,
-    borderRadius: RADIUS.field,
+    height: 46,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: COLORS.lightHoney,
   },
   retakeText: {
     color: COLORS.secondary,
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
+    ...HEADER_FOOTER.footerButton,
   },
   confirmButton: {
     flex: 1,
-    height: 52,
-    borderRadius: RADIUS.field,
+    height: 46,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: COLORS.primary,
@@ -55,8 +52,7 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     color: COLORS.secondary,
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

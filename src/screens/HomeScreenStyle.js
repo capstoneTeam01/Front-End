@@ -18,38 +18,6 @@ const styles = StyleSheet.create({
     paddingBottom: BOTTOM_NAV_HEIGHT + 40,
   },
 
-  topArea: {
-    marginHorizontal: -SIDE_PADDING,
-    position: "relative",
-  },
-
-  topBg: {
-    ...StyleSheet.absoluteFillObject,
-  },
-
-  topRow: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: SIDE_PADDING,
-  },
-
-  locationPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-
-  locationText: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "400",
-    color: COLORS.honeyBrown,
-  },
-
   heroWrap: {
     alignItems: "center",
   },

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import { TYPE } from "../../constants/layout";
+import { HEADER_FOOTER } from "../../constants/typography";
 
 const styles = StyleSheet.create({
   floatWrap: {
@@ -32,14 +32,14 @@ const styles = StyleSheet.create({
   },
 
   navLabel: {
-    fontSize: TYPE.caption.fontSize,
-    fontWeight: "500",
-    color: COLORS.mediumGrey,
+    color: COLORS.navInactiveLabel,
+    ...HEADER_FOOTER.bottomNavLabel,
   },
 
   navLabelActive: {
-    color: COLORS.textPrimary,
-    fontWeight: "700",
+    color: COLORS.secondary,
+    textAlign: "center",
+    ...HEADER_FOOTER.bottomNavLabelActive,
   },
 });
 

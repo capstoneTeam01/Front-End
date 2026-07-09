@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Svg, { Circle, Path } from "react-native-svg";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import HeaderBellButton from "../components/AppHeader/HeaderBellButton";
 import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import PolygonAsset from "../components/PolygonAsset";
 import ProviderPlainButton from "../components/ProviderPlainButton";
@@ -385,10 +386,7 @@ const ProviderAddressTimeScreen = ({ navigation, route }) => {
           title="Address & Time"
           onBack={() => navigation.goBack()}
           right={
-            <Ionicons
-              name="notifications-outline"
-              size={20}
-              color={COLORS.secondary}
+            <HeaderBellButton
               onPress={() => navigation.navigate("Notifications")}
             />
           }

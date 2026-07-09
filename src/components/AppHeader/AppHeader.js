@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import Svg, { Polygon } from "react-native-svg";
-import { useFonts, Rubik_400Regular } from "@expo-google-fonts/rubik";
 
 import COLORS from "../../constants/colors";
 import styles from "./AppHeaderStyle";
@@ -53,11 +52,15 @@ const AppHeader = ({
   backDisabled = false,
   right = null,
   fill = COLORS.lightHoney,
+  titleAlign = "center",
   style,
 }) => {
   const insets = useSafeAreaInsets();
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const [fontsLoaded] = useFonts({ Rubik_400Regular });
+  const titleStyle =
+    titleAlign === "left"
+      ? styles.titleLeft
+      : styles.title;
 
   return (
     <View
@@ -65,30 +68,45 @@ const AppHeader = ({
       onLayout={(e) => setSize(e.nativeEvent.layout)}
     >
       <ShapedBackground size={size} fill={fill} />
-      <View style={styles.row}>
-        <View style={styles.side}>
-          {onBack ? (
-            <Pressable
-              onPress={onBack}
-              disabled={backDisabled}
-              style={styles.backButton}
-              accessibilityLabel="Go back"
-            >
-              <Ionicons name="chevron-back" size={24} color={COLORS.secondary} />
-            </Pressable>
-          ) : null}
+      {titleAlign === "left" ? (
+        <View style={styles.row}>
+          <View style={styles.leading}>
+            {onBack ? (
+              <Pressable
+                onPress={onBack}
+                disabled={backDisabled}
+                style={styles.backButton}
+                accessibilityLabel="Go back"
+              >
+                <Ionicons name="chevron-back" size={24} color={COLORS.secondary} />
+              </Pressable>
+            ) : null}
+            <Text style={titleStyle} numberOfLines={1}>
+              {title || ""}
+            </Text>
+          </View>
+          <View style={styles.sideRight}>{right}</View>
         </View>
-        <Text
-          style={[
-            styles.title,
-            fontsLoaded && { fontFamily: "Rubik_400Regular" },
-          ]}
-          numberOfLines={1}
-        >
-          {title || ""}
-        </Text>
-        <View style={[styles.side, styles.sideRight]}>{right}</View>
-      </View>
+      ) : (
+        <View style={styles.row}>
+          <View style={styles.side}>
+            {onBack ? (
+              <Pressable
+                onPress={onBack}
+                disabled={backDisabled}
+                style={styles.backButton}
+                accessibilityLabel="Go back"
+              >
+                <Ionicons name="chevron-back" size={24} color={COLORS.secondary} />
+              </Pressable>
+            ) : null}
+          </View>
+          <Text style={titleStyle} numberOfLines={1}>
+            {title || ""}
+          </Text>
+          <View style={[styles.side, styles.sideRight]}>{right}</View>
+        </View>
+      )}
     </View>
   );
 };

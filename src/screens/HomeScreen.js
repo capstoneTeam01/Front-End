@@ -9,7 +9,9 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import HomeTopBackground from "./HomeTopBackground.js";
+import HomeTabHeader, {
+  FIGMA_FRAME_WIDTH,
+} from "../components/HomeTabHeader/HomeTabHeader";
 import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
 import ScanHexButton from "../components/ScanHexButton/ScanHexButton";
 import CategoryCard from "../components/CategoryCard/CategoryCard";
@@ -26,7 +28,7 @@ import styles from "./HomeScreenStyle";
 
 const HomeScreen = ({ navigation }) => {
   const { width: screenWidth } = useWindowDimensions();
-  const layoutScale = screenWidth / 402;
+  const layoutScale = screenWidth / FIGMA_FRAME_WIDTH;
   const [popupVisible, setPopupVisible] = useState(false);
   const [location, setLocation] = useState("Vancouver");
 
@@ -109,42 +111,12 @@ const HomeScreen = ({ navigation }) => {
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={[styles.topArea, { height: 116 * layoutScale }]}
-        >
-          <HomeTopBackground style={styles.topBg} />
-          <View
-            style={[
-              styles.topRow,
-              {
-                top: 48 * layoutScale,
-                height: 68 * layoutScale,
-              },
-            ]}
-          >
-            <View style={styles.locationPill}>
-              <Ionicons
-                name="location-outline"
-                size={18}
-                color={COLORS.secondary}
-              />
-              <Text style={styles.locationText} numberOfLines={1}>
-                {location}
-              </Text>
-            </View>
-
-            <TouchableOpacity
-              onPress={() => navigation?.navigate("Notifications")}
-              hitSlop={8}
-            >
-              <Ionicons
-                name="notifications-outline"
-                size={22}
-                color={COLORS.secondary}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <HomeTabHeader
+          variant="home"
+          location={location}
+          layoutScale={layoutScale}
+          onNotificationsPress={() => navigation?.navigate("Notifications")}
+        />
 
         <View style={styles.heroWrap}>
           <HeroHexagon width={354 * layoutScale}>

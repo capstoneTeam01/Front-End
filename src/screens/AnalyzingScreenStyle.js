@@ -4,6 +4,7 @@ import COLORS from "../constants/colors";
 import {
   TYPE,
 } from "../constants/layout";
+import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   container: {
@@ -114,8 +115,8 @@ const styles = StyleSheet.create({
   },
 
   cancelButtonText: {
-    ...TYPE.button,
     color: COLORS.secondary,
+    ...HEADER_FOOTER.footerButton,
   },
 });
 
