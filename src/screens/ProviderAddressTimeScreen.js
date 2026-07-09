@@ -12,9 +12,12 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import Svg, { Circle, Path } from "react-native-svg";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
+import PolygonAsset from "../components/PolygonAsset";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import {
   getCurrentUserDisplayName,
@@ -23,12 +26,11 @@ import {
 import { loadProvidersByIds } from "../localDb/businessDirectoryProviderLocalDb";
 import { buildProviderQuoteEmailDraft } from "../services/providerQuoteEmailService";
 import { getCurrentCityFromGps } from "../utils/locationHelper";
+import { DEFAULT_PROVIDER_CITY } from "../utils/providerConstants";
 import COLORS from "../constants/colors";
 import FONT from "../constants/typography";
 
 const clean = (value) => String(value || "").trim();
-
-const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
 
 const getIssueTitle = (routeParams = {}) =>
   clean(routeParams.fromIssue) ||
@@ -52,27 +54,19 @@ const LocationPinIcon = ({ size = 23, color = COLORS.providerBrown }) => (
   </Svg>
 );
 
-const PeopleHexIcon = ({ size = 48 }) => (
-  <Svg width={size} height={size} viewBox="0 0 64 64" fill="none">
-    <Path
-      d="M32 5 55.4 18.5v27L32 59 8.6 45.5v-27L32 5Z"
-      fill={COLORS.honeyLight}
+const PeopleHexIcon = () => (
+  <PolygonAsset
+    variant="polygon9"
+    width={54}
+    height={60}
+    fill={COLORS.lightHoney}
+  >
+    <Ionicons
+      name="people-outline"
+      size={24}
+      color={COLORS.secondary}
     />
-    <Circle cx="24" cy="27" r="6" stroke={COLORS.providerBrown} strokeWidth={3} />
-    <Path
-      d="M14 45c1.7-6.2 5.2-9.4 10-9.4s8.3 3.2 10 9.4"
-      stroke={COLORS.providerBrown}
-      strokeWidth={3}
-      strokeLinecap="round"
-    />
-    <Circle cx="40" cy="28" r="5" stroke={COLORS.providerBrown} strokeWidth={3} />
-    <Path
-      d="M35 38.5c2.1-.9 4-.9 5-.9 4.3 0 7.3 2.5 8.8 7.4"
-      stroke={COLORS.providerBrown}
-      strokeWidth={3}
-      strokeLinecap="round"
-    />
-  </Svg>
+  </PolygonAsset>
 );
 
 const startOfDay = (value = new Date()) => {
@@ -139,7 +133,11 @@ const ProviderAddressTimeScreen = ({ navigation, route }) => {
   const [providers, setProviders] = useState([]);
   const [address, setAddress] = useState("");
   const [unit, setUnit] = useState("");
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState(
+    clean(route?.params?.detectedUserCity) ||
+      clean(route?.params?.city) ||
+      DEFAULT_PROVIDER_CITY,
+  );
   const [date, setDate] = useState("Today");
   const [customDate, setCustomDate] = useState("");
   const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
@@ -383,7 +381,18 @@ const ProviderAddressTimeScreen = ({ navigation, route }) => {
         style={styles.flex}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <AppHeader title="Address & Time" onBack={() => navigation.goBack()} />
+        <AppHeader
+          title="Address & Time"
+          onBack={() => navigation.goBack()}
+          right={
+            <Ionicons
+              name="notifications-outline"
+              size={20}
+              color={COLORS.secondary}
+              onPress={() => navigation.navigate("Notifications")}
+            />
+          }
+        />
 
         <ScrollView
           contentContainerStyle={styles.content}
@@ -395,26 +404,21 @@ const ProviderAddressTimeScreen = ({ navigation, route }) => {
             quotes.
           </Text>
 
-          <Text style={styles.label}>Service Address</Text>
+          <Text style={[styles.label, styles.firstSectionLabel]}>
+            Service Address
+          </Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, styles.firstAddressInput]}
             value={address}
             onChangeText={setAddress}
             placeholder="Street Address"
             placeholderTextColor={COLORS.providerMidGray}
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, styles.lastAddressInput]}
             value={unit}
             onChangeText={setUnit}
             placeholder="Apartment / Unit (Optional)"
-            placeholderTextColor={COLORS.providerMidGray}
-          />
-          <TextInput
-            style={styles.input}
-            value={city}
-            onChangeText={setCity}
-            placeholder="City"
             placeholderTextColor={COLORS.providerMidGray}
           />
 
@@ -433,7 +437,9 @@ const ProviderAddressTimeScreen = ({ navigation, route }) => {
             </Pressable>
           </View>
 
-          <Text style={styles.label}>Preferred Schedule</Text>
+          <Text style={[styles.label, styles.scheduleLabel]}>
+            Preferred Schedule
+          </Text>
           <Text style={styles.smallLabel}>Date</Text>
           <View style={styles.segmentRow}>
             {DATE_OPTIONS.map((item) => (
@@ -492,15 +498,20 @@ const ProviderAddressTimeScreen = ({ navigation, route }) => {
             ))}
           </View>
 
-          <Text style={styles.label}>Additional Notes</Text>
+          <Text style={[styles.label, styles.notesLabel]}>
+            Additional Notes
+          </Text>
           <TextInput
             style={[styles.input, styles.notes]}
             value={notes}
             onChangeText={setNotes}
-            placeholder="Example: Leak is under kitchen sink near dishwasher"
+            placeholder="Add notes for the selected providers"
             placeholderTextColor={COLORS.providerMidGray}
             multiline
           />
+          <Text style={styles.exampleText}>
+            Example: Leak is under kitchen sink near dishwasher.
+          </Text>
 
           <View style={styles.infoBox}>
             <PeopleHexIcon />
@@ -511,15 +522,17 @@ const ProviderAddressTimeScreen = ({ navigation, route }) => {
           </View>
         </ScrollView>
 
-        <View style={[styles.bottomCta, { paddingBottom: bottomButtonSpace }]}>
-          {preparing ? (
-            <ActivityIndicator />
-          ) : (
-            <ProviderPlainButton
-              title="Review Quote Request"
-              onPress={handleReviewQuoteRequest}
-            />
-          )}
+        <View style={styles.bottomCta}>
+          <AuthFooterTray fill={COLORS.warmCream}>
+            {preparing ? (
+              <ActivityIndicator />
+            ) : (
+              <ProviderPlainButton
+                title="Send Quote Request"
+                onPress={handleReviewQuoteRequest}
+              />
+            )}
+          </AuthFooterTray>
         </View>
       </KeyboardAvoidingView>
 
@@ -616,61 +629,83 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 24,
-    paddingTop: 20,
-    paddingBottom: 130,
+    paddingTop: 16,
+    paddingBottom: 126,
   },
   title: {
-    fontFamily: FONT.extraBold,
+    fontFamily: FONT.regular,
     color: COLORS.textPrimary,
-    fontSize: 18,
-    fontWeight: "800",
+    fontSize: 24,
+    lineHeight: 36,
+    fontWeight: "400",
   },
   subtitle: {
     fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
-    fontSize: 12,
-    lineHeight: 17,
-    marginTop: 6,
+    fontSize: 16,
+    lineHeight: 24,
+    marginTop: 10,
     marginBottom: 24,
   },
   label: {
-    fontFamily: FONT.extraBold,
+    fontFamily: FONT.regular,
+    color: COLORS.textPrimary,
+    fontSize: 18,
+    lineHeight: 28,
+    fontWeight: "400",
+    marginTop: 24,
+    marginBottom: 10,
+  },
+  firstSectionLabel: {
+    marginTop: 0,
+  },
+  scheduleLabel: {
+    marginTop: 0,
+    marginBottom: 0,
+  },
+  notesLabel: {
+    marginTop: 24,
+    marginBottom: 16,
+  },
+  firstAddressInput: {
+    marginBottom: 12,
+  },
+  lastAddressInput: {
+    marginBottom: 0,
+  },
+  smallLabel: {
+    fontFamily: FONT.regular,
     color: COLORS.textPrimary,
     fontSize: 14,
-    fontWeight: "800",
+    lineHeight: 20,
+    fontWeight: "400",
     marginTop: 16,
     marginBottom: 10,
   },
-  smallLabel: {
-    fontFamily: FONT.bold,
-    color: COLORS.textPrimary,
-    fontSize: 12,
-    fontWeight: "700",
-    marginTop: 6,
-    marginBottom: 8,
-  },
   input: {
     fontFamily: FONT.regular,
-    minHeight: 44,
-    backgroundColor: COLORS.providerLightGray,
-    borderRadius: 13,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    minHeight: 57,
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: COLORS.providerLightGray,
+    paddingHorizontal: 17,
+    paddingVertical: 14,
     color: COLORS.textPrimary,
-    fontSize: 13,
-    marginBottom: 10,
+    fontSize: 14,
+    lineHeight: 18,
   },
   notes: {
-    minHeight: 96,
+    minHeight: 135,
     textAlignVertical: "top",
   },
   locationButtonWrap: {
-    marginTop: 6,
-    marginBottom: 26,
+    marginTop: 12,
+    marginBottom: 24,
   },
   locationButton: {
-    minHeight: 58,
-    borderRadius: 18,
+    minHeight: 50,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: COLORS.providerLightGray,
     backgroundColor: COLORS.white,
@@ -685,33 +720,35 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   locationText: {
-    fontFamily: FONT.bold,
+    fontFamily: FONT.regular,
     color: COLORS.textPrimary,
-    fontSize: 15,
-    fontWeight: "700",
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: "400",
   },
   segmentRow: {
     flexDirection: "row",
     gap: 9,
-    marginBottom: 12,
+    marginBottom: 0,
   },
   segment: {
     flex: 1,
-    minHeight: 36,
+    minHeight: 49,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: COLORS.providerLightGray,
-    borderRadius: 12,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   segmentActive: {
     backgroundColor: COLORS.honey,
   },
   segmentText: {
-    fontFamily: FONT.semiBold,
+    fontFamily: FONT.regular,
     color: COLORS.textPrimary,
-    fontSize: 11,
-    fontWeight: "600",
+    fontSize: 14,
+    lineHeight: 18,
+    fontWeight: "400",
   },
   segmentTextActive: {
     fontFamily: FONT.extraBold,
@@ -719,9 +756,11 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   selectedDateBox: {
-    minHeight: 44,
-    backgroundColor: COLORS.providerLightGray,
-    borderRadius: 13,
+    minHeight: 49,
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: COLORS.providerLightGray,
     justifyContent: "center",
     paddingHorizontal: 14,
     marginBottom: 12,
@@ -729,7 +768,7 @@ const styles = StyleSheet.create({
   selectedDateText: {
     fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
-    fontSize: 13,
+    fontSize: 14,
   },
   selectedDateTextActive: {
     fontFamily: FONT.bold,
@@ -737,6 +776,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   infoBox: {
+    minHeight: 100,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: COLORS.white,
@@ -745,15 +785,22 @@ const styles = StyleSheet.create({
     borderColor: COLORS.providerLightGray,
     paddingVertical: 18,
     paddingHorizontal: 24,
-    marginTop: 20,
+    marginTop: 24,
     gap: 18,
   },
   infoText: {
-    fontFamily: FONT.semiBold,
+    fontFamily: FONT.regular,
     flex: 1,
     color: COLORS.textPrimary,
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "400",
+    lineHeight: 24,
+  },
+  exampleText: {
+    marginTop: 8,
+    fontFamily: FONT.regular,
+    color: COLORS.providerMidGray,
+    fontSize: 14,
     lineHeight: 20,
   },
   bottomCta: {
@@ -761,9 +808,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: 22,
-    paddingTop: 12,
-    backgroundColor: COLORS.honeyCream,
   },
   modalOverlay: {
     flex: 1,

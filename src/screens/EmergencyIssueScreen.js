@@ -8,6 +8,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
 import RecommendedActionsList from "../components/RecommendedActionsList/RecommendedActionsList";
 import UserActionButtons from "../components/UserActionButtons/UserActionButtons";
@@ -51,6 +52,7 @@ const EmergencyIssueScreen = ({
   analysisResult,
   imageUri,
   onBack,
+  onNotificationPress,
   onFindExpertsPress,
 }) => {
   const result =
@@ -140,6 +142,7 @@ const EmergencyIssueScreen = ({
           <View style={styles.riskBadgePosition}>
             <UrgencyBadge
               urgency={displayedUrgency}
+              size={80}
             />
           </View>
 
@@ -168,18 +171,30 @@ const EmergencyIssueScreen = ({
       <AppHeader
         title="Issue Detected"
         onBack={onBack}
+        right={
+          <Ionicons
+            name="notifications-outline"
+            size={20}
+            color={COLORS.secondary}
+            onPress={onNotificationPress}
+          />
+        }
         style={styles.headerContainer}
       />
 
       <View style={styles.bottomActionContainer}>
-        <View style={styles.bottomActionContent}>
+        <AuthFooterTray
+          fill={COLORS.warmCream}
+          style={styles.bottomActionContent}
+        >
           <UserActionButtons
             onFindExpertsPress={
               onFindExpertsPress
             }
             showDiy={false}
+            buttonStyle={styles.findExpertsButton}
           />
-        </View>
+        </AuthFooterTray>
       </View>
     </View>
   );

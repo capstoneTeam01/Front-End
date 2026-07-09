@@ -6,30 +6,22 @@ import {
   Pressable,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFonts, Rubik_400Regular } from "@expo-google-fonts/rubik";
 
+import BulbIcon from "../../../assets/icons/Bulb_icon.svg";
+import FocusIcon from "../../../assets/icons/Focus Camera Icon.svg";
+import TargetIcon from "../../../assets/icons/Traget.svg";
+import WrongImageIcon from "../../../assets/icons/Wrong Image.svg";
 import COLORS from "../../constants/colors";
+import AuthFooterTray from "../AuthFooterTray/AuthFooterTray";
 import HexTile from "../HexTile/HexTile";
 import styles from "./CaptureInstructionsPopupStyle";
 
 const TIPS = [
-  { Icon: Ionicons, icon: "bulb-outline", label: "Ensure good lighting" },
-  {
-    Icon: MaterialCommunityIcons,
-    icon: "image-filter-center-focus-weak",
-    label: "Capture the full area",
-  },
-  {
-    Icon: MaterialCommunityIcons,
-    icon: "image-off-outline",
-    label: "Avoid Blurry Photos",
-  },
-  {
-    Icon: MaterialCommunityIcons,
-    icon: "target",
-    label: "Keep the issue centered",
-  },
+  { Icon: BulbIcon, label: "Ensure good lighting" },
+  { Icon: FocusIcon, label: "Capture the full area" },
+  { Icon: WrongImageIcon, label: "Avoid Blurry Photos" },
+  { Icon: TargetIcon, label: "Keep the issue centered" },
 ];
 
 const CaptureInstructionsPopup = ({ visible, onClose, onScanNow }) => {
@@ -52,37 +44,48 @@ const CaptureInstructionsPopup = ({ visible, onClose, onScanNow }) => {
           <View style={styles.sheet}>
             <View style={styles.handle} />
 
-            <Text style={styles.title}>Capture Image Clearly</Text>
-            <Text style={styles.subtitle}>
-              Take a clear photo so FixBee can accurately identify the problem.
-            </Text>
+            <View style={styles.guide}>
+              <Text style={styles.title}>Capture Image Clearly</Text>
+              <Text style={styles.subtitle}>
+                Take a clear photo so FixBee can accurately identify the problem.
+              </Text>
 
-            <View style={styles.tipsCard}>
-              {TIPS.map((tip, index) => (
-                <View
-                  key={tip.label}
-                  style={[
-                    styles.tipRow,
-                    index < TIPS.length - 1 && styles.tipDivider,
-                  ]}
-                >
-                  <View style={styles.tipIconWrap}>
-                    <HexTile size={40} flatTop={false} fill={COLORS.lightHoney}>
-                      <tip.Icon
-                        name={tip.icon}
-                        size={20}
-                        color={COLORS.secondary}
-                      />
-                    </HexTile>
+              <View style={styles.tipsCard}>
+                {TIPS.map((tip, index) => (
+                  <View
+                    key={tip.label}
+                    style={[
+                      styles.tipRow,
+                      index < TIPS.length - 1 && styles.tipDivider,
+                    ]}
+                  >
+                    <View style={styles.tipIconWrap}>
+                      <HexTile
+                        size={40}
+                        flatTop={false}
+                        fill={COLORS.lightHoney}
+                      >
+                        <tip.Icon
+                          width={20}
+                          height={20}
+                          color={COLORS.secondary}
+                        />
+                      </HexTile>
+                    </View>
+                    <Text style={styles.tipText}>{tip.label}</Text>
                   </View>
-                  <Text style={styles.tipText}>{tip.label}</Text>
-                </View>
-              ))}
+                ))}
+              </View>
             </View>
 
-            <Pressable style={styles.scanButton} onPress={onScanNow}>
-              <Text style={styles.scanButtonText}>Scan Now</Text>
-            </Pressable>
+            <AuthFooterTray
+              fill={COLORS.warmCream}
+              style={styles.footerTray}
+            >
+              <Pressable style={styles.scanButton} onPress={onScanNow}>
+                <Text style={styles.scanButtonText}>Scan Now</Text>
+              </Pressable>
+            </AuthFooterTray>
           </View>
         </TouchableWithoutFeedback>
       </Pressable>

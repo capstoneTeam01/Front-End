@@ -5,9 +5,14 @@ import Svg, { Path } from "react-native-svg";
 import COLORS from "../../constants/colors";
 import styles from "./AuthFooterTrayStyle";
 
-const AuthFooterTray = ({ children }) => {
+const AuthFooterTray = ({
+  children,
+  fill = COLORS.lightHoney,
+  style,
+  contentStyle,
+}) => {
   return (
-    <View style={styles.tray}>
+    <View style={[styles.tray, style]}>
       <Svg
         pointerEvents="none"
         style={styles.shape}
@@ -16,10 +21,10 @@ const AuthFooterTray = ({ children }) => {
       >
         <Path
           d="M0 38 L17 9 C21.5 3.5 29 0 38 0 H364 C373 0 380.5 3.5 385 9 L402 38 V102 H0 Z"
-          fill={COLORS.lightHoney}
+          fill={fill}
         />
       </Svg>
-      <View style={styles.content}>{children}</View>
+      <View style={[styles.content, contentStyle]}>{children}</View>
     </View>
   );
 };

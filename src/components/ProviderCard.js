@@ -31,13 +31,14 @@ const ProviderCard = ({ provider, selected = false, onPress, onToggle }) => {
 
 const styles = StyleSheet.create({
   card: {
+    minHeight: 104,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: COLORS.white,
-    borderRadius: 14,
-    paddingVertical: 11,
-    paddingHorizontal: 12,
-    marginBottom: 10,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    marginBottom: 16,
     borderWidth: 1,
     borderColor: COLORS.providerLightGray,
   },
@@ -46,20 +47,18 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: 20,
   },
   name: {
-    fontFamily: FONT.bold,
-    color: COLORS.textPrimary,
-    fontSize: 14,
-    fontWeight: "700",
-    marginBottom: 3,
+    fontFamily: FONT.regular,
+    color: COLORS.secondary,
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: "400",
+    marginBottom: 4,
   },
   distance: {
-    fontFamily: FONT.regular,
-    color: COLORS.providerMidGray,
-    fontSize: 11,
-    marginTop: 2,
+    display: "none",
   },
   selectButton: {
     width: 28,

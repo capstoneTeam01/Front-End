@@ -93,9 +93,11 @@ const ScanScreen = ({ navigation, route }) => {
     step === STEP.RECOMMENDATION ||
     step === STEP.EMERGENCY;
 
-  // Result screens render the shared AppHeader, which draws its own
-  // honey shape under the status bar, so no top safe-area edge there.
-  const safeAreaEdges = isResultScreen
+  const isFullBleedScreen =
+    step === STEP.ANALYZING ||
+    isResultScreen;
+
+  const safeAreaEdges = isFullBleedScreen
     ? []
     : ["top", "bottom"];
 
@@ -306,6 +308,9 @@ const ScanScreen = ({ navigation, route }) => {
           analysisResult={analysisResult}
           imageUri={imageUri}
           onBack={handleBack}
+          onNotificationPress={() =>
+            navigation?.navigate("Notifications")
+          }
           onFindExpertsPress={
             handleFindExpertsPress
           }
@@ -323,6 +328,9 @@ const ScanScreen = ({ navigation, route }) => {
           analysisResult={analysisResult}
           imageUri={imageUri}
           onBack={handleBack}
+          onNotificationPress={() =>
+            navigation?.navigate("Notifications")
+          }
           onFindExpertsPress={
             handleFindExpertsPress
           }

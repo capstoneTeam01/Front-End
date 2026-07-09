@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import getEstimateValue from "../utils/getEstimateValue";
 import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
 import RepairEstimateSection from "../components/RepairEstimateSection/RepairEstimateSection";
 import RecommendedActionsList from "../components/RecommendedActionsList/RecommendedActionsList";
@@ -25,6 +26,7 @@ const RecommendationScreen = ({
   analysisResult,
   imageUri,
   onBack,
+  onNotificationPress,
   onFindExpertsPress,
   onDiyPress,
 }) => {
@@ -93,6 +95,24 @@ const RecommendationScreen = ({
           );
         })
       : [];
+
+  const immediateActions = Array.isArray(result.userActions)
+    ? result.userActions
+        .filter((action) => {
+          if (typeof action === "string") return true;
+          return action?.actionType !== "MARK_RESOLVED";
+        })
+        .map((action) => {
+          if (typeof action === "string") return action;
+          return (
+            action?.description ||
+            action?.label ||
+            action?.title ||
+            null
+          );
+        })
+        .filter(Boolean)
+    : [];
 
   const getPhotoId = () => {
     return (
@@ -169,6 +189,7 @@ const RecommendationScreen = ({
           <View style={styles.riskBadgePosition}>
             <UrgencyBadge
               urgency={displayedUrgency}
+              size={80}
             />
           </View>
 
@@ -194,6 +215,14 @@ const RecommendationScreen = ({
             </View>
           ) : null}
 
+          <View style={styles.sectionContainer}>
+            <RecommendedActionsList
+              title="Actions"
+              actions={immediateActions}
+              emptyMessage="Keep the affected area clear and monitor for changes."
+            />
+          </View>
+
           <View
             style={
               styles.repairEstimateContainer
@@ -215,19 +244,31 @@ const RecommendationScreen = ({
       <AppHeader
         title="Issue Detected"
         onBack={onBack}
+        right={
+          <Ionicons
+            name="notifications-outline"
+            size={20}
+            color={COLORS.secondary}
+            onPress={onNotificationPress}
+          />
+        }
         style={styles.headerContainer}
       />
 
       <View style={styles.bottomActionContainer}>
-        <View style={styles.bottomActionContent}>
+        <AuthFooterTray
+          fill={COLORS.warmCream}
+          style={styles.bottomActionContent}
+        >
           <UserActionButtons
             onFindExpertsPress={
               onFindExpertsPress
             }
             onDiyPress={handleDiyPress}
             showDiy={!isLowConfidence}
+            buttonStyle={styles.actionButton}
           />
-        </View>
+        </AuthFooterTray>
       </View>
     </View>
   );

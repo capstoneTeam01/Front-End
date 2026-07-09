@@ -1,34 +1,37 @@
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import ProviderHexAvatar from "../components/ProviderHexAvatar";
 import ProviderRating from "../components/ProviderRating";
+import ProviderSelectionLimitPopup from "../components/ProviderSelectionLimitPopup/ProviderSelectionLimitPopup";
 import { loadProviderDetails } from "../localDb/businessDirectoryProviderLocalDb";
 import { MAX_SELECTED_PROVIDERS } from "../utils/providerConstants";
 import COLORS from "../constants/colors";
 import FONT from "../constants/typography";
 
-const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
-
 const normalizeSelectedIds = (ids = []) => {
   if (!Array.isArray(ids)) return [];
-  return [...new Set(ids.filter(Boolean).map((id) => String(id)))];
+  return [...new Set(ids.filter(Boolean).map((id) => String(id)))].slice(
+    0,
+    MAX_SELECTED_PROVIDERS,
+  );
 };
 
 const ProviderDetailsScreen = ({ navigation, route }) => {
   const providerId = route?.params?.providerId;
   const [provider, setProvider] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [limitPopupVisible, setLimitPopupVisible] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -59,13 +62,18 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
     const selectedIds = normalizeSelectedIds(route?.params?.selectedProviderIds);
     let nextSelectedIds = selectedIds;
 
-    if (!selectedIds.includes(provider.id)) {
+    const normalizedProviderId = String(provider.id);
+
+    if (!selectedIds.includes(normalizedProviderId)) {
       if (selectedIds.length >= MAX_SELECTED_PROVIDERS) {
-        Alert.alert("Selection limit", `You can select up to ${MAX_SELECTED_PROVIDERS} providers.`);
+        setLimitPopupVisible(true);
         return;
       }
 
-      nextSelectedIds = normalizeSelectedIds([...selectedIds, provider.id]);
+      nextSelectedIds = normalizeSelectedIds([
+        ...selectedIds,
+        normalizedProviderId,
+      ]);
     }
 
     console.log("[FixBee][ProviderDetails] add to list", {
@@ -81,7 +89,18 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.safe}>
-      <AppHeader title="Experts List" onBack={() => navigation.goBack()} />
+      <AppHeader
+        title="Providers"
+        onBack={() => navigation.goBack()}
+        right={
+          <Ionicons
+            name="notifications-outline"
+            size={20}
+            color={COLORS.secondary}
+            onPress={() => navigation.navigate("Notifications")}
+          />
+        }
+      />
 
       {loading ? (
         <View style={styles.centerState}>
@@ -100,32 +119,56 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
       {provider ? (
         <>
           <ScrollView contentContainerStyle={styles.content}>
-            <ProviderHexAvatar label={provider.businessName} size={70} />
-            <Text style={styles.name}>{provider.businessName || "Provider"}</Text>
-            <ProviderRating rating={provider.rating} reviewCount={provider.reviewCount} showGoogle />
-
-            <View style={styles.metaRow}>
-              <View style={styles.categoryPill}>
-                <Text style={styles.categoryPillText}>
-                  {provider.primaryCategory || provider.providerType || "Plumbing"}
-                </Text>
-              </View>
-              <View style={styles.availabilityPill}>
-                <Text style={styles.availabilityPillText}>24/7</Text>
-              </View>
+            <View style={styles.providerSummary}>
+              <ProviderHexAvatar label={provider.businessName} size={100} />
+              <Text style={styles.name}>
+                {provider.businessName || "Provider"}
+              </Text>
+              <ProviderRating
+                rating={provider.rating}
+                reviewCount={provider.reviewCount}
+                showGoogle
+              />
             </View>
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Description</Text>
-              <Text style={styles.description}>{provider.businessDescription || "Licensed repair professional available for residential maintenance and repair requests."}</Text>
+              <Text style={styles.description}>
+                {provider.businessDescription ||
+                  "Licensed repair professional available for residential maintenance and repair requests."}
+              </Text>
+
+              <View style={styles.metaRow}>
+                <View style={styles.categoryPill}>
+                  <Text style={styles.categoryPillText}>
+                    {provider.primaryCategory ||
+                      provider.providerType ||
+                      "Plumbing"}
+                  </Text>
+                </View>
+                <View style={styles.availabilityPill}>
+                  <Text style={styles.availabilityPillText}>24/7</Text>
+                </View>
+              </View>
             </View>
           </ScrollView>
 
-          <View style={[styles.bottomCta, { paddingBottom: bottomButtonSpace }]}>
-            <ProviderPlainButton title="Add To List" onPress={handleAddToList} />
+          <View style={styles.bottomCta}>
+            <AuthFooterTray fill={COLORS.warmCream}>
+              <ProviderPlainButton
+                title="Add to List"
+                onPress={handleAddToList}
+              />
+            </AuthFooterTray>
           </View>
         </>
       ) : null}
+
+      <ProviderSelectionLimitPopup
+        visible={limitPopupVisible}
+        limit={MAX_SELECTED_PROVIDERS}
+        onClose={() => setLimitPopupVisible(false)}
+      />
     </View>
   );
 };
@@ -136,16 +179,22 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   content: {
-    paddingHorizontal: 26,
-    paddingTop: 28,
-    paddingBottom: 120,
+    paddingHorizontal: 24,
+    paddingTop: 40,
+    paddingBottom: 118,
+  },
+  providerSummary: {
+    minHeight: 210,
+    alignItems: "flex-start",
   },
   name: {
-    fontFamily: FONT.extraBold,
-    marginTop: 16,
-    color: COLORS.textPrimary,
-    fontSize: 20,
-    fontWeight: "800",
+    fontFamily: FONT.medium,
+    marginTop: 20,
+    marginBottom: 12,
+    color: COLORS.secondary,
+    fontSize: 24,
+    lineHeight: 36,
+    fontWeight: "500",
   },
   metaRow: {
     flexDirection: "row",
@@ -177,20 +226,21 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   section: {
-    marginTop: 24,
+    paddingTop: 20,
   },
   sectionTitle: {
-    fontFamily: FONT.extraBold,
+    fontFamily: FONT.medium,
     color: COLORS.textPrimary,
-    fontSize: 15,
-    fontWeight: "800",
-    marginBottom: 8,
+    fontSize: 20,
+    lineHeight: 28,
+    fontWeight: "500",
+    marginBottom: 16,
   },
   description: {
     fontFamily: FONT.regular,
-    color: COLORS.textPrimary,
-    fontSize: 13,
-    lineHeight: 20,
+    color: COLORS.textSecondary,
+    fontSize: 16,
+    lineHeight: 24,
   },
   centerState: {
     padding: 24,
@@ -214,9 +264,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: 22,
-    paddingTop: 12,
-    backgroundColor: COLORS.honeyCream,
   },
 });
 

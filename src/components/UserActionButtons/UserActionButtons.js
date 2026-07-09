@@ -6,6 +6,8 @@ const UserActionButtons = ({
   onFindExpertsPress,
   onDiyPress,
   showDiy = false,
+  buttonStyle,
+  textStyle,
 }) => {
   const findExpertsStyle = showDiy
     ? styles.findExpertsWithDiyButton
@@ -18,10 +20,11 @@ const UserActionButtons = ({
         style={({ pressed }) => [
           styles.button,
           findExpertsStyle,
+          buttonStyle,
           pressed ? styles.buttonPressed : null,
         ]}
       >
-        <Text style={styles.buttonText}>
+        <Text style={[styles.buttonText, textStyle]}>
           Find Experts
         </Text>
       </Pressable>
@@ -32,10 +35,11 @@ const UserActionButtons = ({
           style={({ pressed }) => [
             styles.button,
             styles.diyButton,
+            buttonStyle,
             pressed ? styles.buttonPressed : null,
           ]}
         >
-          <Text style={styles.buttonText}>
+          <Text style={[styles.buttonText, textStyle]}>
             DIY
           </Text>
         </Pressable>
