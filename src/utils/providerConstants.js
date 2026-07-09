@@ -3,7 +3,7 @@ export const PROVIDER_DB_NAME = "fixbee_business_directory_provider.db";
 export const DEFAULT_PROVIDER_CATEGORY = "plumber";
 export const DEFAULT_PROVIDER_CITY = "Vancouver";
 export const DEFAULT_PROVIDER_LIMIT = 20;
-export const MAX_SELECTED_PROVIDERS = 10;
+export const MAX_SELECTED_PROVIDERS = 5;
 
 export const SUPPORTED_CITIES = [
   "Vancouver",

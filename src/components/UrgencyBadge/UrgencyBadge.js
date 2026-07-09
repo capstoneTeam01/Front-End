@@ -5,7 +5,7 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
-import HexTile from "../HexTile/HexTile";
+import PolygonAsset from "../PolygonAsset";
 import COLORS from "../../constants/colors";
 import styles from "./UrgencyBadgeStyle";
 
@@ -74,12 +74,13 @@ const getUrgencyConfig = (urgency) => {
 const UrgencyIcon = ({
   iconType,
   iconColor,
+  size,
 }) => {
   if (iconType === "emergency") {
     return (
       <MaterialCommunityIcons
         name="alarm-light-outline"
-        size={29}
+        size={size}
         color={iconColor}
       />
     );
@@ -89,7 +90,7 @@ const UrgencyIcon = ({
     return (
       <Ionicons
         name="warning-outline"
-        size={29}
+        size={size}
         color={iconColor}
       />
     );
@@ -98,21 +99,28 @@ const UrgencyIcon = ({
   return (
     <Ionicons
       name="help-circle-outline"
-      size={29}
+      size={size}
       color={iconColor}
     />
   );
 };
 
-const UrgencyBadge = ({ urgency }) => {
+const UrgencyBadge = ({ urgency, size = 80 }) => {
   const urgencyConfig =
     getUrgencyConfig(urgency);
+  const height = (size * 89) / 80;
 
   return (
-    <View style={styles.badgeContainer}>
-      <HexTile
-        size={96}
-        flatTop={false}
+    <View
+      style={[
+        styles.badgeContainer,
+        { width: size, height },
+      ]}
+    >
+      <PolygonAsset
+        variant="polygon9"
+        width={size}
+        height={height}
         fill={urgencyConfig.backgroundColor}
       >
         <View style={styles.badgeContent}>
@@ -120,11 +128,14 @@ const UrgencyBadge = ({ urgency }) => {
             <UrgencyIcon
               iconType={urgencyConfig.iconType}
               iconColor={urgencyConfig.iconColor}
+              size={24}
             />
           </View>
 
           <Text
             numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.75}
             style={[
               styles.badgeText,
               urgencyConfig.textStyle,
@@ -133,7 +144,7 @@ const UrgencyBadge = ({ urgency }) => {
             {urgencyConfig.label}
           </Text>
         </View>
-      </HexTile>
+      </PolygonAsset>
     </View>
   );
 };
