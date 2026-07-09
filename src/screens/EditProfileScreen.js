@@ -11,7 +11,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import AppHeader, { ShapedBackground } from "../components/AppHeader/AppHeader";
+import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import HexAvatar from "../components/HexAvatar/HexAvatar";
 import CityPickerSheet from "../components/CityPickerSheet/CityPickerSheet";
 import { getMe } from "../api/getMe";
@@ -27,7 +28,6 @@ const EditProfileScreen = ({ navigation }) => {
   const [location, setLocation] = useState("");
   const [cityOpen, setCityOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [footerSize, setFooterSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     (async () => {
@@ -141,28 +141,28 @@ const EditProfileScreen = ({ navigation }) => {
           </TouchableOpacity>
         </ScrollView>
 
-        <View
-          style={styles.footer}
-          onLayout={(e) => setFooterSize(e.nativeEvent.layout)}
-        >
-          <ShapedBackground size={footerSize} fill={COLORS.warmCream} flipped />
-          <TouchableOpacity
-            style={[styles.footerBtn, styles.cancelBtn]}
-            onPress={() => navigation.goBack()}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.cancelLabel}>Cancel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.footerBtn, styles.saveBtn]}
-            onPress={handleSave}
-            activeOpacity={0.85}
-            disabled={saving}
-          >
-            <Text style={styles.saveLabel}>
-              {saving ? "Saving..." : "Save"}
-            </Text>
-          </TouchableOpacity>
+        <View style={styles.footer}>
+          <AuthFooterTray fill={COLORS.warmCream}>
+            <View style={styles.footerRow}>
+              <TouchableOpacity
+                style={[styles.footerBtn, styles.cancelBtn]}
+                onPress={() => navigation.goBack()}
+                activeOpacity={0.85}
+              >
+                <Text style={styles.cancelLabel}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.footerBtn, styles.saveBtn]}
+                onPress={handleSave}
+                activeOpacity={0.85}
+                disabled={saving}
+              >
+                <Text style={styles.saveLabel}>
+                  {saving ? "Saving..." : "Save"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </AuthFooterTray>
         </View>
       </KeyboardAvoidingView>
 

@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   scroll: {
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 16,
-    paddingBottom: 24,
+    paddingBottom: 120,
   },
   avatarWrap: {
     alignItems: "left",
@@ -78,16 +78,19 @@ const styles = StyleSheet.create({
     color: COLORS.placeholder,
   },
   footer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  footerRow: {
     flexDirection: "row",
     gap: 12,
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: 16,
-    paddingBottom: 16,
   },
   footerBtn: {
     flex: 1,
-    height: 52,
-    borderRadius: RADIUS.field,
+    height: 46,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -95,14 +98,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightHoney,
   },
   cancelLabel: {
-    color: COLORS.textPrimary,
+    color: COLORS.secondary,
     ...HEADER_FOOTER.footerButton,
   },
   saveBtn: {
     backgroundColor: COLORS.primary,
   },
   saveLabel: {
-    color: COLORS.textPrimary,
+    color: COLORS.secondary,
     ...HEADER_FOOTER.footerButton,
   },
 });
