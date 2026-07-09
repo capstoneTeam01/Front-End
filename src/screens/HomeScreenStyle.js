@@ -3,7 +3,9 @@ import COLORS from "../constants/colors";
 import {
   SIDE_PADDING,
   TYPE,
+  RADIUS,
   BOTTOM_NAV_HEIGHT,
+  SPACING,
 } from "../constants/layout";
 
 const styles = StyleSheet.create({
@@ -28,30 +30,24 @@ const styles = StyleSheet.create({
   },
 
   heroTitle: {
-    fontSize: 28,
-    lineHeight: 33,
-    fontWeight: "400",
     color: COLORS.secondary,
-    marginBottom: 16,
+    marginBottom: SPACING.card,
     textAlign: "center",
+    ...TYPE.screenTitle,
   },
 
   heroSubtitle: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "400",
     color: COLORS.honeyBrown,
     textAlign: "center",
+    ...TYPE.body,
   },
 
   centerSection: {
     marginTop: 15,
-    marginBottom: 16,
-    fontSize: 22,
-    lineHeight: 28,
-    fontWeight: "400",
+    marginBottom: SPACING.card,
     color: COLORS.honeyBrown,
     textAlign: "center",
+    ...TYPE.sectionTitle,
   },
 
   grid: {
@@ -65,21 +61,17 @@ const styles = StyleSheet.create({
   },
 
   popularTitle: {
-    fontSize: 18,
-    lineHeight: 24,
-    fontWeight: "400",
     color: COLORS.textPrimary,
+    ...TYPE.cardTitle,
   },
 
   popularAction: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
     color: COLORS.goldenHoney,
+    ...TYPE.small,
   },
 
   repairsCard: {
-    borderRadius: 24,
+    borderRadius: RADIUS.big,
     backgroundColor: COLORS.white,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.divider,
@@ -100,16 +92,15 @@ const styles = StyleSheet.create({
   },
 
   emptyTitle: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
     marginTop: 4,
+    ...TYPE.body,
   },
 
   emptyText: {
-    fontSize: TYPE.small.fontSize,
     color: COLORS.textMuted,
     textAlign: "center",
+    ...TYPE.small,
   },
 });
 

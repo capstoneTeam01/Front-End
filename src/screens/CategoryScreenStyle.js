@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import { SIDE_PADDING } from "../constants/layout";
+import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   safe: {
@@ -18,20 +18,16 @@ const styles = StyleSheet.create({
   },
 
   bannerTitle: {
-    fontSize: 28,
-    lineHeight: 33,
-    fontWeight: "400",
     color: COLORS.secondary,
     textAlign: "center",
-    marginBottom: 16,
+    marginBottom: SPACING.card,
+    ...TYPE.screenTitle,
   },
 
   bannerSubtitle: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "400",
     color: COLORS.honeyBrown,
     textAlign: "center",
+    ...TYPE.body,
   },
 
   scanWrap: {
@@ -41,25 +37,21 @@ const styles = StyleSheet.create({
 
   popularHeader: {
     marginTop: 7,
-    marginBottom: 20,
+    marginBottom: SPACING.card,
   },
 
   popularTitle: {
-    fontSize: 18,
-    lineHeight: 24,
-    fontWeight: "400",
     color: COLORS.textPrimary,
+    ...TYPE.cardTitle,
   },
 
   popularAction: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
     color: COLORS.goldenHoney,
+    ...TYPE.small,
   },
 
   repairsCard: {
-    borderRadius: 24,
+    borderRadius: RADIUS.big,
     backgroundColor: COLORS.white,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.divider,

@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 import { HEADER_FOOTER } from "../constants/typography";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   container: {
@@ -17,33 +18,31 @@ const styles = StyleSheet.create({
   },
   textBlock: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
     marginTop: 52,
     alignItems: "center",
   },
   title: {
-    fontSize: 27,
-    fontWeight: "400",
     color: COLORS.secondary,
-    marginBottom: 18,
+    marginBottom: SPACING.card,
     textAlign: "center",
+    ...TYPE.screenTitle,
   },
   body: {
-    fontSize: 16,
     color: COLORS.secondary,
     textAlign: "center",
-    lineHeight: 24,
+    ...TYPE.body,
   },
   buttonRow: {
     flexDirection: "row",
-    gap: 16,
+    gap: SPACING.card,
   },
   buttonHalf: {
     flex: 1,
   },
   welcomeButton: {
-    height: 47,
-    borderRadius: 14,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.primary,
   },
   welcomeButtonLabel: {

@@ -2,6 +2,8 @@ import { StyleSheet } from "react-native";
 
 import COLORS from "../constants/colors";
 import {
+  BUTTON_HEIGHT,
+  RADIUS,
   SIDE_PADDING,
   SPACING,
   TYPE,
@@ -81,18 +83,14 @@ const styles = StyleSheet.create({
   },
 
   issueTitle: {
-    fontSize: 18,
-    fontWeight: "400",
     color: COLORS.white,
-    lineHeight: 24,
     marginBottom: 12,
+    ...TYPE.cardTitle,
   },
 
   issueDescription: {
-    fontSize: 14,
-    fontWeight: "400",
     color: COLORS.white,
-    lineHeight: 20,
+    ...TYPE.small,
   },
 
   /*
@@ -137,8 +135,8 @@ const styles = StyleSheet.create({
   },
 
   findExpertsButton: {
-    height: 46,
-    borderRadius: 14,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
   },
 });
 

@@ -21,24 +21,21 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "400",
     color: COLORS.textPrimary,
     marginBottom: 10,
+    ...TYPE.sectionTitle,
   },
 
   subtitle: {
-    fontSize: TYPE.small.fontSize,
-    lineHeight: 20,
     color: COLORS.mediumGrey,
-    marginBottom: 26,
+    marginBottom: 24,
+    ...TYPE.small,
   },
 
   sectionTitle: {
-    fontSize: TYPE.cardTitle.fontSize,
-    fontWeight: "500",
     color: COLORS.textPrimary,
     marginBottom: 16,
+    ...TYPE.cardTitle,
   },
 
   toolCard: {
@@ -68,8 +65,8 @@ const styles = StyleSheet.create({
   },
 
   toolText: {
-    fontSize: TYPE.body.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.body,
   },
 
   stepsBox: {
@@ -104,9 +101,8 @@ const styles = StyleSheet.create({
   },
 
   stepNumber: {
-    fontSize: TYPE.caption.fontSize,
-    fontWeight: "600",
     color: COLORS.white,
+    ...TYPE.caption,
   },
 
   stepLine: {
@@ -126,16 +122,14 @@ const styles = StyleSheet.create({
   },
 
   stepTitle: {
-    fontSize: 15,
-    fontWeight: "500",
     color: COLORS.secondary,
     marginBottom: 7,
+    ...TYPE.small,
   },
 
   stepDesc: {
-    fontSize: 13,
-    lineHeight: 18,
     color: COLORS.honeyBrown,
+    ...TYPE.caption,
   },
 
   inactiveText: {
@@ -149,7 +143,7 @@ const styles = StyleSheet.create({
   warningBox: {
     minHeight: 92,
     borderRadius: RADIUS.big,
-    padding: 20,
+    padding: 16,
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 18,
@@ -159,7 +153,7 @@ const styles = StyleSheet.create({
   warningIcon: {
     width: 52,
     height: 52,
-    borderRadius: 14,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
@@ -168,9 +162,8 @@ const styles = StyleSheet.create({
 
   warningText: {
     flex: 1,
-    fontSize: 13,
-    lineHeight: 19,
     color: COLORS.textPrimary,
+    ...TYPE.caption,
   },
 
   helpBox: {
@@ -182,16 +175,15 @@ const styles = StyleSheet.create({
   },
 
   helpTitle: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
     marginBottom: 10,
+    ...TYPE.body,
   },
 
   helpText: {
-    fontSize: 13,
     color: COLORS.mediumGrey,
     textAlign: "center",
+    ...TYPE.caption,
   },
 
   bottomBar: {
@@ -205,8 +197,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.warmCream,
     flexDirection: "row",
     gap: 16,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderTopLeftRadius: RADIUS.big,
+    borderTopRightRadius: RADIUS.big,
   },
 
   secondaryButton: {
@@ -219,9 +211,8 @@ const styles = StyleSheet.create({
   },
 
   secondaryText: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: TYPE.button.fontWeight,
     color: COLORS.secondary,
+    ...TYPE.button,
   },
 
   diyButton: {
@@ -241,9 +232,8 @@ const styles = StyleSheet.create({
   },
 
   diyButtonText: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: TYPE.button.fontWeight,
     color: COLORS.secondary,
+    ...TYPE.button,
   },
 
   modalOverlay: {
@@ -279,17 +269,16 @@ const styles = StyleSheet.create({
   },
 
   modalTitle: {
-    fontSize: TYPE.cardTitle.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
     marginBottom: 8,
+    ...TYPE.cardTitle,
   },
 
   modalText: {
-    fontSize: 13,
     color: COLORS.textSecondary,
     textAlign: "center",
     marginBottom: 24,
+    ...TYPE.small,
   },
 
   modalButtons: {
@@ -300,8 +289,8 @@ const styles = StyleSheet.create({
 
   modalDarkButton: {
     flex: 1,
-    height: 44,
-    borderRadius: RADIUS.small,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
@@ -309,8 +298,8 @@ const styles = StyleSheet.create({
 
   modalLightButton: {
     flex: 1,
-    height: 44,
-    borderRadius: RADIUS.small,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.lightHoney,
     alignItems: "center",
     justifyContent: "center",
@@ -318,14 +307,12 @@ const styles = StyleSheet.create({
 
   modalDarkText: {
     color: COLORS.secondary,
-    fontSize: 13,
-    fontWeight: "500",
+    ...TYPE.button,
   },
 
   modalLightText: {
     color: COLORS.secondary,
-    fontSize: 13,
-    fontWeight: "500",
+    ...TYPE.button,
   },
 
   stepCheckIcon: {
@@ -351,8 +338,8 @@ const styles = StyleSheet.create({
 
   loadingText: {
     marginTop: 12,
-    fontSize: TYPE.small.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.small,
   },
 });
 

@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import COLORS from "../../constants/colors";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   backdrop: {
@@ -10,7 +11,7 @@ const styles = StyleSheet.create({
   },
   sheet: {
     minHeight: 308,
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
     paddingTop: 12,
     paddingBottom: 32,
     alignItems: "center",
@@ -27,34 +28,28 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 16,
-    fontSize: 22,
-    lineHeight: 28,
-    fontWeight: "400",
     color: COLORS.textPrimary,
     textAlign: "center",
+    ...TYPE.sectionTitle,
   },
   message: {
     marginTop: 8,
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: "400",
     color: COLORS.mediumGrey,
     textAlign: "center",
+    ...TYPE.body,
   },
   button: {
     width: "100%",
-    height: 46,
-    marginTop: 24,
-    borderRadius: 14,
+    height: BUTTON_HEIGHT,
+    marginTop: SPACING.section,
+    borderRadius: RADIUS.field,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: COLORS.primary,
   },
   buttonText: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "400",
     color: COLORS.secondary,
+    ...TYPE.button,
   },
 });
 

@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
+import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   backdrop: {
@@ -8,9 +9,9 @@ const styles = StyleSheet.create({
   },
   sheet: {
     backgroundColor: COLORS.white,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingHorizontal: 20,
+    borderTopLeftRadius: RADIUS.big,
+    borderTopRightRadius: RADIUS.big,
+    paddingHorizontal: SIDE_PADDING,
     paddingTop: 12,
     paddingBottom: 36,
   },
@@ -20,13 +21,12 @@ const styles = StyleSheet.create({
     height: 5,
     borderRadius: 3,
     backgroundColor: COLORS.gray500,
-    marginBottom: 16,
+    marginBottom: SPACING.card,
   },
   title: {
-    fontSize: 18,
-    fontWeight: "700",
     color: COLORS.textPrimary,
-    marginBottom: 12,
+    marginBottom: SPACING.sm,
+    ...TYPE.cardTitle,
   },
   row: {
     flexDirection: "row",
@@ -34,23 +34,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 16,
     paddingHorizontal: 14,
-    borderRadius: 14,
+    borderRadius: RADIUS.field,
   },
   rowActive: {
     backgroundColor: COLORS.warmCream,
   },
   rowText: {
-    fontSize: 16,
     color: COLORS.surfaceDark,
+    ...TYPE.body,
   },
   rowTextActive: {
     color: COLORS.textPrimary,
-    fontWeight: "700",
   },
   check: {
-    fontSize: 16,
-    fontWeight: "700",
     color: COLORS.primary,
+    ...TYPE.body,
   },
 });
 

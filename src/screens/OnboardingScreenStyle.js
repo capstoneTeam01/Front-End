@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 import { HEADER_FOOTER } from "../constants/typography";
+import { BUTTON_HEIGHT, FIELD_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,33 +23,29 @@ const styles = StyleSheet.create({
   },
   textBlock: {
     width: "100%",
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
     alignItems: "center",
   },
   title: {
-    fontSize: 28,
-    lineHeight: 33,
-    fontWeight: "400",
     color: COLORS.secondary,
-    marginBottom: 16,
+    marginBottom: SPACING.card,
     textAlign: "center",
+    ...TYPE.screenTitle,
   },
   body: {
-    fontSize: 16,
-    fontWeight: "400",
     color: COLORS.secondary,
     textAlign: "center",
-    lineHeight: 24,
+    ...TYPE.body,
   },
   cityField: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: COLORS.white,
-    borderRadius: 12,
-    height: 52,
-    paddingHorizontal: 16,
-    marginTop: 16,
+    borderRadius: RADIUS.field,
+    height: FIELD_HEIGHT,
+    paddingHorizontal: SPACING.card,
+    marginTop: SPACING.card,
     width: "100%",
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
@@ -57,8 +54,8 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   cityText: {
-    fontSize: 15,
     color: COLORS.textPrimary,
+    ...TYPE.body,
   },
   cityPlaceholder: {
     color: COLORS.placeholder,
@@ -84,8 +81,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.warmCream,
   },
   nextButton: {
-    height: 46,
-    borderRadius: 14,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.primary,
   },
   nextButtonLabel: {

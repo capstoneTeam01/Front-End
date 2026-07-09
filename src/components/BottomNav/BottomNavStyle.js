@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
 import { HEADER_FOOTER } from "../../constants/typography";
+import { BOTTOM_NAV_HEIGHT } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   floatWrap: {
@@ -14,9 +15,9 @@ const styles = StyleSheet.create({
   bar: {
     flexDirection: "row",
     alignItems: "center",
-    height: 100,
+    height: BOTTOM_NAV_HEIGHT,
     paddingHorizontal: 8,
-    paddingTop: 10,
+    paddingTop: 8,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.12,

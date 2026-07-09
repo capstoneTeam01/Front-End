@@ -20,6 +20,7 @@ import { detectIssueRegion } from "../api/detectIssueRegion";
 import { COACHING_INSTRUCTIONS, evaluateFocus } from "./evaluateFocus";
 import CameraGuidelines from "./CameraGuidelines";
 import PreviewScreen from "./PreviewScreen/PreviewScreen";
+import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const SCAN_INTERVAL_MS = 1200;
 const SCAN_START_DELAY_MS = 500;
@@ -495,23 +496,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 24,
+    padding: SIDE_PADDING,
   },
   permissionText: {
     color: "#fff",
-    fontSize: 16,
     textAlign: "center",
-    marginBottom: 16,
+    marginBottom: SPACING.card,
+    ...TYPE.body,
   },
   permissionButton: {
     backgroundColor: "#2563eb",
     paddingHorizontal: 20,
     paddingVertical: 12,
-    borderRadius: 8,
+    borderRadius: RADIUS.small,
   },
   permissionButtonText: {
     color: "#fff",
-    fontWeight: "600",
+    ...TYPE.button,
   },
   cancelLink: {
     marginTop: 16,
@@ -519,7 +520,7 @@ const styles = StyleSheet.create({
   },
   cancelLinkText: {
     color: "#93c5fd",
-    fontWeight: "600",
+    ...TYPE.button,
   },
   topBar: {
     position: "absolute",
@@ -566,17 +567,16 @@ const styles = StyleSheet.create({
   },
   aiBadgeText: {
     color: "#fff",
-    fontSize: 14,
-    fontWeight: "600",
+    ...TYPE.small,
   },
   instructionCard: {
     position: "absolute",
-    left: 24,
-    right: 24,
+    left: SIDE_PADDING,
+    right: SIDE_PADDING,
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderRadius: 16,
+    paddingVertical: SPACING.card,
+    borderRadius: RADIUS.medium,
     backgroundColor: "rgba(15, 23, 42, 0.82)",
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.06)",
@@ -586,17 +586,14 @@ const styles = StyleSheet.create({
   },
   instructionPrimary: {
     color: "#fff",
-    fontSize: 15,
-    fontWeight: "600",
     textAlign: "center",
-    lineHeight: 22,
+    ...TYPE.small,
   },
   instructionSecondary: {
     marginTop: 6,
     color: "#94a3b8",
-    fontSize: 13,
     textAlign: "center",
-    lineHeight: 18,
+    ...TYPE.caption,
   },
   controls: {
     position: "absolute",
@@ -611,7 +608,7 @@ const styles = StyleSheet.create({
   sideButton: {
     width: 52,
     height: 52,
-    borderRadius: 14,
+    borderRadius: RADIUS.field,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(30, 41, 59, 0.78)",

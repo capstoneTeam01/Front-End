@@ -30,7 +30,7 @@ import {
   getCurrentCityFromGps,
 } from "../utils/locationHelper";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
+import { SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const normalizeSelectedIds = (ids = []) => {
   if (!Array.isArray(ids)) return [];
@@ -357,37 +357,29 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   headerBlock: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 16,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: SPACING.card,
+    paddingBottom: SPACING.card,
   },
   title: {
-    fontFamily: FONT.regular,
     color: COLORS.textPrimary,
-    fontSize: 22,
-    lineHeight: 28,
-    fontWeight: "400",
+    ...TYPE.sectionTitle,
   },
   subtitle: {
-    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
-    fontSize: 16,
-    lineHeight: 20,
     marginTop: 10,
+    ...TYPE.body,
   },
   countText: {
-    fontFamily: FONT.regular,
     color: COLORS.providerBrown,
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
     marginTop: 10,
+    ...TYPE.small,
   },
   list: {
     flex: 1,
   },
   listContent: {
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
     paddingTop: 0,
     paddingBottom: 110,
   },
@@ -396,18 +388,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   stateTitle: {
-    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
-    fontSize: 15,
-    fontWeight: "700",
-    marginBottom: 8,
+    marginBottom: SPACING.sm,
+    ...TYPE.body,
   },
   stateText: {
-    fontFamily: FONT.regular,
     color: COLORS.textSecondary,
-    fontSize: 12,
-    marginTop: 8,
+    marginTop: SPACING.sm,
     textAlign: "center",
+    ...TYPE.caption,
   },
   bottomCta: {
     position: "absolute",

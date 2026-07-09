@@ -25,10 +25,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "700",
     color: COLORS.textPrimary,
     marginBottom: 8,
+    ...TYPE.sectionTitle,
   },
 });
 

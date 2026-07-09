@@ -1,24 +1,23 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
 import {
+  RADIUS,
   SPACING,
   TYPE,
 } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   sectionTitle: {
-    fontSize: 18,
-    lineHeight: 24,
-    fontWeight: "400",
     color: COLORS.secondary,
-    marginBottom: 16,
+    marginBottom: SPACING.card,
+    ...TYPE.cardTitle,
   },
 
   actionsCard: {
     backgroundColor: COLORS.white,
     borderWidth: 1,
     borderColor: COLORS.gray500,
-    borderRadius: 24,
+    borderRadius: RADIUS.big,
     overflow: "hidden",
     marginBottom: 36,
   },
@@ -33,19 +32,14 @@ const styles = StyleSheet.create({
   },
 
   actionText: {
-    ...TYPE.small,
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
     color: COLORS.mediumGrey,
+    ...TYPE.small,
   },
 
   emptyText: {
-    ...TYPE.small,
-    fontSize: 15,
     color: COLORS.textSecondary,
     padding: SPACING.card,
-    lineHeight: 22,
+    ...TYPE.small,
   },
 });
 

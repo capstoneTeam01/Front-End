@@ -1,48 +1,74 @@
 const FONT = {
-  regular: "Rubik_400Regular",
-  medium: "Rubik_500Medium",
-  semiBold: "Rubik_600SemiBold",
-  bold: "Rubik_700Bold",
-  extraBold: "Rubik_800ExtraBold",
+  regular: "Inter_400Regular",
+  medium: "Inter_500Medium",
+  semiBold: "Inter_600SemiBold",
+  bold: "Inter_700Bold",
+  extraBold: "Inter_800ExtraBold",
 };
 
-// Shared header/footer typography from Figma UI Kit.
-export const HEADER_FOOTER = {
-  appHeaderTitle: {
-    fontFamily: FONT.regular,
+export const TYPOGRAPHY = {
+  screenTitle: {
+    fontFamily: FONT.semiBold,
+    fontSize: 28,
+    lineHeight: 34,
+    fontWeight: "600",
+  },
+  sectionTitle: {
+    fontFamily: FONT.semiBold,
     fontSize: 22,
     lineHeight: 28,
-    fontWeight: "400",
+    fontWeight: "600",
   },
-  appHeaderTitleLeft: {
+  cardTitle: {
+    fontFamily: FONT.medium,
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: "500",
+  },
+  body: {
     fontFamily: FONT.regular,
     fontSize: 16,
+    lineHeight: 24,
+    fontWeight: "400",
+  },
+  small: {
+    fontFamily: FONT.regular,
+    fontSize: 14,
     lineHeight: 20,
     fontWeight: "400",
   },
-  tabHeaderText: {
-    fontFamily: FONT.regular,
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "400",
-  },
-  bottomNavLabel: {
+  caption: {
     fontFamily: FONT.medium,
     fontSize: 12,
     lineHeight: 16,
     fontWeight: "500",
   },
-  bottomNavLabelActive: {
-    fontFamily: FONT.regular,
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
-  },
-  footerButton: {
-    fontFamily: FONT.regular,
+  button: {
+    fontFamily: FONT.medium,
     fontSize: 16,
     lineHeight: 20,
-    fontWeight: "400",
+    fontWeight: "500",
+  },
+};
+
+export const HEADER_FOOTER = {
+  appHeaderTitle: {
+    ...TYPOGRAPHY.sectionTitle,
+  },
+  appHeaderTitleLeft: {
+    ...TYPOGRAPHY.body,
+  },
+  tabHeaderText: {
+    ...TYPOGRAPHY.body,
+  },
+  bottomNavLabel: {
+    ...TYPOGRAPHY.caption,
+  },
+  bottomNavLabelActive: {
+    ...TYPOGRAPHY.small,
+  },
+  footerButton: {
+    ...TYPOGRAPHY.button,
   },
 };
 

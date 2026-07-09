@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
 import { HEADER_FOOTER } from "../../constants/typography";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   backdrop: {
@@ -23,35 +24,31 @@ const styles = StyleSheet.create({
     marginBottom: 36,
   },
   guide: {
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
   },
   title: {
-    fontFamily: "Rubik_400Regular",
-    fontSize: 22,
-    lineHeight: 28,
     color: COLORS.textPrimary,
     textAlign: "left",
-    marginBottom: 16,
+    marginBottom: SPACING.card,
+    ...TYPE.sectionTitle,
   },
   subtitle: {
-    fontFamily: "Rubik_400Regular",
-    fontSize: 16,
-    lineHeight: 20,
     color: COLORS.mediumGrey,
     textAlign: "left",
-    marginBottom: 20,
+    marginBottom: SPACING.card,
+    ...TYPE.body,
   },
   tipsCard: {
     borderWidth: 1,
     borderColor: COLORS.divider,
-    borderRadius: 24,
+    borderRadius: RADIUS.big,
     overflow: "hidden",
   },
   tipRow: {
     minHeight: 68,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
+    paddingHorizontal: SPACING.card,
     paddingVertical: 12,
     gap: 14,
   },
@@ -65,19 +62,17 @@ const styles = StyleSheet.create({
   },
   tipText: {
     flex: 1,
-    fontFamily: "Rubik_400Regular",
-    fontSize: 16,
-    lineHeight: 20,
     color: COLORS.textPrimary,
+    ...TYPE.body,
   },
   footer: {
-    paddingHorizontal: 24,
-    paddingTop: 20,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: SPACING.card,
   },
   scanButton: {
-    height: 46,
+    height: BUTTON_HEIGHT,
     backgroundColor: COLORS.primary,
-    borderRadius: 14,
+    borderRadius: RADIUS.field,
     alignItems: "center",
     justifyContent: "center",
   },

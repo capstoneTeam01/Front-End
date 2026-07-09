@@ -22,9 +22,8 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: TYPE.cardTitle.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...TYPE.cardTitle,
   },
 });
 

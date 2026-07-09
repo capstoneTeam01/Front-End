@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
+import { SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   flex: {
@@ -15,36 +16,33 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
     paddingTop: 286,
     paddingBottom: 40,
   },
   title: {
-    fontSize: 30,
-    fontWeight: "400",
     color: COLORS.secondary,
-    marginBottom: 24,
+    marginBottom: SPACING.section,
+    ...TYPE.screenTitle,
   },
   fieldLabel: {
-    fontSize: 15,
-    fontWeight: "500",
     color: COLORS.honeyBrown,
-    marginBottom: 8,
-    marginTop: 16,
+    marginBottom: SPACING.sm,
+    marginTop: SPACING.card,
+    ...TYPE.small,
   },
   forgotWrap: {
-    marginTop: 16,
-    marginBottom: 24,
+    marginTop: SPACING.card,
+    marginBottom: SPACING.section,
   },
   forgotText: {
-    fontSize: 15,
     color: COLORS.honeyBrown,
-    fontWeight: "500",
+    ...TYPE.small,
   },
   orRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 20,
+    marginVertical: SPACING.card,
   },
   orLine: {
     flex: 1,
@@ -54,23 +52,21 @@ const styles = StyleSheet.create({
   orText: {
     marginHorizontal: 12,
     color: COLORS.white,
-    fontWeight: "600",
-    fontSize: 14,
+    ...TYPE.small,
   },
   footerRow: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 24,
+    marginTop: SPACING.section,
   },
   footerText: {
-    fontSize: 14,
     color: COLORS.honeyBrown,
+    ...TYPE.small,
   },
   footerLink: {
-    fontSize: 14,
-    fontWeight: "700",
     color: COLORS.textPrimary,
+    ...TYPE.small,
   },
 });
 

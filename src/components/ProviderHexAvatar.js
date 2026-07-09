@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
+import { TYPE } from "../constants/layout";
 import PolygonAsset from "./PolygonAsset";
 
 const ProviderHexAvatar = ({ label = "?", size = 60, selected = false }) => {
@@ -36,10 +36,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   label: {
-    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
-    fontSize: 13,
-    fontWeight: "700",
+    ...TYPE.caption,
   },
   selectedLabel: {
     color: COLORS.providerBrown,

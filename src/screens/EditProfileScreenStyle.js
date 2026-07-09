@@ -28,9 +28,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerTitle: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...TYPE.sectionTitle,
   },
   scroll: {
     paddingHorizontal: SIDE_PADDING,
@@ -42,10 +41,10 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   label: {
-    fontSize: TYPE.body.fontSize,
     color: COLORS.textPrimary,
     marginTop: 18,
     marginBottom: 8,
+    ...TYPE.body,
   },
   input: {
     height: 52,
@@ -53,8 +52,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.greyText,
     paddingHorizontal: 16,
-    fontSize: TYPE.body.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.body,
   },
   inputDisabled: {
     backgroundColor: COLORS.surface,

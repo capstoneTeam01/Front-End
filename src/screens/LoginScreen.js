@@ -95,7 +95,7 @@ const LoginScreen = ({ navigation }) => {
         <AppTextField
           value={email}
           onChangeText={setEmail}
-          placeholder="youremail@example.com"
+          placeholder="Enter your email"
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
@@ -105,7 +105,7 @@ const LoginScreen = ({ navigation }) => {
         <AppTextField
           value={password}
           onChangeText={setPassword}
-          placeholder="Your Password"
+          placeholder="Enter your password"
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
@@ -127,7 +127,7 @@ const LoginScreen = ({ navigation }) => {
         </View>
 
         <GoogleButton
-          label="Log In using Google"
+          label="Log In With Google"
           onPress={handleGoogle}
           loading={googleLoading}
         />

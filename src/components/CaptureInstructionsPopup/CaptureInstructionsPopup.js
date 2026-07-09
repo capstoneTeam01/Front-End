@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useFonts, Rubik_400Regular } from "@expo-google-fonts/rubik";
 
 import BulbIcon from "../../../assets/icons/Bulb_icon.svg";
 import FocusIcon from "../../../assets/icons/Focus Camera Icon.svg";
@@ -20,17 +19,12 @@ import styles from "./CaptureInstructionsPopupStyle";
 const TIPS = [
   { Icon: BulbIcon, label: "Ensure good lighting" },
   { Icon: FocusIcon, label: "Capture the full area" },
-  { Icon: WrongImageIcon, label: "Avoid Blurry Photos" },
+  { Icon: WrongImageIcon, label: "Avoid blurry photos" },
   { Icon: TargetIcon, label: "Keep the issue centered" },
 ];
 
 const CaptureInstructionsPopup = ({ visible, onClose, onScanNow }) => {
   const insets = useSafeAreaInsets();
-  const [fontsLoaded] = useFonts({ Rubik_400Regular });
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <Modal

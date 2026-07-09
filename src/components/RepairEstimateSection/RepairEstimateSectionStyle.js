@@ -41,11 +41,9 @@ const styles = StyleSheet.create({
   },
 
   dollarIcon: {
-    fontSize: 25,
-    fontWeight: "400",
-    lineHeight: 27,
     color: COLORS.secondary,
     textAlign: "center",
+    ...TYPE.sectionTitle,
   },
 
   iconContainer: {
@@ -56,22 +54,18 @@ const styles = StyleSheet.create({
   },
 
   estimateLabel: {
-    fontSize: 12,
-    fontWeight: "400",
     color: COLORS.honeyBrown,
     textAlign: "center",
-    lineHeight: 15,
     marginBottom: 3,
+    ...TYPE.caption,
   },
 
   estimateValue: {
-    fontSize: 14,
-    fontWeight: "500",
     color: COLORS.secondary,
     textAlign: "center",
-    lineHeight: 18,
     width: "100%",
     paddingHorizontal: 2,
+    ...TYPE.small,
   },
 });
 

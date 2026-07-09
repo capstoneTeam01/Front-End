@@ -18,7 +18,7 @@ import ProviderSelectionLimitPopup from "../components/ProviderSelectionLimitPop
 import { loadProviderDetails } from "../localDb/businessDirectoryProviderLocalDb";
 import { MAX_SELECTED_PROVIDERS } from "../utils/providerConstants";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
+import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const normalizeSelectedIds = (ids = []) => {
   if (!Array.isArray(ids)) return [];
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   content: {
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
     paddingTop: 40,
     paddingBottom: 118,
   },
@@ -186,13 +186,10 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   name: {
-    fontFamily: FONT.medium,
-    marginTop: 20,
-    marginBottom: 12,
+    marginTop: SPACING.card,
+    marginBottom: SPACING.sm,
     color: COLORS.secondary,
-    fontSize: 24,
-    lineHeight: 36,
-    fontWeight: "500",
+    ...TYPE.sectionTitle,
   },
   metaRow: {
     flexDirection: "row",
@@ -203,59 +200,47 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.providerLightGray,
     paddingHorizontal: 12,
     paddingVertical: 7,
-    borderRadius: 13,
+    borderRadius: RADIUS.field,
   },
   categoryPillText: {
-    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
-    fontSize: 12,
-    fontWeight: "700",
+    ...TYPE.caption,
   },
   availabilityPill: {
     backgroundColor: COLORS.honey,
     paddingHorizontal: 12,
     paddingVertical: 7,
-    borderRadius: 13,
+    borderRadius: RADIUS.field,
   },
   availabilityPillText: {
-    fontFamily: FONT.extraBold,
     color: COLORS.providerBrown,
-    fontSize: 12,
-    fontWeight: "800",
+    ...TYPE.caption,
   },
   section: {
     paddingTop: 20,
   },
   sectionTitle: {
-    fontFamily: FONT.medium,
     color: COLORS.textPrimary,
-    fontSize: 20,
-    lineHeight: 28,
-    fontWeight: "500",
-    marginBottom: 16,
+    marginBottom: SPACING.card,
+    ...TYPE.sectionTitle,
   },
   description: {
-    fontFamily: FONT.regular,
     color: COLORS.textSecondary,
-    fontSize: 16,
-    lineHeight: 24,
+    ...TYPE.body,
   },
   centerState: {
-    padding: 24,
+    padding: SIDE_PADDING,
     alignItems: "center",
   },
   stateTitle: {
-    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
-    fontSize: 15,
-    fontWeight: "700",
-    marginBottom: 8,
+    marginBottom: SPACING.sm,
+    ...TYPE.body,
   },
   stateText: {
-    fontFamily: FONT.regular,
     color: COLORS.textSecondary,
-    fontSize: 12,
-    marginTop: 8,
+    marginTop: SPACING.sm,
+    ...TYPE.caption,
   },
   bottomCta: {
     position: "absolute",

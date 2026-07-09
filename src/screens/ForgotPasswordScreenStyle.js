@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
+import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   flex: {
@@ -18,55 +19,49 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
     paddingTop: 220,
     paddingBottom: 40,
   },
   title: {
-    fontSize: 30,
-    fontWeight: "800",
     color: COLORS.textPrimary,
-    marginBottom: 12,
+    marginBottom: SPACING.sm,
+    ...TYPE.screenTitle,
   },
   subtitle: {
-    fontSize: 15,
     color: COLORS.surfaceDark,
-    lineHeight: 22,
-    marginBottom: 28,
+    marginBottom: SPACING.section,
+    ...TYPE.body,
   },
   fieldLabel: {
-    fontSize: 15,
-    fontWeight: "500",
     color: COLORS.surfaceDark,
-    marginBottom: 8,
+    marginBottom: SPACING.sm,
+    ...TYPE.small,
   },
   sendWrap: {
-    marginTop: 24,
+    marginTop: SPACING.section,
   },
   sentBox: {
     backgroundColor: COLORS.whiteOverlayStrong,
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: RADIUS.medium,
+    padding: SPACING.card,
   },
   sentTitle: {
-    fontSize: 17,
-    fontWeight: "700",
     color: COLORS.textPrimary,
-    marginBottom: 6,
+    marginBottom: SPACING.sm,
+    ...TYPE.cardTitle,
   },
   sentBody: {
-    fontSize: 14,
     color: COLORS.surfaceDark,
-    lineHeight: 20,
+    ...TYPE.small,
   },
   backWrap: {
-    marginTop: 28,
+    marginTop: SPACING.section,
     alignItems: "center",
   },
   backText: {
-    fontSize: 15,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...TYPE.button,
   },
 });
 
