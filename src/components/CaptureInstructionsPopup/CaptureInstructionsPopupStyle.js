@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.divider,
   },
   tipIconWrap: {
-    width: 44,
+    width: 50,
     alignItems: "center",
   },
   tipText: {

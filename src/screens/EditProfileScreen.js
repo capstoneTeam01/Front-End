@@ -80,7 +80,7 @@ const EditProfileScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.avatarWrap}>
-            <HexAvatar size={120} showEditBadge onEditPress={() => {}} />
+            <HexAvatar size={98} showEditBadge onEditPress={() => {}} />
           </View>
 
           <Text style={styles.label}>Full Name</Text>
@@ -88,7 +88,7 @@ const EditProfileScreen = ({ navigation }) => {
             style={styles.input}
             value={fullName}
             onChangeText={setFullName}
-            placeholder="Your full name"
+            placeholder="James mitchell"
             placeholderTextColor={COLORS.placeholder}
           />
 
@@ -116,7 +116,7 @@ const EditProfileScreen = ({ navigation }) => {
             style={styles.input}
             value={password}
             onChangeText={setPassword}
-            placeholder="Leave blank to keep current"
+            placeholder="*************"
             placeholderTextColor={COLORS.placeholder}
             secureTextEntry
             autoCapitalize="none"

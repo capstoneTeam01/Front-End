@@ -3,6 +3,7 @@ import COLORS from "../constants/colors";
 import {
   BUTTON_HEIGHT,
   RADIUS,
+  SIDE_PADDING,
   TYPE,
 } from "../constants/layout";
 import { HEADER_FOOTER } from "../constants/typography";
@@ -56,12 +57,12 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.divider,
   },
 
-  hexIcon: {
-    width: 34,
-    height: 34,
-    backgroundColor: COLORS.lightHoney,
+  toolIcon: {
+    width: 46,
+    height: 50,
     marginRight: 16,
-    borderRadius: 9,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   toolText: {
@@ -79,30 +80,40 @@ const styles = StyleSheet.create({
   },
 
   stepLeft: {
-    width: 44,
+    width: 58,
     alignItems: "center",
   },
 
-  stepCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 9,
-    backgroundColor: COLORS.lightHoney,
+  stepMarker: {
     alignItems: "center",
     justifyContent: "center",
   },
 
-  stepCircleActive: {
-    backgroundColor: COLORS.primary,
+  stepMarkerLayer: {
+    width: 48,
+    height: 54,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
-  stepCircleDone: {
-    backgroundColor: COLORS.primary,
+  stepMarkerBack: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+  },
+
+  stepMarkerFront: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   stepNumber: {
     color: COLORS.white,
     ...TYPE.caption,
+  },
+
+  stepNumberActive: {
+    color: COLORS.white,
   },
 
   stepLine: {
@@ -151,10 +162,8 @@ const styles = StyleSheet.create({
   },
 
   warningIcon: {
-    width: 52,
-    height: 52,
-    borderRadius: RADIUS.field,
-    backgroundColor: COLORS.primary,
+    width: 68,
+    height: 74,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 18,
@@ -227,15 +236,25 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.35)",
-    justifyContent: "flex-end",
+    justifyContent: "center",
+    paddingHorizontal: SIDE_PADDING,
   },
 
   completeModal: {
+    minHeight: 420,
     backgroundColor: COLORS.white,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: 24,
+    borderRadius: RADIUS.big,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 18,
+    paddingBottom: 40,
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: COLORS.providerLightGray,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.12,
+    shadowRadius: 22,
+    elevation: 6,
   },
 
   modalHandle: {
@@ -243,36 +262,35 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 10,
     backgroundColor: COLORS.gray700,
-    marginBottom: 16,
+    marginBottom: 30,
   },
 
   modalIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: COLORS.primary,
+    width: 78,
+    height: 87,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 18,
+    marginBottom: 30,
   },
 
   modalTitle: {
     color: COLORS.textPrimary,
-    marginBottom: 8,
-    ...TYPE.cardTitle,
+    marginBottom: 26,
+    ...TYPE.screenTitle,
   },
 
   modalText: {
-    color: COLORS.textSecondary,
+    color: COLORS.providerMidGray,
     textAlign: "center",
-    marginBottom: 24,
-    ...TYPE.small,
+    paddingHorizontal: 10,
+    ...TYPE.cardTitle,
   },
 
   modalButtons: {
     flexDirection: "row",
-    gap: 12,
+    gap: 16,
     width: "100%",
+    marginTop: "auto",
   },
 
   modalDarkButton: {
@@ -282,6 +300,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 8,
   },
 
   modalLightButton: {
@@ -308,14 +327,9 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
 
-  warningIconStyle: {
-    fontSize: 22,
-    color: COLORS.textPrimary,
-  },
-
   modalCheckIcon: {
-    fontSize: 26,
-    color: COLORS.white,
+    fontSize: 36,
+    color: COLORS.secondary,
   },
 
   loadingBox: {

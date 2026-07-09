@@ -7,8 +7,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 18,
-    paddingHorizontal: 16,
+    minHeight: 58,
+    paddingVertical: 14,
+    paddingHorizontal: 22,
   },
   rowDivider: {
     borderTopWidth: StyleSheet.hairlineWidth,
@@ -17,11 +18,10 @@ const styles = StyleSheet.create({
   left: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 14,
+    gap: 22,
   },
   label: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "500",
+    ...TYPE.body,
   },
 });
 

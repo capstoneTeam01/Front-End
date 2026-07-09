@@ -20,11 +20,17 @@ import { detectIssueRegion } from "../api/detectIssueRegion";
 import { COACHING_INSTRUCTIONS, evaluateFocus } from "./evaluateFocus";
 import CameraGuidelines from "./CameraGuidelines";
 import PreviewScreen from "./PreviewScreen/PreviewScreen";
+import COLORS from "../constants/colors";
 import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const SCAN_INTERVAL_MS = 1200;
 const SCAN_START_DELAY_MS = 500;
 const STABLE_SCANS_REQUIRED = 1;
+
+const getCameraStatusBarProps = (showingPreview) => ({
+  style: showingPreview ? "dark" : "light",
+  backgroundColor: showingPreview ? COLORS.lightHoney : "#0b1224",
+});
 
 const CameraScreen = ({ visible, onClose, onCapture }) => {
   const cameraRef = useRef(null);
@@ -466,7 +472,7 @@ const CameraScreen = ({ visible, onClose, onCapture }) => {
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
-      <StatusBar style="light" />
+      <StatusBar {...getCameraStatusBarProps(Boolean(previewPhoto))} />
       <View style={styles.container}>
         {previewPhoto ? (
           <PreviewScreen

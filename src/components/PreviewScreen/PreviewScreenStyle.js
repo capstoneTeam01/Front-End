@@ -12,11 +12,23 @@ const styles = StyleSheet.create({
   image: {
     ...StyleSheet.absoluteFillObject,
   },
-  header: {
+  headerLayer: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
+    zIndex: 2,
+  },
+  headerStatusFill: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 58,
+    backgroundColor: COLORS.lightHoney,
+  },
+  header: {
+    zIndex: 1,
   },
   actionBar: {
     position: "absolute",

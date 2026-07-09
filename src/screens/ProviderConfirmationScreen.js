@@ -1,39 +1,53 @@
 import React from "react";
 import { Platform, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import ProviderPlainButton from "../components/ProviderPlainButton";
-import ProviderHexAvatar from "../components/ProviderHexAvatar";
+import PolygonAsset from "../components/PolygonAsset";
 import COLORS from "../constants/colors";
-import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, TYPE } from "../constants/layout";
 
 const androidTopSpace = Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
 
 const ProviderConfirmationScreen = ({ navigation, route }) => {
-  const count = route?.params?.selectedProviderIds?.length || 0;
   const sent = route?.params?.quoteStatus === "email-sent";
 
   return (
     <SafeAreaView style={styles.safe}>
       <View style={[styles.wrap, { paddingTop: 26 + androidTopSpace }]}>
         <View style={styles.card}>
+          <View style={styles.handle} />
+
           <View style={styles.successIconWrap}>
-            <ProviderHexAvatar label="✓" size={54} selected />
-            <Text style={styles.checkOverlay}>✓</Text>
+            <PolygonAsset
+              variant="polygon9"
+              width={78}
+              height={87}
+              fill={COLORS.lightHoney}
+            >
+              <Ionicons
+                name="checkmark-sharp"
+                size={36}
+                color={COLORS.secondary}
+              />
+            </PolygonAsset>
           </View>
 
           <Text style={styles.title}>{sent ? "Email Sent" : "Request Prepared"}</Text>
           <Text style={styles.subtitle}>
             {sent
-              ? `Your request has been sent to ${count} selected provider${count === 1 ? "" : "s"}.`
+              ? "Your request has been sent to selected providers."
               : "Your request was prepared, but it was not sent."}
           </Text>
 
-          {route?.params?.quoteRequestId ? (
-            <Text style={styles.reference}>Reference: {route.params.quoteRequestId}</Text>
-          ) : null}
+          <View style={styles.actionsSpacer} />
 
           <View style={styles.actions}>
             <View style={styles.actionButton}>
-              <ProviderPlainButton title="Recent Scans" onPress={() => navigation.navigate("MyRepairs")} />
+              <ProviderPlainButton
+                title="Recent Scans"
+                onPress={() => navigation.navigate("MyRepairs")}
+                style={styles.recentButton}
+              />
             </View>
             <Pressable style={styles.homeButton} onPress={() => navigation.navigate("Home")}>
               <Text style={styles.homeText}>Home</Text>
@@ -56,52 +70,64 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIDE_PADDING,
   },
   card: {
+    minHeight: 420,
     backgroundColor: COLORS.white,
     borderRadius: RADIUS.big,
     paddingHorizontal: SIDE_PADDING,
-    paddingVertical: SPACING.large,
+    paddingTop: 18,
+    paddingBottom: 78,
     alignItems: "center",
     borderWidth: 1,
     borderColor: COLORS.providerLightGray,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.12,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  handle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: COLORS.gray700,
+    marginBottom: 30,
   },
   successIconWrap: {
-    width: 60,
-    height: 60,
+    width: 78,
+    height: 87,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 18,
-  },
-  checkOverlay: {
-    position: "absolute",
-    color: COLORS.providerBrown,
-    ...TYPE.cardTitle,
+    marginBottom: 30,
   },
   title: {
     color: COLORS.textPrimary,
-    marginBottom: SPACING.sm,
-    ...TYPE.sectionTitle,
+    marginBottom: 26,
+    ...TYPE.screenTitle,
   },
   subtitle: {
     color: COLORS.providerMidGray,
     textAlign: "center",
-    ...TYPE.small,
+    paddingHorizontal: 10,
+    ...TYPE.cardTitle,
   },
-  reference: {
-    color: COLORS.providerMidGray,
-    marginTop: 14,
-    ...TYPE.caption,
+  actionsSpacer: {
+    flex: 1,
+    minHeight: 86,
   },
   actions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 14,
-    marginTop: 30,
+    gap: 16,
+    width: "100%",
   },
   actionButton: {
-    width: 142,
+    flex: 1,
+  },
+  recentButton: {
+    paddingHorizontal: 8,
   },
   homeButton: {
-    width: 112,
+    flex: 1,
     minHeight: BUTTON_HEIGHT,
     borderRadius: RADIUS.field,
     backgroundColor: COLORS.honeyLight,

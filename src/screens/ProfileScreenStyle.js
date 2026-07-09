@@ -4,7 +4,6 @@ import {
   SIDE_PADDING,
   BOTTOM_NAV_HEIGHT,
   TYPE,
-  RADIUS,
 } from "../constants/layout";
 
 const styles = StyleSheet.create({
@@ -16,13 +15,13 @@ const styles = StyleSheet.create({
   scroll: {
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 0,
-    paddingBottom: BOTTOM_NAV_HEIGHT + 40,
+    paddingBottom: BOTTOM_NAV_HEIGHT + 34,
   },
 
   // Twin-hexagon cream band, bleeds to screen edges.
   topArea: {
     marginHorizontal: -SIDE_PADDING,
-    height: 110,
+    height: 116,
   },
 
   topBg: {
@@ -31,16 +30,16 @@ const styles = StyleSheet.create({
 
   // Hero overlaps up into the cream band slightly.
   heroWrap: {
-    marginTop: -8,
+    marginTop: -14,
     alignItems: "center",
   },
 
   avatarHex: {
-    marginBottom: 16,
+    marginBottom: 14,
   },
 
   name: {
-    color: COLORS.textPrimary,
+    color: COLORS.secondary,
     textAlign: "center",
     ...TYPE.sectionTitle,
   },
@@ -53,8 +52,8 @@ const styles = StyleSheet.create({
   },
 
   menuCard: {
-    marginTop: 24,
-    borderRadius: RADIUS.big,
+    marginTop: 30,
+    borderRadius: 18,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.divider,
     backgroundColor: COLORS.white,

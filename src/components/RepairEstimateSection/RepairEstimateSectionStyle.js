@@ -40,17 +40,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
 
-  dollarIcon: {
-    color: COLORS.secondary,
-    textAlign: "center",
-    ...TYPE.sectionTitle,
-  },
-
   iconContainer: {
-    height: 24,
+    height: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 2,
+    marginBottom: 5,
   },
 
   estimateLabel: {

@@ -1,44 +1,42 @@
 import React from "react";
-import { View } from "react-native";
-import Svg, { Polygon } from "react-native-svg";
+import { Pressable, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import COLORS from "../../constants/colors";
+import PolygonAsset from "../PolygonAsset";
 import styles from "./HexAvatarStyle";
 
 const HexAvatar = ({ size = 110, showEditBadge = false, onEditPress }) => {
-  
-  const w = size;
-  const h = size;
-  const points = [
-    [w * 0.5, 0],
-    [w, h * 0.25],
-    [w, h * 0.75],
-    [w * 0.5, h],
-    [0, h * 0.75],
-    [0, h * 0.25],
-  ]
-    .map(([x, y]) => `${x},${y}`)
-    .join(" ");
+  const height = (size * 89) / 80;
 
   return (
-    <View style={[styles.wrap, { width: size, height: size }]}>
-      <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <Polygon points={points} fill={COLORS.lightHoney} />
-      </Svg>
+    <View style={[styles.wrap, { width: size, height }]}>
+      <PolygonAsset
+        variant="polygon9"
+        width={size}
+        height={height}
+        fill={COLORS.lightHoney}
+        style={styles.polygon}
+      />
 
       <View style={styles.iconLayer}>
         <Ionicons
           name="person-outline"
-          size={size * 0.32}
-          color={COLORS.honeyBrown}
+          size={size * 0.34}
+          color={COLORS.secondary}
         />
       </View>
 
       {showEditBadge && (
-        <View style={styles.editBadge}>
+        <Pressable
+          onPress={onEditPress}
+          style={styles.editBadge}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="Edit profile photo"
+        >
           <Ionicons name="pencil" size={14} color={COLORS.white} />
-        </View>
+        </Pressable>
       )}
     </View>
   );
