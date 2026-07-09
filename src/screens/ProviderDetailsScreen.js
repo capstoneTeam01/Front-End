@@ -9,6 +9,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import HeaderBellButton from "../components/AppHeader/HeaderBellButton";
 import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import ProviderHexAvatar from "../components/ProviderHexAvatar";
@@ -93,10 +94,7 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
         title="Providers"
         onBack={() => navigation.goBack()}
         right={
-          <Ionicons
-            name="notifications-outline"
-            size={20}
-            color={COLORS.secondary}
+          <HeaderBellButton
             onPress={() => navigation.navigate("Notifications")}
           />
         }

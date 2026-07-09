@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
+import { HEADER_FOOTER } from "../../constants/typography";
 
 const styles = StyleSheet.create({
   backdrop: {
@@ -8,12 +9,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   sheet: {
-    height: 534,
     backgroundColor: COLORS.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     paddingTop: 12,
-    overflow: "hidden",
   },
   handle: {
     width: 40,
@@ -71,11 +70,9 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: COLORS.textPrimary,
   },
-  footerTray: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
+  footer: {
+    paddingHorizontal: 24,
+    paddingTop: 20,
   },
   scanButton: {
     height: 46,
@@ -86,9 +83,7 @@ const styles = StyleSheet.create({
   },
   scanButtonText: {
     color: COLORS.secondary,
-    fontFamily: "Rubik_400Regular",
-    fontSize: 16,
-    lineHeight: 20,
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

@@ -18,6 +18,8 @@ const COLORS = {
   divider: "#EFEFEF", // hairline between list rows
 
   navInactive: "#A1A1A1", // bottom-tab inactive
+  navInactiveIcon: "rgba(26,26,26,0.4)",
+  navInactiveLabel: "rgba(26,26,26,0.4)",
   navActive: "#0A0A0A", // bottom-tab active
 
   //Design system

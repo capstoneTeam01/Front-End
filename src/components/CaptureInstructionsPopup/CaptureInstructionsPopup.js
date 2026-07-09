@@ -6,6 +6,7 @@ import {
   Pressable,
   TouchableWithoutFeedback,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFonts, Rubik_400Regular } from "@expo-google-fonts/rubik";
 
 import BulbIcon from "../../../assets/icons/Bulb_icon.svg";
@@ -13,7 +14,6 @@ import FocusIcon from "../../../assets/icons/Focus Camera Icon.svg";
 import TargetIcon from "../../../assets/icons/Traget.svg";
 import WrongImageIcon from "../../../assets/icons/Wrong Image.svg";
 import COLORS from "../../constants/colors";
-import AuthFooterTray from "../AuthFooterTray/AuthFooterTray";
 import HexTile from "../HexTile/HexTile";
 import styles from "./CaptureInstructionsPopupStyle";
 
@@ -25,6 +25,7 @@ const TIPS = [
 ];
 
 const CaptureInstructionsPopup = ({ visible, onClose, onScanNow }) => {
+  const insets = useSafeAreaInsets();
   const [fontsLoaded] = useFonts({ Rubik_400Regular });
 
   if (!fontsLoaded) {
@@ -41,7 +42,7 @@ const CaptureInstructionsPopup = ({ visible, onClose, onScanNow }) => {
     >
       <Pressable style={styles.backdrop} onPress={onClose}>
         <TouchableWithoutFeedback>
-          <View style={styles.sheet}>
+          <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) }]}>
             <View style={styles.handle} />
 
             <View style={styles.guide}>
@@ -78,14 +79,11 @@ const CaptureInstructionsPopup = ({ visible, onClose, onScanNow }) => {
               </View>
             </View>
 
-            <AuthFooterTray
-              fill={COLORS.warmCream}
-              style={styles.footerTray}
-            >
+            <View style={styles.footer}>
               <Pressable style={styles.scanButton} onPress={onScanNow}>
                 <Text style={styles.scanButtonText}>Scan Now</Text>
               </Pressable>
-            </AuthFooterTray>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </Pressable>

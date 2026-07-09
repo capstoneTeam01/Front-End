@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
+import { HEADER_FOOTER } from "../constants/typography";
 
 const ProviderPlainButton = ({ title, onPress, disabled = false, variant = "primary", style }) => {
   const isSecondary = variant === "secondary";
@@ -47,10 +47,8 @@ const styles = StyleSheet.create({
     opacity: 0.82,
   },
   buttonText: {
-    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
-    fontSize: 13,
-    fontWeight: "700",
+    ...HEADER_FOOTER.footerButton,
   },
   secondaryButtonText: {
     color: COLORS.providerBrown,

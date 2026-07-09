@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
+import { HEADER_FOOTER } from "../../constants/typography";
 
 const styles = StyleSheet.create({
   button: {
@@ -19,9 +20,8 @@ const styles = StyleSheet.create({
     opacity: 0.55,
   },
   label: {
-    fontSize: 16,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

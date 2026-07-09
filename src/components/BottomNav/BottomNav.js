@@ -2,42 +2,18 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
 
 import { ShapedBackground } from "../AppHeader/AppHeader";
 import CategoryPopup from "../CategoryPopup/CategoryPopup";
+import BottomNavTabIcon from "./BottomNavTabIcon";
 import COLORS from "../../constants/colors";
 import styles from "./BottomNavStyle";
 
 const TABS = [
-  {
-    key: "Home",
-    label: "Home",
-    icon: "home-outline",
-    iconActive: "home",
-    route: "Home",
-  },
-  {
-    key: "Scan",
-    label: "Scan",
-    icon: "scan-outline",
-    iconActive: "scan",
-    route: "Scan",
-  },
-  {
-    key: "Repairs",
-    label: "Repairs",
-    icon: "build-outline",
-    iconActive: "build",
-    route: "MyRepairs",
-  },
-  {
-    key: "Profile",
-    label: "Profile",
-    icon: "person-outline",
-    iconActive: "person",
-    route: "Profile",
-  },
+  { key: "Home", label: "Home", route: "Home" },
+  { key: "Scan", label: "Scan", route: "Scan" },
+  { key: "Repairs", label: "Repairs", route: "MyRepairs" },
+  { key: "Profile", label: "Profile", route: "Profile" },
 ];
 
 // Shared bottom tab bar. Owns the category popup so the Scan tab
@@ -83,14 +59,8 @@ const BottomNav = ({ active }) => {
                 onPress={() => handlePress(tab)}
                 activeOpacity={0.7}
               >
-                <Ionicons
-                  name={isActive ? tab.iconActive : tab.icon}
-                  size={22}
-                  color={isActive ? COLORS.primary : COLORS.mediumGrey}
-                />
-                <Text
-                  style={[styles.navLabel, isActive && styles.navLabelActive]}
-                >
+                <BottomNavTabIcon tabKey={tab.key} isActive={isActive} />
+                <Text style={isActive ? styles.navLabelActive : styles.navLabel}>
                   {tab.label}
                 </Text>
               </TouchableOpacity>

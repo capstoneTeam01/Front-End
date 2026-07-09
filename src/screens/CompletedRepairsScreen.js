@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
+import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import styles from "./RecentScansScreenStyle";
 import COLORS from "../constants/colors";
 
@@ -13,27 +14,16 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
   const [activeFilter, setActiveFilter] = useState("All");
 
   const filteredRepairs = repairs.filter((item) => {
-    const urgency = String(
-      item.analysis?.urgency || ""
-    ).toLowerCase();
-
-    const diyStatus = String(
-      item.diyGenerationStatus || ""
-    ).toLowerCase();
+    const urgency = String(item.analysis?.urgency || "").toLowerCase();
+    const diyStatus = String(item.diyGenerationStatus || "").toLowerCase();
 
     switch (activeFilter) {
       case "DIY":
         return diyStatus === "completed";
-
       case "Emergency":
-        return (
-          urgency === "critical" ||
-          urgency === "high"
-        );
-
+        return urgency === "critical" || urgency === "high";
       case "Service Requested":
         return item.providerRequested === true;
-
       case "All":
       default:
         return true;
@@ -41,27 +31,11 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
   });
 
   return (
-    <SafeAreaView
-      edges={["left", "right", "bottom"]}
-      style={styles.safe}
-    >
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons
-            name="chevron-back"
-            size={24}
-            color={COLORS.textPrimary}
-          />
-        </TouchableOpacity>
-
-        <Text style={styles.headerTitle}>
-          Completed Repairs
-        </Text>
-
-        <View style={styles.headerSpace} />
-      </View>
+    <View style={styles.safe}>
+      <AppHeader
+        title="Completed Repairs"
+        onBack={() => navigation.goBack()}
+      />
 
       <View style={styles.filterRow}>
         {FILTERS.map((filter) => (
@@ -69,18 +43,14 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
             key={filter}
             style={[
               styles.filterPill,
-              activeFilter === filter &&
-                styles.filterPillActive,
+              activeFilter === filter && styles.filterPillActive,
             ]}
-            onPress={() =>
-              setActiveFilter(filter)
-            }
+            onPress={() => setActiveFilter(filter)}
           >
             <Text
               style={[
                 styles.filterText,
-                activeFilter === filter &&
-                  styles.filterTextActive,
+                activeFilter === filter && styles.filterTextActive,
               ]}
             >
               {filter}
@@ -94,14 +64,10 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>
-            No completed repairs found.
-          </Text>
+          <Text style={styles.emptyText}>No completed repairs found.</Text>
         }
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-          >
+          <TouchableOpacity style={styles.card}>
             <View style={styles.iconBox}>
               <Ionicons
                 name="camera-outline"
@@ -111,14 +77,10 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
             </View>
 
             <View style={styles.cardContent}>
-              <Text style={styles.title}>
-                {item.title}
-              </Text>
-
+              <Text style={styles.title}>{item.title}</Text>
               <Text style={styles.meta}>
                 <Text style={styles.categoryText}>
-                  {item.analysis?.category ||
-                    "Repair"}
+                  {item.analysis?.category || "Repair"}
                 </Text>{" "}
                 • {item.date}
               </Text>
@@ -127,17 +89,18 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
         )}
       />
 
-      <View style={styles.bottomBar}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backText}>
-            Back
-          </Text>
-        </TouchableOpacity>
+      <View style={styles.footer}>
+        <AuthFooterTray fill={COLORS.warmCream}>
+          <TouchableOpacity
+            style={styles.footerButton}
+            onPress={() => navigation.goBack()}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.footerButtonText}>Back</Text>
+          </TouchableOpacity>
+        </AuthFooterTray>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

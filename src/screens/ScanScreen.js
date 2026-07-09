@@ -6,7 +6,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import ScreenHeader from "../components/ScreenHeader/ScreenHeader";
+import AppHeader from "../components/AppHeader/AppHeader";
+import HeaderBellButton from "../components/AppHeader/HeaderBellButton";
 import ImageUpload from "../components/ImageUpload";
 import AnalyzingScreen from "./AnalyzingScreen";
 import RecommendationScreen from "./RecommendationScreen";
@@ -257,24 +258,20 @@ const ScanScreen = ({ navigation, route }) => {
       edges={safeAreaEdges}
     >
       {showUploadHeader ? (
-        <View style={styles.header}>
-          <ScreenHeader
-            title={title}
-            showBack
-            onBack={handleBack}
-            onBellPress={() =>
-              navigation?.navigate(
-                "Notifications"
-              )
-            }
-          />
+        <AppHeader
+          title={title}
+          onBack={handleBack}
+          titleAlign="left"
+          right={
+            <HeaderBellButton
+              onPress={() => navigation?.navigate("Notifications")}
+            />
+          }
+        />
+      ) : null}
 
-          {subtitle ? (
-            <Text style={styles.subtitle}>
-              {subtitle}
-            </Text>
-          ) : null}
-        </View>
+      {showUploadHeader && subtitle ? (
+        <Text style={styles.subtitle}>{subtitle}</Text>
       ) : null}
 
       {step === STEP.UPLOAD ? (
@@ -350,14 +347,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightHoney,
   },
 
-  header: {
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: 8,
-  },
-
   subtitle: {
     marginTop: 4,
     marginBottom: 8,
+    marginHorizontal: SIDE_PADDING,
     fontSize: 14,
     color: COLORS.textSecondary,
     textAlign: "center",

@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import getEstimateValue from "../utils/getEstimateValue";
 import AppHeader from "../components/AppHeader/AppHeader";
+import HeaderBellButton from "../components/AppHeader/HeaderBellButton";
 import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
 import RepairEstimateSection from "../components/RepairEstimateSection/RepairEstimateSection";
@@ -245,12 +246,7 @@ const RecommendationScreen = ({
         title="Issue Detected"
         onBack={onBack}
         right={
-          <Ionicons
-            name="notifications-outline"
-            size={20}
-            color={COLORS.secondary}
-            onPress={onNotificationPress}
-          />
+          <HeaderBellButton onPress={onNotificationPress} />
         }
         style={styles.headerContainer}
       />

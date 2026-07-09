@@ -13,45 +13,6 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
 
-  topArea: {
-    position: "relative",
-    marginHorizontal: -SIDE_PADDING,
-  },
-
-  topBg: {
-    ...StyleSheet.absoluteFillObject,
-  },
-
-  topRow: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    paddingHorizontal: SIDE_PADDING,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-
-  headerTitle: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "400",
-    color: COLORS.honeyBrown,
-  },
-
-  headerButton: {
-    width: 36,
-    height: 36,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
   heroWrap: {
     alignItems: "center",
   },

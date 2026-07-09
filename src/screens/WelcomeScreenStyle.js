@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
+import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   container: {
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
   },
   welcomeButtonLabel: {
     color: COLORS.secondary,
-    fontWeight: "400",
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

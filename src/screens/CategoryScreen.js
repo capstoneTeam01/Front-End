@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
-import HomeTopBackground from "./HomeTopBackground";
+import HomeTabHeader, {
+  FIGMA_FRAME_WIDTH,
+} from "../components/HomeTabHeader/HomeTabHeader";
 import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
 import ScanHexButton from "../components/ScanHexButton/ScanHexButton";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
@@ -22,7 +23,7 @@ import styles from "./CategoryScreenStyle";
 
 const CategoryScreen = ({ navigation, route }) => {
   const { width: screenWidth } = useWindowDimensions();
-  const layoutScale = screenWidth / 402;
+  const layoutScale = screenWidth / FIGMA_FRAME_WIDTH;
   const categoryId = route?.params?.categoryId || "plumbing";
   const headerTitle = route?.params?.title || "Plumbing";
   const [capturePopupVisible, setCapturePopupVisible] = useState(false);
@@ -52,47 +53,13 @@ const CategoryScreen = ({ navigation, route }) => {
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={[styles.topArea, { height: 116 * layoutScale }]}
-        >
-          <HomeTopBackground style={styles.topBg} />
-          <View
-            style={[
-              styles.topRow,
-              {
-                top: 48 * layoutScale,
-                height: 68 * layoutScale,
-              },
-            ]}
-          >
-            <TouchableOpacity
-              style={styles.headerLeft}
-              onPress={() => navigation?.goBack()}
-              activeOpacity={0.7}
-              accessibilityLabel="Go back"
-            >
-              <Ionicons
-                name="chevron-back"
-                size={24}
-                color={COLORS.secondary}
-              />
-              <Text style={styles.headerTitle}>{headerTitle}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.headerButton}
-              onPress={() => navigation?.navigate("Notifications")}
-              activeOpacity={0.7}
-              accessibilityLabel="Open notifications"
-            >
-              <Ionicons
-                name="notifications-outline"
-                size={20}
-                color={COLORS.secondary}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <HomeTabHeader
+          variant="category"
+          title={headerTitle}
+          layoutScale={layoutScale}
+          onBack={() => navigation?.goBack()}
+          onNotificationsPress={() => navigation?.navigate("Notifications")}
+        />
 
         <View style={styles.heroWrap}>
           <HeroHexagon width={354 * layoutScale}>

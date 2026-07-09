@@ -8,6 +8,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import HeaderBellButton from "../components/AppHeader/HeaderBellButton";
 import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import UrgencyBadge from "../components/UrgencyBadge/UrgencyBadge";
 import RecommendedActionsList from "../components/RecommendedActionsList/RecommendedActionsList";
@@ -171,14 +172,7 @@ const EmergencyIssueScreen = ({
       <AppHeader
         title="Issue Detected"
         onBack={onBack}
-        right={
-          <Ionicons
-            name="notifications-outline"
-            size={20}
-            color={COLORS.secondary}
-            onPress={onNotificationPress}
-          />
-        }
+        right={<HeaderBellButton onPress={onNotificationPress} />}
         style={styles.headerContainer}
       />
 
