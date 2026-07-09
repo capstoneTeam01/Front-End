@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
+import { TYPE } from "../constants/layout";
 import ProviderGoogleIcon from "./ProviderGoogleIcon";
 
 const ProviderRating = ({ rating, reviewCount, showGoogle = false }) => (
@@ -11,7 +11,7 @@ const ProviderRating = ({ rating, reviewCount, showGoogle = false }) => (
     <Text style={styles.muted}> {reviewCount || 0} reviews</Text>
     {showGoogle ? (
       <>
-        <Text style={styles.onText}> on </Text>
+        <Text style={styles.onText}> On </Text>
         <ProviderGoogleIcon size={18} />
       </>
     ) : null}
@@ -25,27 +25,22 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   star: {
-    fontFamily: FONT.bold,
     color: COLORS.honeyDark,
-    fontSize: 12,
     marginRight: 3,
+    ...TYPE.caption,
   },
   text: {
-    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
-    fontSize: 12,
-    fontWeight: "700",
+    ...TYPE.caption,
   },
   muted: {
-    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
-    fontSize: 11,
+    ...TYPE.caption,
   },
   onText: {
-    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
-    fontSize: 11,
     marginLeft: 4,
+    ...TYPE.caption,
   },
 });
 

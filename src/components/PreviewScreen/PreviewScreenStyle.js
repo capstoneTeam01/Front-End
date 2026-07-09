@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 import COLORS from "../../constants/colors";
 import { HEADER_FOOTER } from "../../constants/typography";
+import { BUTTON_HEIGHT, RADIUS, SPACING } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   container: {
@@ -25,12 +26,12 @@ const styles = StyleSheet.create({
   },
   actionRow: {
     flexDirection: "row",
-    gap: 12,
+    gap: SPACING.card,
   },
   retakeButton: {
     flex: 1,
-    height: 46,
-    borderRadius: 14,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: COLORS.lightHoney,
@@ -41,8 +42,8 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     flex: 1,
-    height: 46,
-    borderRadius: 14,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: COLORS.primary,

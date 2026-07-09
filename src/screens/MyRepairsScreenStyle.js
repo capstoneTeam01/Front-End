@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import { SIDE_PADDING } from "../constants/layout";
+import { BOTTOM_NAV_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   safe: {
@@ -21,9 +21,8 @@ const styles = StyleSheet.create({
   },
 
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "500",
     color: COLORS.secondary,
+    ...TYPE.cardTitle,
   },
 
   headerSpace: {
@@ -31,13 +30,13 @@ const styles = StyleSheet.create({
   },
 
   scroll: {
-    paddingHorizontal: 24,
-    paddingTop: 8,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: SPACING.sm,
     paddingBottom: 120,
   },
 
   section: {
-    marginTop: 24,
+    marginTop: SPACING.section,
   },
 
   scanList: {
@@ -46,8 +45,13 @@ const styles = StyleSheet.create({
   },
 
   completedList: {
-    marginTop: 16,
-    gap: 14,
+    marginTop: SPACING.card,
+    gap: SPACING.card,
+  },
+
+  emptyText: {
+    color: COLORS.textMuted,
+    ...TYPE.body,
   },
 
   bottomNav: {
@@ -55,25 +59,24 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: 104,
-    paddingTop: 24,
+    height: BOTTOM_NAV_HEIGHT,
+    paddingTop: SPACING.card,
     paddingHorizontal: 34,
     backgroundColor: COLORS.lightHoney,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
+    borderTopLeftRadius: RADIUS.big,
+    borderTopRightRadius: RADIUS.big,
     flexDirection: "row",
     justifyContent: "space-between",
   },
 
   navText: {
-    fontSize: 13,
     color: COLORS.honeyBrown,
+    ...TYPE.caption,
   },
 
   navActive: {
-    fontSize: 13,
-    fontWeight: "600",
     color: COLORS.secondary,
+    ...TYPE.caption,
   },
 });
 

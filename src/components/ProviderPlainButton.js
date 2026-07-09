@@ -2,6 +2,7 @@ import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import COLORS from "../constants/colors";
 import { HEADER_FOOTER } from "../constants/typography";
+import { BUTTON_HEIGHT, RADIUS, SPACING } from "../constants/layout";
 
 const ProviderPlainButton = ({ title, onPress, disabled = false, variant = "primary", style }) => {
   const isSecondary = variant === "secondary";
@@ -26,9 +27,9 @@ const ProviderPlainButton = ({ title, onPress, disabled = false, variant = "prim
 
 const styles = StyleSheet.create({
   button: {
-    minHeight: 46,
-    borderRadius: 13,
-    paddingHorizontal: 18,
+    minHeight: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
+    paddingHorizontal: SPACING.section,
     alignItems: "center",
     justifyContent: "center",
   },

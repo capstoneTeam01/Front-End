@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
+import { BUTTON_HEIGHT, FIELD_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   flex: {
@@ -15,43 +16,39 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
     paddingTop: 200,
-    paddingBottom: 24,
+    paddingBottom: SPACING.section,
   },
   title: {
-    fontSize: 28,
-    lineHeight: 33,
-    fontWeight: "400",
     color: COLORS.secondary,
+    ...TYPE.screenTitle,
   },
   fieldLabel: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "400",
     color: COLORS.honeyBrown,
-    marginBottom: 11,
-    marginTop: 16,
+    marginBottom: SPACING.sm,
+    marginTop: SPACING.card,
+    ...TYPE.small,
   },
   field: {
-    height: 52,
-    borderRadius: 12,
+    height: FIELD_HEIGHT,
+    borderRadius: RADIUS.field,
   },
   createWrap: {
-    marginTop: 16,
+    marginTop: SPACING.card,
   },
   formButton: {
-    height: 48,
-    borderRadius: 14,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
   },
   formButtonLabel: {
-    fontWeight: "400",
+    ...TYPE.button,
   },
   orRow: {
     flexDirection: "row",
     alignItems: "center",
     height: 24,
-    marginVertical: 16,
+    marginVertical: SPACING.card,
   },
   orLine: {
     flex: 1,
@@ -61,26 +58,21 @@ const styles = StyleSheet.create({
   orText: {
     marginHorizontal: 12,
     color: COLORS.white,
-    fontWeight: "400",
-    fontSize: 16,
-    lineHeight: 24,
+    ...TYPE.body,
   },
   footerRow: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 16,
+    marginTop: SPACING.card,
   },
   footerText: {
-    fontSize: 16,
-    lineHeight: 20,
     color: COLORS.honeyBrown,
+    ...TYPE.body,
   },
   footerLink: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "400",
     color: COLORS.textPrimary,
+    ...TYPE.body,
   },
 });
 

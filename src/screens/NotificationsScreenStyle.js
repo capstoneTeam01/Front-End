@@ -16,16 +16,15 @@ const styles = StyleSheet.create({
   },
 
   markAllText: {
-    fontSize: TYPE.small.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...TYPE.small,
   },
 
   list: {
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 16,
     paddingBottom: 32,
-    gap: 12,
+    gap: 16,
   },
 
   row: {
@@ -57,15 +56,14 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    fontSize: TYPE.small.fontSize,
     color: COLORS.textPrimary,
-    lineHeight: 20,
+    ...TYPE.small,
   },
 
   time: {
-    fontSize: TYPE.caption.fontSize,
     color: COLORS.textMuted,
     marginTop: 4,
+    ...TYPE.caption,
   },
 
   dot: {
@@ -85,16 +83,15 @@ const styles = StyleSheet.create({
   },
 
   emptyTitle: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
     marginTop: 4,
+    ...TYPE.body,
   },
 
   emptyText: {
-    fontSize: TYPE.small.fontSize,
     color: COLORS.textMuted,
     textAlign: "center",
+    ...TYPE.small,
   },
 
   retryBtn: {
@@ -106,9 +103,8 @@ const styles = StyleSheet.create({
   },
 
   retryText: {
-    fontSize: TYPE.small.fontSize,
-    fontWeight: "600",
     color: COLORS.secondary,
+    ...TYPE.button,
   },
 });
 

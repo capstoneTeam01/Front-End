@@ -23,6 +23,111 @@ import {
 import COLORS from "../constants/colors";
 import styles from "./RecommendationScreenStyle";
 
+const clean = (value) => String(value || "").trim();
+
+const capitalizeFirstLetter = (value) => {
+  const text = clean(value);
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
+};
+
+const getFirstText = (...values) => {
+  for (const value of values) {
+    const text = clean(value);
+    if (text) return text;
+  }
+
+  return "";
+};
+
+const getNormalizedStatusText = (result = {}) => {
+  return [
+    result.analysisStatus,
+    result.status,
+    result.resultStatus,
+    result.issueStatus,
+    result.classification,
+    result.outcome,
+  ]
+    .filter(Boolean)
+    .map((value) => String(value).toLowerCase())
+    .join(" ");
+};
+
+const getBackendMessageText = (result = {}) =>
+  getFirstText(
+    result.userMessage,
+    result.message,
+    result.displayMessage,
+    result.analysisMessage,
+    result.description,
+    result.confidenceReason,
+    result.urgencyDescription
+  );
+
+const getBackendTitleText = (result = {}) =>
+  getFirstText(
+    result.headline,
+    result.title,
+    result.displayTitle,
+    result.userTitle,
+    result.resultTitle,
+    result.detectedIssue,
+    result.issueTitle,
+    result.issueName
+  );
+
+const getAnalysisPayload = (analysisResult = {}) =>
+  analysisResult?.analysis ||
+  analysisResult?.data?.analysis ||
+  analysisResult?.scan?.analysis ||
+  analysisResult?.data ||
+  analysisResult?.scan ||
+  analysisResult ||
+  {};
+
+const isNoIssueResult = (result = {}) => {
+  const statusText = getNormalizedStatusText(result);
+  const contentText = [
+    getBackendTitleText(result),
+    getBackendMessageText(result),
+    result.detectedObject,
+  ]
+    .filter(Boolean)
+    .map((value) => String(value).toLowerCase())
+    .join(" ");
+
+  return (
+    statusText.includes("no_issue") ||
+    statusText.includes("no issue") ||
+    statusText.includes("no_repair") ||
+    statusText.includes("no repair") ||
+    statusText.includes("nothing_detected") ||
+    statusText.includes("nothing detected") ||
+    contentText.includes("no issue visible") ||
+    contentText.includes("no issue detected") ||
+    contentText.includes("no repair issue") ||
+    contentText.includes("nothing detected")
+  );
+};
+
+const isRetakeResult = (result = {}) => {
+  const statusText = getNormalizedStatusText(result);
+  const messageText = getBackendMessageText(result).toLowerCase();
+
+  return (
+    statusText.includes("low_confidence") ||
+    statusText.includes("low confidence") ||
+    statusText.includes("blurry") ||
+    statusText.includes("blurred") ||
+    statusText.includes("retake") ||
+    statusText.includes("unclear") ||
+    messageText.includes("blurry") ||
+    messageText.includes("blurred") ||
+    messageText.includes("retake") ||
+    messageText.includes("not clear enough")
+  );
+};
+
 const RecommendationScreen = ({
   analysisResult,
   imageUri,
@@ -31,17 +136,16 @@ const RecommendationScreen = ({
   onFindExpertsPress,
   onDiyPress,
 }) => {
-  const result =
-    analysisResult?.analysis ||
-    analysisResult ||
-    {};
+  const result = getAnalysisPayload(analysisResult);
 
-  const isLowConfidence =
-    result.analysisStatus ===
-    "LOW_CONFIDENCE";
+  const isLowConfidence = isRetakeResult(result);
+  const isNoIssue = !isLowConfidence && isNoIssueResult(result);
+  const isRepairAssessment = !isLowConfidence && !isNoIssue;
+  const backendTitleText = getBackendTitleText(result);
+  const backendMessageText = getBackendMessageText(result);
 
   const estimatedCostText =
-    isLowConfidence
+    !isRepairAssessment
       ? "N/A"
       : getEstimateValue(
           result.estimatedCostRange,
@@ -51,7 +155,7 @@ const RecommendationScreen = ({
         );
 
   const estimatedTimeText =
-    isLowConfidence
+    !isRepairAssessment
       ? "N/A"
       : getEstimateValue(
           result.estimatedRepairTime,
@@ -61,23 +165,49 @@ const RecommendationScreen = ({
         );
 
   const displayedIssue =
-    isLowConfidence
-      ? "Unable to Confirm Repair Issue"
-      : result.detectedIssue ||
-        "Possible Repair Issue Detected";
+    capitalizeFirstLetter(
+      backendTitleText ||
+        backendMessageText ||
+        (isLowConfidence
+          ? "Unable to Confirm Repair Issue"
+          : isNoIssue
+            ? "No Issue Detected"
+            : "Possible Repair Issue Detected")
+    );
 
   const displayedUrgency =
-    isLowConfidence
+    !isRepairAssessment
       ? "N/A"
       : result.urgency || "N/A";
 
   const displayedDescription =
     isLowConfidence
-      ? result.userMessage ||
+      ? capitalizeFirstLetter(
+          backendTitleText
+            ? backendMessageText
+            : ""
+        ) ||
         "The image is not clear enough for a reliable repair assessment. Please retake the photo."
-      : result.urgencyDescription ||
-        result.confidenceReason ||
-        "FixBee identified a possible repair issue in the uploaded image.";
+      : isNoIssue
+        ? capitalizeFirstLetter(
+            backendTitleText
+              ? backendMessageText
+              : ""
+          ) ||
+          "No visible repair issue was detected in this image."
+        : capitalizeFirstLetter(
+            result.urgencyDescription ||
+              result.confidenceReason ||
+              backendMessageText ||
+              "FixBee identified a possible repair issue in the uploaded image."
+          );
+
+  const resultActionMessage =
+    isLowConfidence
+      ? "Retake the photo with better lighting and a clearer view."
+      : isNoIssue
+        ? "No repair action is needed for this scan."
+        : "No recommended actions available.";
 
   const displayedImageUri =
     imageUri ||
@@ -87,7 +217,7 @@ const RecommendationScreen = ({
     null;
 
   const issuesToFix =
-    !isLowConfidence &&
+    isRepairAssessment &&
     Array.isArray(result.issuesToFix)
       ? result.issuesToFix.filter((issue) => {
           return (
@@ -128,7 +258,7 @@ const RecommendationScreen = ({
   };
 
   const handleDiyPress = () => {
-    if (isLowConfidence) {
+    if (!isRepairAssessment) {
       return;
     }
 
@@ -199,9 +329,7 @@ const RecommendationScreen = ({
               title="Recommended Actions"
               actions={result.recommendedActions}
               emptyMessage={
-                isLowConfidence
-                  ? "Retake the photo with better lighting and a clearer view."
-                  : "No recommended actions available."
+                resultActionMessage
               }
             />
           </View>
@@ -216,34 +344,42 @@ const RecommendationScreen = ({
             </View>
           ) : null}
 
-          <View style={styles.sectionContainer}>
-            <RecommendedActionsList
-              title="Actions"
-              actions={immediateActions}
-              emptyMessage="Keep the affected area clear and monitor for changes."
-            />
-          </View>
+          {immediateActions.length > 0 || isRepairAssessment ? (
+            <View style={styles.sectionContainer}>
+              <RecommendedActionsList
+                title="Actions"
+                actions={immediateActions}
+                emptyMessage="Keep the affected area clear and monitor for changes."
+              />
+            </View>
+          ) : null}
 
-          <View
-            style={
-              styles.repairEstimateContainer
-            }
-          >
-            <RepairEstimateSection
-              urgency={displayedUrgency}
-              estimatedCostRange={
-                estimatedCostText
+          {isRepairAssessment ? (
+            <View
+              style={
+                styles.repairEstimateContainer
               }
-              estimatedRepairTime={
-                estimatedTimeText
-              }
-            />
-          </View>
+            >
+              <RepairEstimateSection
+                urgency={displayedUrgency}
+                estimatedCostRange={
+                  estimatedCostText
+                }
+                estimatedRepairTime={
+                  estimatedTimeText
+                }
+              />
+            </View>
+          ) : null}
         </View>
       </ScrollView>
 
       <AppHeader
-        title="Issue Detected"
+        title={
+          isRepairAssessment
+            ? "Issue Detected"
+            : "Scan Result"
+        }
         onBack={onBack}
         right={
           <HeaderBellButton onPress={onNotificationPress} />
@@ -258,10 +394,17 @@ const RecommendationScreen = ({
         >
           <UserActionButtons
             onFindExpertsPress={
-              onFindExpertsPress
+              isRepairAssessment
+                ? onFindExpertsPress
+                : onBack
             }
             onDiyPress={handleDiyPress}
-            showDiy={!isLowConfidence}
+            findExpertsLabel={
+              isRepairAssessment
+                ? "Find Experts"
+                : "Retake Photo"
+            }
+            showDiy={isRepairAssessment}
             buttonStyle={styles.actionButton}
           />
         </AuthFooterTray>

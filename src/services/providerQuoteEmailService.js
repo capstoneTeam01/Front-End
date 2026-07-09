@@ -269,7 +269,7 @@ export const buildProviderQuoteEmailDraft = ({
     bccList,
 
     subject:
-      `Service Request: ${issueTitle} (${requestReference})`
+      `Service Request: ${issueTitle}`
         .slice(0, 110),
 
     body: plainBody,

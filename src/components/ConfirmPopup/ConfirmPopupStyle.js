@@ -39,22 +39,19 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   title: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "700",
     color: COLORS.textPrimary,
     marginBottom: 8,
+    ...TYPE.sectionTitle,
   },
   message: {
-    fontSize: TYPE.small.fontSize,
     color: COLORS.textSecondary,
-    lineHeight: 20,
+    ...TYPE.small,
   },
   fieldLabel: {
-    fontSize: TYPE.small.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
     marginTop: 16,
     marginBottom: 8,
+    ...TYPE.small,
   },
   input: {
     height: 52,
@@ -62,8 +59,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.greyText,
     paddingHorizontal: 16,
-    fontSize: TYPE.body.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.body,
   },
   actions: {
     flexDirection: "row",
@@ -81,17 +78,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   confirmLabel: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...TYPE.button,
   },
   cancelBtn: {
     backgroundColor: COLORS.lightHoney,
   },
   cancelLabel: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...TYPE.button,
   },
 });
 

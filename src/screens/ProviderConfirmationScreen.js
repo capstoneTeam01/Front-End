@@ -3,7 +3,7 @@ import { Platform, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, View } 
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import ProviderHexAvatar from "../components/ProviderHexAvatar";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const androidTopSpace = Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
 
@@ -53,13 +53,13 @@ const styles = StyleSheet.create({
   wrap: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
   },
   card: {
     backgroundColor: COLORS.white,
-    borderRadius: 26,
-    paddingHorizontal: 24,
-    paddingVertical: 30,
+    borderRadius: RADIUS.big,
+    paddingHorizontal: SIDE_PADDING,
+    paddingVertical: SPACING.large,
     alignItems: "center",
     borderWidth: 1,
     borderColor: COLORS.providerLightGray,
@@ -72,31 +72,24 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   checkOverlay: {
-    fontFamily: FONT.extraBold,
     position: "absolute",
     color: COLORS.providerBrown,
-    fontWeight: "900",
-    fontSize: 17,
+    ...TYPE.cardTitle,
   },
   title: {
-    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
-    fontSize: 21,
-    fontWeight: "800",
-    marginBottom: 10,
+    marginBottom: SPACING.sm,
+    ...TYPE.sectionTitle,
   },
   subtitle: {
-    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
-    fontSize: 13,
     textAlign: "center",
-    lineHeight: 19,
+    ...TYPE.small,
   },
   reference: {
-    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
-    fontSize: 10,
     marginTop: 14,
+    ...TYPE.caption,
   },
   actions: {
     flexDirection: "row",
@@ -109,17 +102,15 @@ const styles = StyleSheet.create({
   },
   homeButton: {
     width: 112,
-    minHeight: 46,
-    borderRadius: 13,
+    minHeight: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.honeyLight,
     alignItems: "center",
     justifyContent: "center",
   },
   homeText: {
-    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
-    fontSize: 13,
-    fontWeight: "700",
+    ...TYPE.button,
   },
 });
 

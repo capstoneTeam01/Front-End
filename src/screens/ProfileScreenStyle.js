@@ -40,17 +40,16 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "700",
     color: COLORS.textPrimary,
     textAlign: "center",
+    ...TYPE.sectionTitle,
   },
 
   email: {
-    fontSize: TYPE.body.fontSize,
     color: COLORS.honeyBrown,
     marginTop: 6,
     textAlign: "center",
+    ...TYPE.body,
   },
 
   menuCard: {

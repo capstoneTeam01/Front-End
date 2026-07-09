@@ -1,18 +1,19 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
+import { RADIUS, SPACING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   container: {
     width: 354,
-    borderRadius: 12,
+    borderRadius: RADIUS.field,
     borderWidth: 2,
     borderColor: COLORS.gray500,
     backgroundColor: COLORS.white,
   },
 
   card: {
-    height: 104,
-    padding: 20,
+    minHeight: 104,
+    padding: SPACING.card,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -37,10 +38,9 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 16,
-    fontWeight: "600",
     color: COLORS.black,
     marginBottom: 10,
+    ...TYPE.body,
   },
 
   info: {
@@ -56,18 +56,18 @@ const styles = StyleSheet.create({
   },
 
   star: {
-    fontSize: 12,
     color: COLORS.black,
+    ...TYPE.caption,
   },
 
   ratingText: {
-    fontSize: 12,
     color: COLORS.black,
+    ...TYPE.caption,
   },
 
   reviewText: {
-    fontSize: 12,
     color: COLORS.gray900,
+    ...TYPE.caption,
   },
 
   right: {
@@ -76,9 +76,9 @@ const styles = StyleSheet.create({
   },
 
   distance: {
-    fontSize: 12,
     color: COLORS.gray900,
     marginBottom: 8,
+    ...TYPE.caption,
   },
 });
 

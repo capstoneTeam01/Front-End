@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
+import { TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   container: {
@@ -16,8 +17,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   wordmark: {
-    fontSize: 34,
-    fontWeight: "800",
+    ...TYPE.screenTitle,
   },
   wordmarkFix: {
     color: COLORS.textPrimary,

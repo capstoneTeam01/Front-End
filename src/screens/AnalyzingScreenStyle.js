@@ -2,6 +2,8 @@ import { StyleSheet } from "react-native";
 
 import COLORS from "../constants/colors";
 import {
+  BUTTON_HEIGHT,
+  RADIUS,
   TYPE,
 } from "../constants/layout";
 import { HEADER_FOOTER } from "../constants/typography";
@@ -40,11 +42,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    fontSize: 22,
-    lineHeight: 28,
-    fontWeight: "400",
     color: COLORS.secondary,
     textAlign: "center",
+    ...TYPE.sectionTitle,
   },
 
   stepsCard: {
@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
 
   cancelButton: {
     width: "100%",
-    height: 46,
-    borderRadius: 14,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",

@@ -51,7 +51,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
         {sent ? (
           <View style={styles.sentBox}>
-            <Text style={styles.sentTitle}>Check your email</Text>
+            <Text style={styles.sentTitle}>Check Your Email</Text>
             <Text style={styles.sentBody}>
               If an account exists for {email.trim()}, a reset link is on its way.
             </Text>
@@ -62,14 +62,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
             <AppTextField
               value={email}
               onChangeText={setEmail}
-              placeholder="youremail@example.com"
+              placeholder="Enter your email"
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
             />
 
             <View style={styles.sendWrap}>
-              <AuthButton label="Send reset link" onPress={handleSend} loading={submitting} />
+              <AuthButton label="Send Reset Link" onPress={handleSend} loading={submitting} />
             </View>
           </>
         )}
@@ -78,7 +78,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Login")}
           style={styles.backWrap}
         >
-          <Text style={styles.backText}>Back to login</Text>
+          <Text style={styles.backText}>Back to Login</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>

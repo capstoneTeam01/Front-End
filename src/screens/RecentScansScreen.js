@@ -3,11 +3,15 @@ import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
-import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import styles from "./RecentScansScreenStyle";
 import COLORS from "../constants/colors";
 
 const FILTERS = ["All", "DIY", "Emergency", "Service Requested"];
+
+const capitalizeFirstLetter = (value) => {
+  const text = String(value || "").trim();
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
+};
 
 const RecentScansScreen = ({ navigation, route }) => {
   const scans = route?.params?.scans || [];
@@ -91,7 +95,7 @@ const RecentScansScreen = ({ navigation, route }) => {
             </View>
 
             <View style={styles.cardContent}>
-              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.title}>{capitalizeFirstLetter(item.title)}</Text>
               <Text style={styles.meta}>
                 <Text style={styles.categoryText}>Plumbing</Text> {item.date}
               </Text>
@@ -100,17 +104,6 @@ const RecentScansScreen = ({ navigation, route }) => {
         )}
       />
 
-      <View style={styles.footer}>
-        <AuthFooterTray fill={COLORS.warmCream}>
-          <TouchableOpacity
-            style={styles.footerButton}
-            onPress={() => navigation?.goBack()}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.footerButtonText}>Back</Text>
-          </TouchableOpacity>
-        </AuthFooterTray>
-      </View>
     </View>
   );
 };

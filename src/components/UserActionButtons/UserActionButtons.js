@@ -5,6 +5,7 @@ import styles from "./UserActionButtonsStyle";
 const UserActionButtons = ({
   onFindExpertsPress,
   onDiyPress,
+  findExpertsLabel = "Find Experts",
   showDiy = false,
   buttonStyle,
   textStyle,
@@ -25,7 +26,7 @@ const UserActionButtons = ({
         ]}
       >
         <Text style={[styles.buttonText, textStyle]}>
-          Find Experts
+          {findExpertsLabel}
         </Text>
       </Pressable>
 
