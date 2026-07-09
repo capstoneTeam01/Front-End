@@ -9,27 +9,34 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    // paddingHorizontal: 16,
+    zIndex: 10,
+    elevation: 10,
   },
 
-  bar: {
-    flexDirection: "row",
-    alignItems: "center",
+  menu: {
     height: BOTTOM_NAV_HEIGHT,
+    overflow: "hidden",
+  },
+
+  shape: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
+  barContent: {
+    ...StyleSheet.absoluteFillObject,
+    flexDirection: "row",
+    alignItems: "stretch",
     paddingHorizontal: 8,
-    paddingTop: 8,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 6,
   },
 
   navItem: {
     flex: 1,
-    alignItems: "center",
+    flexBasis: 0,
+    alignSelf: "stretch",
+    flexDirection: "column",
     justifyContent: "center",
-    gap: 4,
+    alignItems: "center",
+    gap: 8,
   },
 
   navLabel: {

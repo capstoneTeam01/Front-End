@@ -18,6 +18,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { getProviderRouteParamsFromIssue } from "../utils/issueProviderRouteMapper";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
+import COLORS from "../constants/colors";
 import styles from "./DIYSolutionScreenStyle";
 import { getDiyInstructions } from "../api/getDiyInstructions";
 import { updateRepairStatus } from "../api/updateRepairStatus";
@@ -532,54 +534,44 @@ for (
         </View>
       </ScrollView>
 
-      <View
-        style={
-          styles.bottomBar
-        }
-      >
-        <TouchableOpacity
-          style={styles.secondaryButton}
-  onPress={() => {
-    const providerRouteParams =
-      getProviderRouteParamsFromIssue({
-        analysisResult,
-      });
+      <View style={styles.footer}>
+        <AuthFooterTray fill={COLORS.warmCream}>
+          <View style={styles.footerRow}>
+            <TouchableOpacity
+              style={[styles.footerBtn, styles.findExpertsBtn]}
+              onPress={() => {
+                const providerRouteParams =
+                  getProviderRouteParamsFromIssue({
+                    analysisResult,
+                  });
 
-    providerRouteParams.photoId = photoId;
-    providerRouteParams.uploadedImageUri = analysisResult?.uploadedImageUri;
-    providerRouteParams.uploadedImageUrl =
-      analysisResult?.uploadedImageUrl ||
-      analysisResult?.analysis?.uploadedImageUrl;
+                providerRouteParams.photoId = photoId;
+                providerRouteParams.uploadedImageUri =
+                  analysisResult?.uploadedImageUri;
+                providerRouteParams.uploadedImageUrl =
+                  analysisResult?.uploadedImageUrl ||
+                  analysisResult?.analysis?.uploadedImageUrl;
 
-    navigation.navigate(
-      "ProviderList",
-      providerRouteParams
-    );
-  }}
-          >
-             <Text style={styles.secondaryText}>
-            Find Experts
-          </Text>
-        </TouchableOpacity>
+                navigation.navigate("ProviderList", providerRouteParams);
+              }}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.footerBtnText}>Find Experts</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          disabled={!allDone}
-            onPress={handleDiyDone}
-          style={[
-            styles.diyButton,
-            allDone
-              ? styles.diyButtonActive
-              : styles.diyButtonDisabled,
-          ]}
-        >
-          <Text
-            style={
-              styles.diyButtonText
-            }
-          >
-            DIY Done
-          </Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              disabled={!allDone}
+              onPress={handleDiyDone}
+              style={[
+                styles.footerBtn,
+                allDone ? styles.diyDoneBtnActive : styles.diyDoneBtnDisabled,
+              ]}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.footerBtnText}>DIY Done</Text>
+            </TouchableOpacity>
+          </View>
+        </AuthFooterTray>
       </View>
 
       <Modal
