@@ -49,11 +49,17 @@ export const TYPOGRAPHY = {
     lineHeight: 20,
     fontWeight: "500",
   },
+  headerTitle: {
+    fontFamily: FONT.regular,
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: "400",
+  },
 };
 
 export const HEADER_FOOTER = {
   appHeaderTitle: {
-    ...TYPOGRAPHY.sectionTitle,
+    ...TYPOGRAPHY.headerTitle,
   },
   appHeaderTitleLeft: {
     ...TYPOGRAPHY.body,

@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 import {
-  SIDE_PADDING,
   BUTTON_HEIGHT,
   RADIUS,
   TYPE,
 } from "../constants/layout";
+import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   safe: {
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     width: 354,
     alignSelf: "center",
     paddingTop: 24,
-    paddingBottom: 130,
+    paddingBottom: 120,
   },
 
   title: {
@@ -186,54 +186,42 @@ const styles = StyleSheet.create({
     ...TYPE.caption,
   },
 
-  bottomBar: {
+  footer: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: 22,
-    paddingBottom: 28,
-    backgroundColor: COLORS.warmCream,
+  },
+
+  footerRow: {
     flexDirection: "row",
-    gap: 16,
-    borderTopLeftRadius: RADIUS.big,
-    borderTopRightRadius: RADIUS.big,
+    gap: 12,
   },
 
-  secondaryButton: {
+  footerBtn: {
     flex: 1,
-    height: BUTTON_HEIGHT,
-    borderRadius: RADIUS.field,
-    backgroundColor: COLORS.lightHoney,
+    height: 46,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
   },
 
-  secondaryText: {
-    color: COLORS.secondary,
-    ...TYPE.button,
-  },
-
-  diyButton: {
-    flex: 1,
-    height: BUTTON_HEIGHT,
-    borderRadius: RADIUS.field,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  diyButtonDisabled: {
+  findExpertsBtn: {
     backgroundColor: COLORS.lightHoney,
   },
 
-  diyButtonActive: {
+  diyDoneBtnDisabled: {
+    backgroundColor: COLORS.lightHoney,
+    opacity: 0.6,
+  },
+
+  diyDoneBtnActive: {
     backgroundColor: COLORS.primary,
   },
 
-  diyButtonText: {
+  footerBtnText: {
     color: COLORS.secondary,
-    ...TYPE.button,
+    ...HEADER_FOOTER.footerButton,
   },
 
   modalOverlay: {

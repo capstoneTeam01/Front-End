@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 import { SIDE_PADDING, RADIUS, TYPE } from "../constants/layout";
+import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   safe: {
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
   list: {
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 18,
-    paddingBottom: 32,
+    paddingBottom: 120,
   },
 
   card: {
@@ -91,6 +92,25 @@ const styles = StyleSheet.create({
     ...TYPE.body,
   },
 
+  footer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+
+  footerButton: {
+    height: 46,
+    borderRadius: 14,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  footerButtonText: {
+    color: COLORS.secondary,
+    ...HEADER_FOOTER.footerButton,
+  },
 });
 
 export default styles;

@@ -28,6 +28,11 @@ import RecentScansScreen from "../screens/RecentScansScreen";
 
 const Stack = createNativeStackNavigator();
 
+const bottomTabScreenOptions = {
+  contentStyle: { backgroundColor: "#FDFDFD" },
+  safeAreaInsets: { bottom: 0 },
+};
+
 const AppNavigator = () => {
   return (
     <NavigationContainer>
@@ -44,11 +49,11 @@ const AppNavigator = () => {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
 
         {/* Main app */}
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} options={bottomTabScreenOptions} />
         <Stack.Screen name="Category" component={CategoryScreen} />
         <Stack.Screen name="Scan" component={ScanScreen} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} />
-        <Stack.Screen name="MyRepairs" component={MyRepairsScreen} />
+        <Stack.Screen name="MyRepairs" component={MyRepairsScreen} options={bottomTabScreenOptions} />
         <Stack.Screen name="DIYSolution" component={DIYSolutionScreen} />
         <Stack.Screen name="ProviderList" component={ProviderListScreen} />
         <Stack.Screen
@@ -72,7 +77,7 @@ const AppNavigator = () => {
         <Stack.Screen name="CompletedRepairs" component={CompletedRepairsScreen} />
 
         {/* Profile */}
-        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={bottomTabScreenOptions} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>

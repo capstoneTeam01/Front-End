@@ -9,7 +9,7 @@ export const SPACING = {
 };
 
 export const SIDE_PADDING = 24;
-export const BOTTOM_NAV_HEIGHT = 84;
+export const BOTTOM_NAV_HEIGHT = 102;
 
 export const RADIUS = {
   big: 20,
