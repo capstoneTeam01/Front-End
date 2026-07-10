@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   row: {
@@ -40,15 +41,14 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 18,
-    fontWeight: "500",
     color: "#0A0A0A",
     marginBottom: 8,
+    ...TYPE.h3,
   },
 
   subtitle: {
-    fontSize: 14,
     color: "#4A5565",
+    ...TYPE.body,
   },
 });
 

@@ -21,10 +21,13 @@ export const RADIUS = {
 export const TYPE = {
   screenTitle: TYPOGRAPHY.screenTitle,
   sectionTitle: TYPOGRAPHY.sectionTitle,
+  h3: TYPOGRAPHY.h3,
   cardTitle: TYPOGRAPHY.cardTitle,
+  cardRegular: TYPOGRAPHY.cardRegular,
   body: TYPOGRAPHY.body,
   small: TYPOGRAPHY.small,
   caption: TYPOGRAPHY.caption,
+  captionSmall: TYPOGRAPHY.captionSmall,
   button: TYPOGRAPHY.button,
 };
 

@@ -171,6 +171,7 @@ feedbackInput: {
   padding: 14,
   marginBottom: 18,
   color: COLORS.textPrimary,
+  ...TYPE.small,
 },
 });
 

@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
+import { TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   button: {
@@ -21,9 +22,7 @@ const styles = StyleSheet.create({
 
   text: {
     color: "#0A0A0A",
-    fontSize: 14,
-    fontWeight: "500",
-    lineHeight: 24,
+    ...TYPE.body,
   },
 
   activeText: {

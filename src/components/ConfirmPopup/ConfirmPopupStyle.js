@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     marginTop: 24,
     marginBottom: 12,
-    ...TYPE.body,
+    ...TYPE.small,
   },
   input: {
     height: 58,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.greyText,
     paddingHorizontal: 16,
     color: COLORS.textPrimary,
-    ...TYPE.body,
+    ...TYPE.small,
   },
   actions: {
     flexDirection: "row",

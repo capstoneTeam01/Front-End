@@ -192,8 +192,6 @@ const renderPlainLines = (lines = []) =>
     )
     .join("");
 
-// Gmail deep links and Android mail intents usually open a plain-text compose screen.
-// Keep this body as simple plain text so Gmail does not need HTML to preserve it.
 export const buildPlainQuoteEmailBody = ({
   issueTitle,
   detectedObject,
@@ -212,8 +210,6 @@ export const buildPlainQuoteEmailBody = ({
   const schedule = buildPreferredScheduleText({ date, time });
   const serviceAddress = splitServiceAddress(fullAddress);
 
-  // Keep urgency/cost/time available for app screens, but do not include them in
-  // provider emails. The email is meant to stay concise and request-focused.
   console.log("[FixBee][QuoteEmail] omitted internal estimate fields from email body", {
     hasUrgency: Boolean(clean(urgency)),
     hasEstimatedCostRange: Boolean(clean(estimatedCostRange)),
@@ -323,7 +319,7 @@ export const buildHtmlQuoteEmailBody = ({
     : `<td style="font-size:14px;line-height:20px;color:#6B7280;">Image thumbnail will be included in the email.</td>`;
 
   return `
-  <div style="margin:0;padding:24px;background:#F3F4F6;font-family:Inter,Arial,Helvetica,sans-serif;color:#0A0A0A;">
+  <div style="margin:0;padding:24px;background:#F3F4F6;font-family:Rubik,Arial,Helvetica,sans-serif;color:#0A0A0A;">
     <div style="max-width:620px;margin:0 auto;background:#FDFDFD;border:1px solid #E9E7E7;border-radius:20px;padding:24px;">
       <div style="font-size:12px;line-height:16px;font-weight:500;color:#8A5611;margin-bottom:8px;">FixBee Service Request</div>
       <h1 style="font-size:28px;line-height:34px;font-weight:600;margin:0 0 24px 0;color:#0A0A0A;">${escapeHtml(finalIssueTitle)}</h1>

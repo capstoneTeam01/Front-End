@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     marginTop: 16,
     marginBottom: 8,
-    ...TYPE.body,
+    ...TYPE.small,
   },
   input: {
     height: 52,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.greyText,
     paddingHorizontal: 16,
     color: COLORS.textPrimary,
-    ...TYPE.body,
+    ...TYPE.small,
   },
   inputDisabled: {
     color: COLORS.textMuted,
@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   cityText: {
-    fontSize: TYPE.body.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.small,
   },
   cityPlaceholder: {
     color: COLORS.placeholder,

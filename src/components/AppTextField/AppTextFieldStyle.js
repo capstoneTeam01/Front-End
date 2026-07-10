@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     color: COLORS.textPrimary,
     padding: 0,
-    ...TYPE.body,
+    ...TYPE.small,
   },
 });
 

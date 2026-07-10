@@ -30,8 +30,6 @@ const analysisSteps = [
 const STEP_DURATION_MS = 1250;
 const ACTIVE_DOT_PULSE_MS = 650;
 
-// The first three steps complete automatically.
-// The fourth step keeps loading until this screen is replaced.
 const AUTO_COMPLETED_STEP_COUNT =
   analysisSteps.length - 1;
 
