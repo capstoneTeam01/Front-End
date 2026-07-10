@@ -39,6 +39,14 @@ const styles = StyleSheet.create({
   avatarWrap: {
     alignItems: "flex-start",
     marginVertical: 16,
+    position: "relative",
+  },
+  avatarLoading: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255,255,255,0.45)",
+    borderRadius: 16,
   },
   label: {
     color: COLORS.textPrimary,
