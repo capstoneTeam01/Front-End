@@ -37,6 +37,8 @@ const STEP_MARKER_FRONT_SIZE = {
   width: 40,
   height: 45,
 };
+const DIY_WARNING_TEXT =
+  "Stop immediately if the repair feels unsafe.";
 
 const getPhotoId = (analysisResult) => {
   return (
@@ -278,13 +280,6 @@ for (
       diyData?.repairSteps
     )
       ? diyData.repairSteps
-      : [];
-
-  const safetyWarnings =
-    Array.isArray(
-      diyData?.safetyWarnings
-    )
-      ? diyData.safetyWarnings
       : [];
 
   const allDone =
@@ -564,9 +559,7 @@ for (
               styles.warningText
             }
           >
-            {safetyWarnings.join(
-              "\n\n"
-            )}
+            {DIY_WARNING_TEXT}
           </Text>
         </View>
 
