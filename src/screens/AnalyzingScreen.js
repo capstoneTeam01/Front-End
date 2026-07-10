@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
+  Animated,
   Pressable,
   Text,
   useWindowDimensions,
@@ -23,6 +28,7 @@ const analysisSteps = [
 ];
 
 const STEP_DURATION_MS = 1250;
+const ACTIVE_DOT_PULSE_MS = 650;
 
 // The first three steps complete automatically.
 // The fourth step keeps loading until this screen is replaced.
@@ -33,6 +39,39 @@ const StepStatusIcon = ({
   isActive,
   isCompleted,
 }) => {
+  const dotScale = useRef(
+    new Animated.Value(1)
+  ).current;
+
+  useEffect(() => {
+    if (!isActive) {
+      dotScale.setValue(1);
+      return undefined;
+    }
+
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(dotScale, {
+          toValue: 1.45,
+          duration: ACTIVE_DOT_PULSE_MS,
+          useNativeDriver: true,
+        }),
+        Animated.timing(dotScale, {
+          toValue: 1,
+          duration: ACTIVE_DOT_PULSE_MS,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    animation.start();
+
+    return () => {
+      animation.stop();
+      dotScale.setValue(1);
+    };
+  }, [dotScale, isActive]);
+
   let backgroundColor = COLORS.warmCream;
 
   if (isCompleted) {
@@ -59,7 +98,16 @@ const StepStatusIcon = ({
         ) : null}
 
         {isActive ? (
-          <View style={styles.activeDot} />
+          <Animated.View
+            style={[
+              styles.activeDot,
+              {
+                transform: [
+                  { scale: dotScale },
+                ],
+              },
+            ]}
+          />
         ) : null}
       </HexTile>
     </View>
@@ -128,7 +176,7 @@ const AnalyzingScreen = ({ onCancel }) => {
             <Text
               style={[
                 styles.heroTitle,
-                { top: 244 * layoutScale },
+                { top: 286 * layoutScale },
               ]}
             >
               Analyzing Issue..

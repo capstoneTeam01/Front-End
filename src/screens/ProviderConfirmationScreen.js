@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.big,
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 18,
-    paddingBottom: 78,
+    paddingBottom: 104,
     alignItems: "center",
     borderWidth: 1,
     borderColor: COLORS.providerLightGray,
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 16,
     width: "100%",
+    marginBottom: 8,
   },
   actionButton: {
     flex: 1,

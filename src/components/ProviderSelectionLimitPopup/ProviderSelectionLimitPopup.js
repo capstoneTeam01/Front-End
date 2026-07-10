@@ -33,12 +33,12 @@ const ProviderSelectionLimitPopup = ({
             variant="polygon9"
             width={64}
             height={71.2}
-            fill={COLORS.riskHigh}
+            fill={COLORS.primary}
           >
             <Ionicons
               name="warning-outline"
               size={28}
-              color={COLORS.white}
+              color={COLORS.secondary}
             />
           </PolygonAsset>
 
