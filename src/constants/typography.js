@@ -1,4 +1,12 @@
 const FONT = {
+  regular: "Rubik_400Regular",
+  medium: "Rubik_400Regular",
+  semiBold: "Rubik_400Regular",
+  bold: "Rubik_400Regular",
+  extraBold: "Rubik_400Regular",
+};
+
+const HEADER_FOOTER_FONT = {
   regular: "Inter_400Regular",
   medium: "Inter_500Medium",
   semiBold: "Inter_600SemiBold",
@@ -8,49 +16,67 @@ const FONT = {
 
 export const TYPOGRAPHY = {
   screenTitle: {
-    fontFamily: FONT.semiBold,
+    fontFamily: FONT.regular,
     fontSize: 28,
     lineHeight: 34,
-    fontWeight: "600",
+    fontWeight: "400",
   },
   sectionTitle: {
-    fontFamily: FONT.semiBold,
+    fontFamily: FONT.regular,
     fontSize: 22,
     lineHeight: 28,
-    fontWeight: "600",
+    fontWeight: "400",
   },
-  cardTitle: {
-    fontFamily: FONT.medium,
+  h3: {
+    fontFamily: FONT.regular,
     fontSize: 18,
     lineHeight: 24,
-    fontWeight: "500",
+    fontWeight: "400",
+  },
+  cardTitle: {
+    fontFamily: FONT.regular,
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: "400",
+  },
+  cardRegular: {
+    fontFamily: FONT.regular,
+    fontSize: 14,
+    lineHeight: 18,
+    fontWeight: "400",
   },
   body: {
     fontFamily: FONT.regular,
     fontSize: 16,
-    lineHeight: 24,
+    lineHeight: 20,
     fontWeight: "400",
   },
   small: {
     fontFamily: FONT.regular,
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 18,
     fontWeight: "400",
   },
   caption: {
-    fontFamily: FONT.medium,
+    fontFamily: FONT.regular,
     fontSize: 12,
     lineHeight: 16,
-    fontWeight: "500",
+    fontWeight: "400",
+  },
+  captionSmall: {
+    fontFamily: FONT.regular,
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: "400",
   },
   button: {
-    fontFamily: FONT.medium,
+    fontFamily: FONT.regular,
     fontSize: 16,
     lineHeight: 20,
-    fontWeight: "500",
+    fontWeight: "400",
   },
   headerTitle: {
-    fontFamily: FONT.regular,
+    fontFamily: HEADER_FOOTER_FONT.regular,
     fontSize: 18,
     lineHeight: 24,
     fontWeight: "400",
@@ -59,22 +85,40 @@ export const TYPOGRAPHY = {
 
 export const HEADER_FOOTER = {
   appHeaderTitle: {
-    ...TYPOGRAPHY.headerTitle,
+    fontFamily: HEADER_FOOTER_FONT.regular,
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: "400",
   },
   appHeaderTitleLeft: {
-    ...TYPOGRAPHY.body,
+    fontFamily: HEADER_FOOTER_FONT.regular,
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: "400",
   },
   tabHeaderText: {
-    ...TYPOGRAPHY.body,
+    fontFamily: HEADER_FOOTER_FONT.regular,
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: "400",
   },
   bottomNavLabel: {
-    ...TYPOGRAPHY.caption,
+    fontFamily: HEADER_FOOTER_FONT.medium,
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: "500",
   },
   bottomNavLabelActive: {
-    ...TYPOGRAPHY.small,
+    fontFamily: HEADER_FOOTER_FONT.regular,
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: "400",
   },
   footerButton: {
-    ...TYPOGRAPHY.button,
+    fontFamily: HEADER_FOOTER_FONT.medium,
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: "500",
   },
 };
 
