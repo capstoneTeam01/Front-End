@@ -87,7 +87,12 @@ const getRequestTimeoutMs = (path, options = {}) => {
   if (options.timeoutMs) return options.timeoutMs;
 
   const textPath = String(path || "").toLowerCase();
-  if (textPath.includes("/api/photos/upload")) return UPLOAD_REQUEST_TIMEOUT_MS;
+  if (
+    textPath.includes("/api/photos/upload") ||
+    textPath.includes("/api/users/avatar")
+  ) {
+    return UPLOAD_REQUEST_TIMEOUT_MS;
+  }
   if (textPath.includes("/api/analysis")) return ANALYSIS_REQUEST_TIMEOUT_MS;
 
   return DEFAULT_REQUEST_TIMEOUT_MS;

@@ -34,6 +34,7 @@ const ProfileScreen = ({ navigation }) => {
   );
   const [displayName, setDisplayName] = useState("User Name");
   const [email, setEmail] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
   const [notif, setNotif] = useState({
     push: true,
     appointmentReminders: true,
@@ -49,6 +50,7 @@ const ProfileScreen = ({ navigation }) => {
       const { user, displayName: name } = await getMe();
       if (name) setDisplayName(name);
       if (user?.email) setEmail(user.email);
+      setProfileImage(user?.profileImage || null);
       if (user?.notificationSettings) {
         setNotif({
           push: user.notificationSettings.push !== false,
@@ -129,7 +131,7 @@ const ProfileScreen = ({ navigation }) => {
         <View style={styles.heroWrap}>
           <HeroHexagon width={heroWidth} contentOffsetY={-6}>
             <View style={styles.avatarHex}>
-              <HexAvatar size={88} />
+              <HexAvatar size={88} imageUri={profileImage} />
             </View>
             <Text style={styles.name}>{displayName}</Text>
             <Text style={styles.email}>{email || "Emailid@example.com"}</Text>
