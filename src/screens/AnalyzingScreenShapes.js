@@ -7,34 +7,39 @@ import COLORS from "../constants/colors";
 
 const TopBackgroundPattern = ({ style }) => {
   const { width: screenWidth } = useWindowDimensions();
-  const scale = screenWidth / 402;
+  const frameScale = screenWidth / 402;
+  const polygonWidth = 346.41 * frameScale;
+  const polygonHeight = 393.81 * frameScale;
+  const leftOffset = -157.21 * frameScale;
+  const rightOffset = 215.79 * frameScale;
+  const topOffset = -195.91 * frameScale;
 
   return (
     <View style={style} pointerEvents="none">
       <PolygonAsset
         variant="polygon8"
-        width={400 * scale}
-        height={400 * scale}
+        width={polygonWidth}
+        height={polygonHeight}
         fill={COLORS.warmCream}
         stroke="transparent"
         preserveAspectRatio="none"
         style={{
           position: "absolute",
-          left: -185 * scale,
-          top: -220 * scale,
+          left: leftOffset,
+          top: topOffset,
         }}
       />
       <PolygonAsset
         variant="polygon8"
-        width={400 * scale}
-        height={400 * scale}
+        width={polygonWidth}
+        height={polygonHeight}
         fill={COLORS.warmCream}
         stroke="transparent"
         preserveAspectRatio="none"
         style={{
           position: "absolute",
-          left: 185 * scale,
-          top: -220 * scale,
+          left: rightOffset,
+          top: topOffset,
         }}
       />
     </View>

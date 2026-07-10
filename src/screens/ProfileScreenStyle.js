@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 
   // Hero overlaps up into the cream band slightly.
   heroWrap: {
-    marginTop: -14,
+    marginTop: 0,
     alignItems: "center",
   },
 

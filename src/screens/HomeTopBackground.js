@@ -10,8 +10,8 @@ const BACKGROUND_LAYOUTS = {
     top: -195.91,
   },
   profile: {
-    scale: 0.96,
-    top: -214,
+    scale: 1,
+    top: -195.91,
   },
 };
 

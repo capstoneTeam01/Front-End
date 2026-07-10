@@ -34,6 +34,8 @@ const styles = StyleSheet.create({
   label: {
     color: COLORS.providerBrown,
     ...TYPE.caption,
+    fontSize: 22,
+    lineHeight: 28,
   },
 });
 
