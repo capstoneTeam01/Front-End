@@ -1,11 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import {
-  BUTTON_HEIGHT,
-  RADIUS,
-  SIDE_PADDING,
-  TYPE,
-} from "../constants/layout";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, TYPE } from "../constants/layout";
 import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
@@ -77,6 +72,7 @@ const styles = StyleSheet.create({
   stepRow: {
     flexDirection: "row",
     minHeight: 76,
+    paddingBottom: 16,
   },
 
   stepLeft: {
@@ -139,8 +135,10 @@ const styles = StyleSheet.create({
   },
 
   stepDesc: {
-    color: COLORS.honeyBrown,
     ...TYPE.caption,
+    fontSize: 13,
+    lineHeight: 20,
+    color: COLORS.honeyBrown,
   },
 
   inactiveText: {

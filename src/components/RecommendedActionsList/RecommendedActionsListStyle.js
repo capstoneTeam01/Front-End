@@ -1,10 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import {
-  RADIUS,
-  SPACING,
-  TYPE,
-} from "../../constants/layout";
+import { RADIUS, SPACING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   sectionTitle: {
@@ -19,7 +15,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gray500,
     borderRadius: RADIUS.big,
     overflow: "hidden",
-    marginBottom: 36,
+    marginBottom: 24,
   },
 
   actionItem: {

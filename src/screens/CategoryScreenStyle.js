@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
 
   popularHeader: {
-    marginTop: 7,
+    marginTop: 24,
     marginBottom: SPACING.card,
   },
 

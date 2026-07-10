@@ -50,5 +50,6 @@
   "bugs": {
     "url": "https://github.com/capstoneTeam01/Front-End/issues"
   },
-  "homepage": "https://github.com/capstoneTeam01/Front-End#readme"
+  "homepage": "https://github.com/capstoneTeam01/Front-End#readme",
+  "devDependencies": {}
 }

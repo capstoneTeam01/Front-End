@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
   avatarWrap: {
     alignItems: "flex-start",
-    marginBottom: 22,
+    marginVertical: 16,
   },
   label: {
     color: COLORS.textPrimary,
