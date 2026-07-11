@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     fontSize: TYPE.small.fontSize,
     lineHeight: 18,
     fontWeight: "400",
-    color: COLORS.mediumGrey,
+    color: COLORS.textSecondary,
     marginBottom: 16,
   },
 
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     fontSize: TYPE.small.fontSize,
     lineHeight: 18,
     fontWeight: "400",
-    color: COLORS.mediumGrey,
+    color: COLORS.textSecondary,
   },
 });
 
