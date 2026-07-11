@@ -150,13 +150,15 @@ const styles = StyleSheet.create({
   },
 
   warningBox: {
-    minHeight: 92,
+    minHeight: 126,
     borderRadius: RADIUS.big,
-    padding: 16,
+    padding: 24,
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 18,
-    backgroundColor: COLORS.lightHoney,
+    borderWidth: 1,
+    borderColor: COLORS.riskHigh,
+    backgroundColor: "#FFF1F3",
   },
 
   warningIcon: {
@@ -164,13 +166,13 @@ const styles = StyleSheet.create({
     height: 74,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 18,
+    marginRight: 24,
   },
 
   warningText: {
     flex: 1,
-    color: COLORS.textPrimary,
-    ...TYPE.caption,
+    color: COLORS.secondary,
+    ...TYPE.body,
   },
 
   helpBox: {

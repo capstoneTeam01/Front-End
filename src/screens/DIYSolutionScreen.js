@@ -17,7 +17,6 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { getProviderRouteParamsFromIssue } from "../utils/issueProviderRouteMapper";
 
-import HazardIcon from "../../assets/icons/Hazard_Icon.svg";
 import RepairIcon from "../../assets/icons/Repair_Icon.svg";
 import AppHeader from "../components/AppHeader/AppHeader";
 import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
@@ -38,7 +37,7 @@ const STEP_MARKER_FRONT_SIZE = {
   height: 45,
 };
 const DIY_WARNING_TEXT =
-  "Stop immediately if the repair feels unsafe.";
+  "Stop if water reaches nearby electrical outlets.";
 
 const getPhotoId = (analysisResult) => {
   return (
@@ -545,11 +544,12 @@ for (
               variant="polygon9"
               width={64}
               height={71}
-              fill={COLORS.primary}
+              fill={COLORS.riskHigh}
             >
-              <HazardIcon
-                width={28}
-                height={28}
+              <Ionicons
+                name="warning-outline"
+                size={30}
+                color={COLORS.white}
               />
             </PolygonAsset>
           </View>
