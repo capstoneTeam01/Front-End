@@ -9,17 +9,6 @@ import {
 
 const clean = (value) => String(value || "").trim();
 
-const buildQuoteRequestReference = () => {
-  const date = new Date();
-
-  const timestamp = date
-    .toISOString()
-    .replace(/[-:TZ.]/g, "")
-    .slice(0, 12);
-
-  return `FB-${timestamp}`;
-};
-
 const uniqueEmails = (providers = []) => {
   const seen = new Set();
 
@@ -138,9 +127,6 @@ export const buildProviderQuoteEmailDraft = ({
   const issueTitle =
     normalizeQuoteIssueTitle(issue);
 
-  const requestReference =
-    buildQuoteRequestReference();
-
   const fullAddress =
     buildFullServiceAddress({
       address,
@@ -225,7 +211,6 @@ export const buildProviderQuoteEmailDraft = ({
       imageUrl,
       requesterName,
       requesterEmail,
-      requestReference,
     });
 
   const htmlBody =
@@ -252,7 +237,6 @@ export const buildProviderQuoteEmailDraft = ({
       images: normalizedImages,
       requesterName,
       requesterEmail,
-      requestReference,
     });
 
   return {
@@ -268,16 +252,13 @@ export const buildProviderQuoteEmailDraft = ({
     bcc: bccList.join(","),
     bccList,
 
-    subject:
-      `Service Request: ${issueTitle}`
-        .slice(0, 110),
+    subject: issueTitle.slice(0, 110),
 
     body: plainBody,
     htmlBody,
     imageUrl,
     images: normalizedImages,
     requesterName,
-    requestReference,
     photoId: clean(photoId),
     providerEmails,
 
@@ -338,9 +319,13 @@ export const buildProviderQuoteRequestPayload = ({
   notes,
   editedBody,
 }) => {
-  const body =
-    clean(editedBody) ||
-    draft?.body;
+  const hasEditedBody =
+    typeof editedBody === "string" &&
+    clean(editedBody).length > 0;
+
+  const body = hasEditedBody
+    ? editedBody
+    : draft?.body;
 
   const images =
     Array.isArray(draft?.images)
@@ -379,9 +364,6 @@ export const buildProviderQuoteRequestPayload = ({
 
       requesterEmail:
         draft?.requesterEmail,
-
-      requestReference:
-        draft?.requestReference,
 
       editedBody: body,
     });
@@ -465,9 +447,6 @@ export const buildProviderQuoteRequestPayload = ({
       providerEmails:
         draft?.providerEmails ||
         [],
-
-      requestReference:
-        draft?.requestReference,
     },
 
     preview: {
