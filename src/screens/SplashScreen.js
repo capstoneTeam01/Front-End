@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Easing, useWindowDimensions, View } from "react-native";
-import Svg, { Path, Polygon } from "react-native-svg";
+import Svg, { Path } from "react-native-svg";
 
 import COLORS from "../constants/colors";
 import { getSavedToken } from "../features/auth/services/authSessionService";
@@ -9,6 +9,7 @@ import styles from "./SplashScreenStyle";
 const SPLASH_MIN_MS = 2000;
 const ANIM_MS = 1400;
 const ANIM_DELAY_MS = 280;
+const HEX_CORNER_RADIUS = 10;
 
 const BEE_W = 84;
 const BEE_H = 88;
@@ -24,9 +25,6 @@ const lerpPoint = (a, b, t) => ({
   y: lerp(a.y, b.y, t),
 });
 
-const pointsToString = (pts) =>
-  pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
-
 /** Flat-top hexagon points (matches FixBee hex geometry). */
 const hexPoints = (cx, cy, radius) => {
   const pts = [];
@@ -38,6 +36,45 @@ const hexPoints = (cx, cy, radius) => {
     });
   }
   return pts;
+};
+
+/** Rounded flat-top hexagon path with corner radius. */
+const roundedHexPath = (cx, cy, radius, cornerRadius = HEX_CORNER_RADIUS) => {
+  const pts = hexPoints(cx, cy, radius);
+  const n = pts.length;
+  const maxCorner = Math.min(cornerRadius, radius * 0.35);
+  if (maxCorner < 0.5) {
+    return `M ${pts.map((p) => `${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(" L ")} Z`;
+  }
+
+  let d = "";
+  for (let i = 0; i < n; i += 1) {
+    const prev = pts[(i - 1 + n) % n];
+    const curr = pts[i];
+    const next = pts[(i + 1) % n];
+
+    const len1 = Math.hypot(curr.x - prev.x, curr.y - prev.y);
+    const len2 = Math.hypot(next.x - curr.x, next.y - curr.y);
+    const r = Math.min(maxCorner, len1 / 2, len2 / 2);
+
+    const p1 = {
+      x: curr.x + ((prev.x - curr.x) / len1) * r,
+      y: curr.y + ((prev.y - curr.y) / len1) * r,
+    };
+    const p2 = {
+      x: curr.x + ((next.x - curr.x) / len2) * r,
+      y: curr.y + ((next.y - curr.y) / len2) * r,
+    };
+
+    if (i === 0) {
+      d += `M ${p1.x.toFixed(2)} ${p1.y.toFixed(2)}`;
+    } else {
+      d += ` L ${p1.x.toFixed(2)} ${p1.y.toFixed(2)}`;
+    }
+    d += ` Q ${curr.x.toFixed(2)} ${curr.y.toFixed(2)} ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+  }
+
+  return `${d} Z`;
 };
 
 const SplashScreen = ({ navigation }) => {
@@ -142,9 +179,9 @@ const SplashScreen = ({ navigation }) => {
   );
 
   const yellowTopLeft =
-    radius > 1 ? pointsToString(hexPoints(tlCenter.x, tlCenter.y, radius)) : "";
+    radius > 1 ? roundedHexPath(tlCenter.x, tlCenter.y, radius) : "";
   const yellowBottomRight =
-    radius > 1 ? pointsToString(hexPoints(brCenter.x, brCenter.y, radius)) : "";
+    radius > 1 ? roundedHexPath(brCenter.x, brCenter.y, radius) : "";
 
   return (
     <View style={[styles.container, { backgroundColor: COLORS.warmCream }]}>
@@ -155,10 +192,10 @@ const SplashScreen = ({ navigation }) => {
         pointerEvents="none"
       >
         {yellowTopLeft ? (
-          <Polygon points={yellowTopLeft} fill={COLORS.primary} />
+          <Path d={yellowTopLeft} fill={COLORS.primary} />
         ) : null}
         {yellowBottomRight ? (
-          <Polygon points={yellowBottomRight} fill={COLORS.primary} />
+          <Path d={yellowBottomRight} fill={COLORS.primary} />
         ) : null}
       </Svg>
 
