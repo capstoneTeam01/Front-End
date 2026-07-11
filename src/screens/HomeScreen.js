@@ -13,6 +13,7 @@ import CategoryIcon from "../components/CategoryIcon";
 
 import { CATEGORIES } from "../data/repairData";
 import { getMe } from "../api/getMe";
+import { getCurrentCityFromGps } from "../utils/locationHelper";
 import COLORS from "../constants/colors";
 import styles from "./HomeScreenStyle";
 
@@ -24,12 +25,27 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     let active = true;
+
     (async () => {
+      try {
+        const current = await getCurrentCityFromGps({
+          preferCached: true,
+          allowCachedOnFailure: true,
+          cacheReason: "home-header-location",
+          highAccuracy: false,
+        });
+
+        if (active && current?.city) {
+          setLocation(current.city);
+          return;
+        }
+      } catch {}
       try {
         const { location: loc } = await getMe();
         if (active && loc) setLocation(loc);
       } catch {}
     })();
+
     return () => {
       active = false;
     };
