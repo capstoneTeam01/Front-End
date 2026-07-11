@@ -6,7 +6,7 @@ import {
   FlatList,
   useWindowDimensions,
 } from "react-native";
-
+import { getCurrentCityFromGps } from "../utils/locationHelper";
 import { Ionicons } from "@expo/vector-icons";
 
 import HomeTabHeader, {
@@ -71,12 +71,27 @@ const ScanDashboardScreen = ({ navigation }) => {
 
   useEffect(() => {
     let active = true;
+
     (async () => {
+      try {
+        const current = await getCurrentCityFromGps({
+          preferCached: true,
+          allowCachedOnFailure: true,
+          cacheReason: "scan-header-location",
+          highAccuracy: false,
+        });
+
+        if (active && current?.city) {
+          setLocation(current.city);
+          return;
+        }
+      } catch {}
       try {
         const { location: loc } = await getMe();
         if (active && loc) setLocation(loc);
       } catch {}
     })();
+
     return () => {
       active = false;
     };
