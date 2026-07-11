@@ -37,7 +37,7 @@ const STEP_MARKER_FRONT_SIZE = {
   height: 45,
 };
 const DIY_WARNING_TEXT =
-  "Stop immediately if the issue worsens.";
+  "Stop immediately if conditions worsen or feel unsafe.";
 
 const getPhotoId = (analysisResult) => {
   return (
