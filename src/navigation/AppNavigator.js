@@ -1,5 +1,8 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import SplashScreen from "../screens/SplashScreen";
@@ -27,6 +30,9 @@ import ProfileScreen from "../screens/ProfileScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import RecentScansScreen from "../screens/RecentScansScreen";
 
+// Ref so non-component code (e.g. the API layer on a 401) can navigate.
+export const navigationRef = createNavigationContainerRef();
+
 const Stack = createNativeStackNavigator();
 
 const bottomTabScreenOptions = {
@@ -36,7 +42,7 @@ const bottomTabScreenOptions = {
 
 const AppNavigator = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{ headerShown: false }}
