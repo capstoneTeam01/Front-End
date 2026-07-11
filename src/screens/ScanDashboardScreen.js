@@ -120,8 +120,7 @@ const ScanDashboardScreen = ({ navigation }) => {
           imageUrl: historyItem.imageUrl,
           analysis: historyItem.analysis,
 
-          diyGenerationStatus:
-            historyItem.diyGenerationStatus || "not_started",
+          diyGenerationStatus: historyItem.diyGenerationStatus || "not_started",
           repairStatus: historyItem.repairStatus || "open",
           repairCompletedAt: historyItem.repairCompletedAt || null,
           providerRequested: historyItem.providerRequested || false,
@@ -133,11 +132,11 @@ const ScanDashboardScreen = ({ navigation }) => {
       }
 
       const openScans = formattedScans.filter(
-        (item) => item.repairStatus !== "completed"
+        (item) => item.repairStatus !== "completed",
       );
 
       const completedScans = formattedScans.filter(
-        (item) => item.repairStatus === "completed"
+        (item) => item.repairStatus === "completed",
       );
 
       setRecentScans(openScans);
@@ -160,13 +159,16 @@ const ScanDashboardScreen = ({ navigation }) => {
   };
 
   const handleScanNow = () => {
-    setCapturePopupVisible(false);
-    navigation?.navigate("Scan", {
+    const params = {
       categoryId: selectedCategoryId,
       repairId: null,
       title: "Start New Scan",
       subtitle: "Capture a repair issue with AI guidance.",
       openCamera: true,
+    };
+    setCapturePopupVisible(false);
+    requestAnimationFrame(() => {
+      navigation?.navigate("ScanCamera", params);
     });
   };
 

@@ -10,16 +10,18 @@ import {
   Inter_700Bold,
   Inter_800ExtraBold,
 } from "@expo-google-fonts/inter";
-import {
-  Rubik_400Regular,
-} from "@expo-google-fonts/rubik";
+import { Rubik_400Regular } from "@expo-google-fonts/rubik";
 
 import AppNavigator from "./src/navigation/AppNavigator";
+import { NotificationsProvider } from "./src/context/NotificationsContext";
 import { warmUpFixBeeSession } from "./src/bootstrap/appStartupWarmup";
 import FONT from "./src/constants/typography";
 
 Text.defaultProps = Text.defaultProps || {};
-Text.defaultProps.style = [Text.defaultProps.style, { fontFamily: FONT.regular }];
+Text.defaultProps.style = [
+  Text.defaultProps.style,
+  { fontFamily: FONT.regular },
+];
 TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.style = [
   TextInput.defaultProps.style,
@@ -47,7 +49,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
-      <AppNavigator />
+      <NotificationsProvider>
+        <AppNavigator />
+      </NotificationsProvider>
     </SafeAreaProvider>
   );
 }

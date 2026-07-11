@@ -1,31 +1,18 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-import { getNotifications } from "../api/getNotifications";
+import { useNotifications } from "../context/NotificationsContext";
 
 const useUnreadCount = () => {
-  const [count, setCount] = useState(0);
+  const { unreadCount, refresh } = useNotifications();
 
   useFocusEffect(
     useCallback(() => {
-      let active = true;
-
-      (async () => {
-        try {
-          const items = await getNotifications();
-          if (!active) return;
-          const unread = items.filter((n) => !n.isDeleted && !n.isRead).length;
-          setCount(unread);
-        } catch {}
-      })();
-
-      return () => {
-        active = false;
-      };
-    }, []),
+      refresh();
+    }, [refresh]),
   );
 
-  return count;
+  return unreadCount;
 };
 
 export default useUnreadCount;

@@ -15,6 +15,7 @@ import {
   markNotificationRead,
   markAllNotificationsRead,
 } from "../api/getNotifications";
+import { useNotifications } from "../context/NotificationsContext";
 import COLORS from "../constants/colors";
 import styles from "./NotificationsScreenStyle";
 
@@ -25,8 +26,6 @@ const ICON_FOR_TYPE = {
   general: "information-circle-outline",
 };
 
-// Turns a backend timestamp into a short relative label.
-// Falls back to the raw value if it's already a friendly string.
 const formatTime = (value) => {
   if (!value) return "";
 
@@ -54,6 +53,8 @@ const NotificationsScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [items, setItems] = useState([]);
   const [error, setError] = useState("");
+
+  const { refresh: refreshUnreadCount } = useNotifications();
 
   const load = useCallback(async () => {
     try {
@@ -90,8 +91,8 @@ const NotificationsScreen = ({ navigation }) => {
     );
     try {
       await markNotificationRead(id);
+      refreshUnreadCount({ force: true });
     } catch {
-      // Revert on failure.
       setItems((prev) =>
         prev.map((n) => (n._id === id ? { ...n, isRead: false } : n)),
       );
@@ -103,24 +104,25 @@ const NotificationsScreen = ({ navigation }) => {
     setItems((prev) => prev.map((n) => ({ ...n, isRead: true })));
     try {
       await markAllNotificationsRead();
+      refreshUnreadCount({ force: true });
     } catch {
       setItems(snapshot);
     }
   };
 
   const handleNotificationPress = async (notification) => {
-  await markOne(notification._id);
+    await markOne(notification._id);
 
-  if (notification.type === "provider_reply") {
-    navigation.navigate("RepairStatus", {
-      photoId: notification.relatedId,
-      notificationId: notification._id,
-      selectedProviders: notification.selectedProviders || [],
-    });
+    if (notification.type === "provider_reply") {
+      navigation.navigate("RepairStatus", {
+        photoId: notification.relatedId,
+        notificationId: notification._id,
+        selectedProviders: notification.selectedProviders || [],
+      });
 
-    return;
-  }
-};
+      return;
+    }
+  };
 
   const renderBody = () => {
     if (loading) {
@@ -172,10 +174,10 @@ const NotificationsScreen = ({ navigation }) => {
       >
         {items.map((n) => (
           <TouchableOpacity
-                key={n._id}
-                activeOpacity={0.7}
-                onPress={() => handleNotificationPress(n)}
-                style={[styles.row, !n.isRead && styles.rowUnread]}
+            key={n._id}
+            activeOpacity={0.7}
+            onPress={() => handleNotificationPress(n)}
+            style={[styles.row, !n.isRead && styles.rowUnread]}
           >
             <View style={styles.iconChip}>
               <Ionicons
