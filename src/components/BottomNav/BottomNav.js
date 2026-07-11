@@ -9,7 +9,7 @@ import { BOTTOM_NAV_HEIGHT } from "../../constants/layout";
 import styles from "./BottomNavStyle";
 
 const NAV_MENU_PATH =
-  "M0 38 L17 9 C21.5 3.5 29 0 38 0 H364 C373 0 380.5 3.5 385 9 L402 38 V102 H0 Z";
+  "M0 44 L20 10 C26 3.5 36 0 48 0 H354 C366 0 376 3.5 382 10 L402 44 V102 H0 Z";
 
 const TABS = [
   { key: "Home", label: "Home", route: "Home" },
