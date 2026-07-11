@@ -38,7 +38,7 @@ const CategoryScreen = ({ navigation, route }) => {
 
   const handleScanNow = () => {
     setCapturePopupVisible(false);
-    navigation?.navigate("Scan", {
+    navigation?.navigate("ScanCamera", {
       categoryId,
       repairId,
       title: "Start New Scan",
@@ -68,9 +68,7 @@ const CategoryScreen = ({ navigation, route }) => {
           </HeroHexagon>
         </View>
 
-        <View
-          style={[styles.scanWrap, { marginTop: -50 * layoutScale }]}
-        >
+        <View style={[styles.scanWrap, { marginTop: -50 * layoutScale }]}>
           <ScanHexButton
             size={87 * layoutScale}
             onPress={() => openCapturePopup()}

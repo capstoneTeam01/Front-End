@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  ActivityIndicator,
-  TouchableOpacity,
-  useWindowDimensions,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, ScrollView, useWindowDimensions } from "react-native";
 
 import HomeTabHeader, {
   FIGMA_FRAME_WIDTH,
@@ -15,13 +7,11 @@ import HomeTabHeader, {
 import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
 import ScanHexButton from "../components/ScanHexButton/ScanHexButton";
 import CategoryCard from "../components/CategoryCard/CategoryCard";
-import SectionHeader from "../components/SectionHeader/SectionHeader";
-import RepairListItem from "../components/RepairListItem/RepairListItem";
 import CategoryPopup from "../components/CategoryPopup/CategoryPopup";
 import BottomNav from "../components/BottomNav/BottomNav";
 import CategoryIcon from "../components/CategoryIcon";
 
-import { CATEGORIES, POPULAR_REPAIRS } from "../data/repairData";
+import { CATEGORIES } from "../data/repairData";
 import { getMe } from "../api/getMe";
 import COLORS from "../constants/colors";
 import styles from "./HomeScreenStyle";
@@ -45,64 +35,9 @@ const HomeScreen = ({ navigation }) => {
     };
   }, []);
 
-  const [loadingRepairs] = useState(false);
-  const repairs = POPULAR_REPAIRS;
-
   const goToCategory = (cat) => {
     setPopupVisible(false);
     navigation?.navigate("Category", { categoryId: cat.id, title: cat.label });
-  };
-
-  const renderRepairs = () => {
-    if (loadingRepairs) {
-      return (
-        <View style={styles.stateBox}>
-          <ActivityIndicator color={COLORS.textMuted} />
-        </View>
-      );
-    }
-
-    if (!repairs.length) {
-      return (
-        <View style={styles.stateBox}>
-          <Ionicons
-            name="construct-outline"
-            size={28}
-            color={COLORS.textMuted}
-          />
-          <Text style={styles.emptyTitle}>No repairs yet</Text>
-          <Text style={styles.emptyText}>
-            Scan an issue to see it show up here.
-          </Text>
-        </View>
-      );
-    }
-
-    return (
-      <View style={styles.repairsCard}>
-        {repairs.map((item, i) => (
-          <RepairListItem
-            key={item.id}
-            title={item.title}
-            subtitle={item.subtitle}
-            showDivider={i > 0}
-            icon={
-              <CategoryIcon
-                categoryId={item.subtitle}
-                size={18}
-                color={COLORS.secondary}
-              />
-            }
-            onPress={() =>
-              navigation?.navigate("Category", {
-                categoryId: item.subtitle.toLowerCase(),
-                title: item.subtitle,
-              })
-            }
-          />
-        ))}
-      </View>
-    );
   };
 
   return (
@@ -127,9 +62,7 @@ const HomeScreen = ({ navigation }) => {
           </HeroHexagon>
         </View>
 
-        <View
-          style={[styles.scanWrap, { marginTop: -50 * layoutScale }]}
-        >
+        <View style={[styles.scanWrap, { marginTop: -50 * layoutScale }]}>
           <ScanHexButton
             size={87 * layoutScale}
             onPress={() => setPopupVisible(true)}
@@ -154,17 +87,6 @@ const HomeScreen = ({ navigation }) => {
             />
           ))}
         </View>
-
-        <View style={styles.popularHeader}>
-          <SectionHeader
-            title="Popular Repairs"
-            actionLabel="See All"
-            onActionPress={() => {}}
-            titleStyle={styles.popularTitle}
-            actionStyle={styles.popularAction}
-          />
-        </View>
-        {renderRepairs()}
       </ScrollView>
 
       <BottomNav active="Home" />
