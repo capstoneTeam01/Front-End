@@ -6,9 +6,9 @@ import COLORS from "../constants/colors";
 import { getSavedToken } from "../features/auth/services/authSessionService";
 import styles from "./SplashScreenStyle";
 
-const SPLASH_MIN_MS = 2000;
 const ANIM_MS = 1400;
 const ANIM_DELAY_MS = 280;
+const ANIM_HOLD_MS = 400; // brief pause on final cream frame before navigate
 const HEX_CORNER_RADIUS = 10;
 
 const BEE_W = 84;
@@ -113,6 +113,19 @@ const SplashScreen = ({ navigation }) => {
   );
 
   useEffect(() => {
+    let isMounted = true;
+    let routeName = null;
+    let animDone = false;
+    let authDone = false;
+
+    const goNext = () => {
+      if (!isMounted || !animDone || !authDone || !routeName) return;
+      navigation.reset({
+        index: 0,
+        routes: [{ name: routeName }],
+      });
+    };
+
     const progressId = progress.addListener(({ value }) => setSuck(value));
 
     Animated.sequence([
@@ -123,50 +136,37 @@ const SplashScreen = ({ navigation }) => {
         easing: Easing.bezier(0.4, 0.0, 0.2, 1),
         useNativeDriver: false,
       }),
-    ]).start();
+      Animated.delay(ANIM_HOLD_MS),
+    ]).start(({ finished }) => {
+      if (!finished || !isMounted) return;
+      animDone = true;
+      goNext();
+    });
 
-    return () => {
-      progress.removeListener(progressId);
-    };
-  }, [progress]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const decideRoute = async () => {
-      const startedAt = Date.now();
-      let token = null;
-
+    (async () => {
       try {
-        token = await getSavedToken();
+        const token = await getSavedToken();
+        routeName = token ? "Home" : "Welcome";
       } catch (error) {
         console.log("[FixBee][Splash] token check failed", error?.message);
+        routeName = "Welcome";
       }
-
-      const elapsed = Date.now() - startedAt;
-      const wait = Math.max(0, SPLASH_MIN_MS - elapsed);
-
-      setTimeout(() => {
-        if (!isMounted) return;
-        navigation.reset({
-          index: 0,
-          routes: [{ name: token ? "Home" : "Welcome" }],
-        });
-      }, wait);
-    };
-
-    decideRoute();
+      if (!isMounted) return;
+      authDone = true;
+      goNext();
+    })();
 
     return () => {
       isMounted = false;
+      progress.removeListener(progressId);
     };
-  }, [navigation]);
+  }, [navigation, progress]);
 
-  // Ease: cream opens on TR/BL first (screenshot mid-frame), then hexes finish into wings
+
   const t = Math.pow(suck, 0.9);
   const radius = startRadius * (1 - t);
 
-  // Hex centers travel from the TL / BR corners into each wing
+
   const tlCenter = lerpPoint(
     { x: width * 0.22, y: height * 0.22 },
     leftWing,
