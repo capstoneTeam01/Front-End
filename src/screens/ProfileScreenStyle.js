@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
   // Twin-hexagon cream band, bleeds to screen edges.
   topArea: {
     marginHorizontal: -SIDE_PADDING,
-    height: 116,
   },
 
   topBg: {

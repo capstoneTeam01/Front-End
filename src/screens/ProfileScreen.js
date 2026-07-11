@@ -23,6 +23,7 @@ import styles from "./ProfileScreenStyle";
 
 const PROFILE_FRAME_WIDTH = 402;
 const PROFILE_HERO_BASE_WIDTH = 354;
+const PROFILE_TOP_AREA_HEIGHT = 116;
 
 const ProfileScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -123,7 +124,16 @@ const ProfileScreen = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         {/* Twin-hexagon cream background behind the status bar */}
-        <View style={styles.topArea}>
+        <View
+          style={[
+            styles.topArea,
+            {
+              height:
+                PROFILE_TOP_AREA_HEIGHT *
+                layoutScale,
+            },
+          ]}
+        >
           <HomeTopBackground style={styles.topBg} variant="profile" />
           <View style={{ height: insets.top }} />
         </View>
