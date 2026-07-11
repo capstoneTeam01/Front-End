@@ -26,6 +26,7 @@ import COLORS from "../constants/colors";
 import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const clean = (value) => String(value || "").trim();
+const isPublicImageUrl = (value) => /^https?:\/\//i.test(clean(value));
 
 const getIssueTitle = (routeParams = {}) =>
   clean(routeParams.fromIssue) ||
@@ -177,11 +178,20 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         hasUri: Boolean(asset.uri),
       });
       const uploaded = await uploadPhoto(asset);
+      const publicImageUrl = clean(
+        uploaded.uploadedImageUrl || uploaded.url,
+      );
+
+      if (!isPublicImageUrl(publicImageUrl)) {
+        throw new Error(
+          "The image uploaded, but a shareable image URL was not returned.",
+        );
+      }
 
       setQuoteImages((current) => [
         ...current,
         {
-          url: uploaded.uploadedImageUrl || uploaded.url || "",
+          url: publicImageUrl,
           thumbnailUri: asset.uri,
           label: `Issue Photo ${current.length + 1}`,
         },
@@ -224,6 +234,27 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
       Alert.alert(
         "Provider email missing",
         "None of the selected providers has an email address in the local provider cache.",
+      );
+      return;
+    }
+
+    if (!clean(draft?.photoId)) {
+      Alert.alert(
+        "Issue report unavailable",
+        "The analyzed photo ID is missing, so the PDF report cannot be attached. Please restart from the issue photo.",
+      );
+      return;
+    }
+
+    const emailImages = Array.isArray(draft?.images) ? draft.images : [];
+    const hasUnsharedImage = emailImages.some(
+      (image) => !isPublicImageUrl(image?.url),
+    );
+
+    if (!emailImages.length || hasUnsharedImage) {
+      Alert.alert(
+        "Image upload incomplete",
+        "One or more issue photos are not ready to include in the email. Please remove them and add them again.",
       );
       return;
     }
