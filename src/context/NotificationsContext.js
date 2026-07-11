@@ -8,6 +8,7 @@ import {
 } from "react";
 
 import { getNotifications } from "../api/getNotifications";
+import { getSavedToken } from "../features/auth/services/authSessionService";
 
 const COOLDOWN_MS = 3000;
 
@@ -32,6 +33,12 @@ export const NotificationsProvider = ({ children }) => {
 
     const request = (async () => {
       try {
+        const token = await getSavedToken();
+        if (!token) {
+          setUnreadCount(0);
+          return;
+        }
+
         const items = await getNotifications();
         const unread = items.filter((n) => !n.isDeleted && !n.isRead).length;
         setUnreadCount(unread);

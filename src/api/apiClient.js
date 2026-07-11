@@ -199,35 +199,41 @@ export const apiRequest = async (path, options = {}) => {
   }
 
   if (needsAuth && shouldRetryWithFreshToken(response, data)) {
-    console.log(
-      "[FixBee][Auth] backend rejected token, refreshing and retrying request",
-      {
-        path,
-        status: response.status,
-        message: data?.message || data?.error || data?.code,
-      },
-    );
+    // Guest / pre-auth requests (no token) can 401 — that is not a session expiry.
+    // Redirecting here was killing Splash before its animation finished.
+    const hadToken = Boolean(token);
 
-    markFixBeeWarmupStale();
-    await resetAuthSession({ reason: `auth-retry:${path}` });
-    token = await getTokenForRequest({
-      forceRefresh: true,
-      reason: `auth-retry:${path}`,
-    });
-    response = await rawApiRequest(path, options, token);
-    data = await parseJsonSafely(response);
-
-    // If it STILL fails auth after a fresh-token retry, the session is
-    // truly expired and unrecoverable — kick the user to Login.
-    if (shouldRetryWithFreshToken(response, data)) {
+    if (hadToken) {
       console.log(
-        "[FixBee][Auth] session expired and unrecoverable, redirecting to Login",
+        "[FixBee][Auth] backend rejected token, refreshing and retrying request",
         {
           path,
           status: response.status,
+          message: data?.message || data?.error || data?.code,
         },
       );
-      await handleSessionExpired();
+
+      markFixBeeWarmupStale();
+      await resetAuthSession({ reason: `auth-retry:${path}` });
+      token = await getTokenForRequest({
+        forceRefresh: true,
+        reason: `auth-retry:${path}`,
+      });
+      response = await rawApiRequest(path, options, token);
+      data = await parseJsonSafely(response);
+
+      // If it STILL fails auth after a fresh-token retry, the session is
+      // truly expired and unrecoverable — kick the user to Login.
+      if (shouldRetryWithFreshToken(response, data)) {
+        console.log(
+          "[FixBee][Auth] session expired and unrecoverable, redirecting to Login",
+          {
+            path,
+            status: response.status,
+          },
+        );
+        await handleSessionExpired();
+      }
     }
   }
 
