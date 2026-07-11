@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
 
   actionText: {
-    color: COLORS.mediumGrey,
+    color: COLORS.textSecondary,
     ...TYPE.small,
   },
 
