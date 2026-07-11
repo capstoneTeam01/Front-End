@@ -1,6 +1,10 @@
 import { resolveApiUrl } from "./resolveApiUrl";
-import { getTokenForRequest, resetAuthSession } from "../features/auth/services/authSessionService";
+import {
+  getTokenForRequest,
+  resetAuthSession,
+} from "../features/auth/services/authSessionService";
 import { markFixBeeWarmupStale } from "../bootstrap/appStartupWarmup";
+import { handleSessionExpired } from "../utils/sessionExpiry";
 
 const AUTH_RETRY_STATUSES = new Set([401, 403, 419, 440]);
 const DEFAULT_REQUEST_TIMEOUT_MS = 45000;
@@ -37,7 +41,10 @@ const NETWORK_ERROR_PATTERNS = [
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const buildUrl = (path) => {
-  if (String(path).startsWith("http://") || String(path).startsWith("https://")) {
+  if (
+    String(path).startsWith("http://") ||
+    String(path).startsWith("https://")
+  ) {
     return path;
   }
 
@@ -69,7 +76,7 @@ const shouldRetryWithFreshToken = (response, data) => {
   if (AUTH_RETRY_STATUSES.has(response.status)) {
     return true;
   }
-  
+
   const errorText = getErrorText(data);
   return AUTH_ERROR_PATTERNS.some((pattern) => errorText.includes(pattern));
 };
@@ -109,7 +116,9 @@ const fetchWithTimeout = async (requestUrl, fetchOptions, timeoutMs) => {
     });
   } catch (error) {
     if (error?.name === "AbortError") {
-      throw new Error(`Request timed out after ${Math.round(timeoutMs / 1000)} seconds.`);
+      throw new Error(
+        `Request timed out after ${Math.round(timeoutMs / 1000)} seconds.`,
+      );
     }
 
     throw error;
@@ -150,13 +159,15 @@ const rawApiRequest = async (path, options = {}, token) => {
       headers,
       body: json !== undefined ? JSON.stringify(json) : fetchOptions.body,
     },
-    resolvedTimeoutMs
+    resolvedTimeoutMs,
   );
 };
 
 export const apiRequest = async (path, options = {}) => {
   const needsAuth = options.auth !== false;
-  let token = needsAuth ? await getTokenForRequest({ reason: `api:${path}` }) : null;
+  let token = needsAuth
+    ? await getTokenForRequest({ reason: `api:${path}` })
+    : null;
   let response;
   let data;
 
@@ -176,7 +187,10 @@ export const apiRequest = async (path, options = {}) => {
     markFixBeeWarmupStale();
     if (needsAuth) {
       await resetAuthSession({ reason: `network-retry:${path}` });
-      token = await getTokenForRequest({ forceRefresh: true, reason: `network-retry:${path}` });
+      token = await getTokenForRequest({
+        forceRefresh: true,
+        reason: `network-retry:${path}`,
+      });
     }
 
     await delay(NETWORK_RETRY_DELAY_MS);
@@ -185,21 +199,44 @@ export const apiRequest = async (path, options = {}) => {
   }
 
   if (needsAuth && shouldRetryWithFreshToken(response, data)) {
-    console.log("[FixBee][Auth] backend rejected token, refreshing and retrying request", {
-      path,
-      status: response.status,
-      message: data?.message || data?.error || data?.code,
-    });
+    console.log(
+      "[FixBee][Auth] backend rejected token, refreshing and retrying request",
+      {
+        path,
+        status: response.status,
+        message: data?.message || data?.error || data?.code,
+      },
+    );
 
     markFixBeeWarmupStale();
     await resetAuthSession({ reason: `auth-retry:${path}` });
-    token = await getTokenForRequest({ forceRefresh: true, reason: `auth-retry:${path}` });
+    token = await getTokenForRequest({
+      forceRefresh: true,
+      reason: `auth-retry:${path}`,
+    });
     response = await rawApiRequest(path, options, token);
     data = await parseJsonSafely(response);
+
+    // If it STILL fails auth after a fresh-token retry, the session is
+    // truly expired and unrecoverable — kick the user to Login.
+    if (shouldRetryWithFreshToken(response, data)) {
+      console.log(
+        "[FixBee][Auth] session expired and unrecoverable, redirecting to Login",
+        {
+          path,
+          status: response.status,
+        },
+      );
+      await handleSessionExpired();
+    }
   }
 
   if (!response.ok) {
-    const error = new Error(data.message || data.error || `Request failed with status ${response.status}`);
+    const error = new Error(
+      data.message ||
+        data.error ||
+        `Request failed with status ${response.status}`,
+    );
     error.status = response.status;
     error.data = data;
     throw error;
@@ -220,7 +257,7 @@ export const apiPost = (path, json, options = {}) =>
     method: "POST",
     json,
   });
-  export const apiPatch = (path, json, options = {}) =>
+export const apiPatch = (path, json, options = {}) =>
   apiRequest(path, {
     ...options,
     method: "PATCH",
