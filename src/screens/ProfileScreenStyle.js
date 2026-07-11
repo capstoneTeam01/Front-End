@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
   // Twin-hexagon cream band, bleeds to screen edges.
   topArea: {
     marginHorizontal: -SIDE_PADDING,
-    height: 116,
   },
 
   topBg: {
@@ -30,7 +29,7 @@ const styles = StyleSheet.create({
 
   // Hero overlaps up into the cream band slightly.
   heroWrap: {
-    marginTop: -14,
+    marginTop: 0,
     alignItems: "center",
   },
 

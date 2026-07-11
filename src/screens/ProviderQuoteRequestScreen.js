@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Alert,
   Image,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,6 +13,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import { uploadPhoto } from "../api/uploadPhoto";
 import { loadProvidersByIds } from "../localDb/businessDirectoryProviderLocalDb";
@@ -26,7 +26,6 @@ import COLORS from "../constants/colors";
 import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const clean = (value) => String(value || "").trim();
-const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
 
 const getIssueTitle = (routeParams = {}) =>
   clean(routeParams.fromIssue) ||
@@ -380,15 +379,17 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         </View>
       </ScrollView>
 
-      <View style={[styles.bottomCta, { paddingBottom: bottomButtonSpace }]}>
-        {sending ? (
-          <ActivityIndicator />
-        ) : (
-          <ProviderPlainButton
-            title="Send Quote Request"
-            onPress={handleSendRequest}
-          />
-        )}
+      <View style={styles.bottomCta}>
+        <AuthFooterTray fill={COLORS.warmCream}>
+          {sending ? (
+            <ActivityIndicator />
+          ) : (
+            <ProviderPlainButton
+              title="Send Quote Request"
+              onPress={handleSendRequest}
+            />
+          )}
+        </AuthFooterTray>
       </View>
     </View>
   );
@@ -522,9 +523,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: SPACING.card,
-    backgroundColor: COLORS.honeyCream,
   },
   pdfTile: {
     width: 62,

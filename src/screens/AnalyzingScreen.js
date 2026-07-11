@@ -29,6 +29,10 @@ const analysisSteps = [
 
 const STEP_DURATION_MS = 1250;
 const ACTIVE_DOT_PULSE_MS = 650;
+const FIGMA_FRAME_WIDTH = 402;
+const TOP_BACKGROUND_AREA_HEIGHT = 116;
+const ANALYSIS_HERO_HEIGHT = 400;
+const ANALYSIS_HERO_TO_STEPS_GAP = 16;
 
 const AUTO_COMPLETED_STEP_COUNT =
   analysisSteps.length - 1;
@@ -114,7 +118,7 @@ const StepStatusIcon = ({
 
 const AnalyzingScreen = ({ onCancel }) => {
   const { width: screenWidth } = useWindowDimensions();
-  const layoutScale = screenWidth / 402;
+  const layoutScale = screenWidth / FIGMA_FRAME_WIDTH;
   const [
     completedStepCount,
     setCompletedStepCount,
@@ -150,10 +154,10 @@ const AnalyzingScreen = ({ onCancel }) => {
         style={[
           styles.heroContainer,
           {
-            top: 100 * layoutScale,
+            top: TOP_BACKGROUND_AREA_HEIGHT * layoutScale,
             left: 24 * layoutScale,
             width: 354 * layoutScale,
-            height: 400 * layoutScale,
+            height: ANALYSIS_HERO_HEIGHT * layoutScale,
           },
         ]}
       >
@@ -187,7 +191,11 @@ const AnalyzingScreen = ({ onCancel }) => {
         style={[
           styles.stepsCard,
           {
-            top: 516 * layoutScale,
+            top:
+              (TOP_BACKGROUND_AREA_HEIGHT +
+                ANALYSIS_HERO_HEIGHT +
+                ANALYSIS_HERO_TO_STEPS_GAP) *
+              layoutScale,
             left: 24 * layoutScale,
             right: 24 * layoutScale,
             minHeight: 238 * layoutScale,
