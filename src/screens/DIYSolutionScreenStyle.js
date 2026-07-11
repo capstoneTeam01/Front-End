@@ -150,29 +150,29 @@ const styles = StyleSheet.create({
   },
 
   warningBox: {
-    minHeight: 126,
-    borderRadius: RADIUS.big,
-    padding: 24,
+    minHeight: 100,
+    borderRadius: 24,
+    padding: 20,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 18,
+    marginBottom: 16,
     borderWidth: 1,
-    borderColor: COLORS.riskHigh,
-    backgroundColor: "#FFF1F3",
+    borderColor: "#C0001A",
+    backgroundColor: "#FFF4F5",
   },
 
   warningIcon: {
-    width: 68,
-    height: 74,
+    width: 60,
+    height: 60,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 24,
+    marginRight: 16,
   },
 
   warningText: {
     flex: 1,
     color: COLORS.secondary,
-    ...TYPE.body,
+    ...TYPE.small,
   },
 
   helpBox: {

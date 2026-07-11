@@ -37,7 +37,7 @@ const STEP_MARKER_FRONT_SIZE = {
   height: 45,
 };
 const DIY_WARNING_TEXT =
-  "Stop if water reaches nearby electrical outlets.";
+  "Stop immediately if the issue worsens.";
 
 const getPhotoId = (analysisResult) => {
   return (
@@ -544,7 +544,7 @@ for (
               variant="polygon9"
               width={64}
               height={71}
-              fill={COLORS.riskHigh}
+              fill="#C0001A"
             >
               <Ionicons
                 name="warning-outline"
