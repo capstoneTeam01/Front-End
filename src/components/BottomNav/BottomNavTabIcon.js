@@ -67,35 +67,44 @@ const HomeNavIcon = ({ isActive }) => {
   );
 };
 
+const scanActiveStroke = {
+  fill: "none",
+  stroke: ACTIVE_STROKE,
+  strokeWidth: 2,
+  strokeLinecap: "round",
+  strokeLinejoin: "round",
+};
+
 const ScanNavIcon = ({ isActive }) => {
   if (isActive) {
     return (
       <Svg
         width={NAV_ICON_SIZE}
         height={NAV_ICON_SIZE}
-        viewBox="0 0 20 20"
+        viewBox="0 0 24 24"
         fill="none"
       >
         <Path
-          d="M2.5 6.5V4.16667C2.5 3.72464 2.67559 3.30072 2.98816 2.98816C3.30072 2.67559 3.72464 2.5 4.16667 2.5H6.5V3.83333H4.83333V6.5H2.5Z"
-          {...activeFill}
+          d="M9 5.5H15C16.933 5.5 18.5 7.067 18.5 9V15C18.5 16.933 16.933 18.5 15 18.5H9C7.067 18.5 5.5 16.933 5.5 15V9C5.5 7.067 7.067 5.5 9 5.5Z"
+          fill={ACTIVE_FILL}
         />
         <Path
-          d="M13.5 2.5H15.8333C16.2754 2.5 16.6994 2.67559 17.0119 2.98816C17.3245 3.30072 17.5001 3.72464 17.5001 4.16667V6.5H16.1667V4.83333H13.5V2.5Z"
-          {...activeFill}
+          d="M3 7.5V5C3 3.89543 3.89543 3 5 3H7.5"
+          {...scanActiveStroke}
         />
         <Path
-          d="M17.5001 13.5V15.8333C17.5001 16.2753 17.3245 16.6992 17.0119 17.0118C16.6994 17.3244 16.2754 17.5 15.8334 17.5H13.5V16.1667H15.1667V13.5H17.5001Z"
-          {...activeFill}
+          d="M16.5 3H19C20.1046 3 21 3.89543 21 5V7.5"
+          {...scanActiveStroke}
         />
         <Path
-          d="M6.5 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6992 2.5 16.2753 2.5 15.8333V13.5H3.83333V15.1667H6.5V17.5Z"
-          {...activeFill}
+          d="M21 16.5V19C21 20.1046 20.1046 21 19 21H16.5"
+          {...scanActiveStroke}
         />
         <Path
-          d="M5.83325 9.2H14.1666V10.8H5.83325V9.2Z"
-          {...activeFill}
+          d="M7.5 21H5C3.89543 21 3 20.1046 3 19V16.5"
+          {...scanActiveStroke}
         />
+        <Path d="M7.5 12H16.5" {...scanActiveStroke} />
       </Svg>
     );
   }
