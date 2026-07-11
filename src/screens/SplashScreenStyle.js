@@ -6,6 +6,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  yellowLayer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  beeWrap: {
+    zIndex: 2,
+  },
 });
 
 export default styles;
