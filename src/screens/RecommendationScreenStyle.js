@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
   issueTitle: {
     color: COLORS.white,
     marginBottom: 12,
+    textTransform: "capitalize",
     ...TYPE.cardTitle,
   },
 

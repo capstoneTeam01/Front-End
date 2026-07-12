@@ -21,9 +21,8 @@ const styles = StyleSheet.create({
   estimateRow: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    gap: SPACING.sm,
   },
 
   estimateTile: {
@@ -57,6 +56,7 @@ const styles = StyleSheet.create({
   estimateValue: {
     color: COLORS.secondary,
     textAlign: "center",
+    textTransform: "capitalize",
     width: "100%",
     paddingHorizontal: 2,
     ...TYPE.small,
