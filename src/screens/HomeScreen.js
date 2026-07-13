@@ -8,6 +8,7 @@ import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
 import ScanHexButton from "../components/ScanHexButton/ScanHexButton";
 import CategoryCard from "../components/CategoryCard/CategoryCard";
 import CategoryPopup from "../components/CategoryPopup/CategoryPopup";
+import CaptureInstructionsPopup from "../components/CaptureInstructionsPopup/CaptureInstructionsPopup";
 import BottomNav from "../components/BottomNav/BottomNav";
 import CategoryIcon from "../components/CategoryIcon";
 
@@ -20,7 +21,11 @@ import styles from "./HomeScreenStyle";
 const HomeScreen = ({ navigation }) => {
   const { width: screenWidth } = useWindowDimensions();
   const layoutScale = screenWidth / FIGMA_FRAME_WIDTH;
-  const [popupVisible, setPopupVisible] = useState(false);
+
+  const [categoryPopupVisible, setCategoryPopupVisible] = useState(false);
+  const [capturePopupVisible, setCapturePopupVisible] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+
   const [location, setLocation] = useState("Vancouver");
 
   useEffect(() => {
@@ -51,9 +56,24 @@ const HomeScreen = ({ navigation }) => {
     };
   }, []);
 
-  const goToCategory = (cat) => {
-    setPopupVisible(false);
-    navigation?.navigate("Category", { categoryId: cat.id, title: cat.label });
+  const handleSelectCategory = (cat) => {
+    setSelectedCategoryId(cat.id);
+    setCategoryPopupVisible(false);
+    setCapturePopupVisible(true);
+  };
+
+  const handleScanNow = () => {
+    const params = {
+      categoryId: selectedCategoryId,
+      repairId: null,
+      title: "Start New Scan",
+      subtitle: "Capture a repair issue with AI guidance.",
+      openCamera: true,
+    };
+    setCapturePopupVisible(false);
+    requestAnimationFrame(() => {
+      navigation?.navigate("ScanCamera", params);
+    });
   };
 
   return (
@@ -81,7 +101,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={[styles.scanWrap, { marginTop: -50 * layoutScale }]}>
           <ScanHexButton
             size={87 * layoutScale}
-            onPress={() => setPopupVisible(true)}
+            onPress={() => setCategoryPopupVisible(true)}
           />
         </View>
 
@@ -99,7 +119,7 @@ const HomeScreen = ({ navigation }) => {
                   color={COLORS.primary}
                 />
               }
-              onPress={() => goToCategory(cat)}
+              onPress={() => handleSelectCategory(cat)}
             />
           ))}
         </View>
@@ -108,9 +128,15 @@ const HomeScreen = ({ navigation }) => {
       <BottomNav active="Home" />
 
       <CategoryPopup
-        visible={popupVisible}
-        onClose={() => setPopupVisible(false)}
-        onSelectCategory={goToCategory}
+        visible={categoryPopupVisible}
+        onClose={() => setCategoryPopupVisible(false)}
+        onSelectCategory={handleSelectCategory}
+      />
+
+      <CaptureInstructionsPopup
+        visible={capturePopupVisible}
+        onClose={() => setCapturePopupVisible(false)}
+        onScanNow={handleScanNow}
       />
     </View>
   );
