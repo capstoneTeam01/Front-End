@@ -8,14 +8,17 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
-import AppHeader, { ShapedBackground } from "../components/AppHeader/AppHeader";
+import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import HexAvatar from "../components/HexAvatar/HexAvatar";
 import CityPickerSheet from "../components/CityPickerSheet/CityPickerSheet";
 import { getMe } from "../api/getMe";
-import { updateProfile } from "../api/profileApi";
+import { updateProfile, uploadProfileImage } from "../api/profileApi";
 import COLORS from "../constants/colors";
 import styles from "./EditProfileScreenStyle";
 
@@ -25,9 +28,10 @@ const EditProfileScreen = ({ navigation }) => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [location, setLocation] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
   const [cityOpen, setCityOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [footerSize, setFooterSize] = useState({ width: 0, height: 0 });
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -37,11 +41,61 @@ const EditProfileScreen = ({ navigation }) => {
         if (user?.email) setEmail(user.email);
         if (user?.phone) setPhone(user.phone);
         if (user?.location) setLocation(user.location);
+        if (user?.profileImage) setProfileImage(user.profileImage);
       } catch (error) {
         console.log("[FixBee][EditProfile] load failed", error?.message);
       }
     })();
   }, []);
+
+  const handleEditAvatar = async () => {
+    try {
+      const permission =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permission.status !== "granted") {
+        Alert.alert(
+          "Gallery permission needed",
+          "Please allow photo library access to update your profile photo.",
+        );
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.85,
+      });
+
+      if (result.canceled || !result.assets?.[0]) return;
+
+      const asset = result.assets[0];
+      setUploadingAvatar(true);
+      // Show local preview immediately while upload runs
+      setProfileImage(asset.uri);
+
+      const data = await uploadProfileImage(asset);
+      const nextUrl = data?.profileImage || data?.user?.profileImage;
+      if (nextUrl) {
+        setProfileImage(nextUrl);
+      }
+    } catch (error) {
+      console.log("[FixBee][EditProfile] avatar upload failed", error?.message);
+      Alert.alert(
+        "Couldn't update photo",
+        error?.message || "Please try again.",
+      );
+      // Reload saved image if upload failed after local preview
+      try {
+        const { user } = await getMe();
+        setProfileImage(user?.profileImage || null);
+      } catch {
+        setProfileImage(null);
+      }
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
 
   const handleSave = async () => {
     const fields = {};
@@ -80,7 +134,17 @@ const EditProfileScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.avatarWrap}>
-            <HexAvatar size={120} showEditBadge onEditPress={() => {}} />
+            <HexAvatar
+              size={98}
+              imageUri={profileImage}
+              showEditBadge
+              onEditPress={uploadingAvatar ? undefined : handleEditAvatar}
+            />
+            {uploadingAvatar && (
+              <View style={styles.avatarLoading}>
+                <ActivityIndicator color={COLORS.secondary} />
+              </View>
+            )}
           </View>
 
           <Text style={styles.label}>Full Name</Text>
@@ -88,7 +152,7 @@ const EditProfileScreen = ({ navigation }) => {
             style={styles.input}
             value={fullName}
             onChangeText={setFullName}
-            placeholder="Your full name"
+            placeholder="James mitchell"
             placeholderTextColor={COLORS.placeholder}
           />
 
@@ -116,7 +180,7 @@ const EditProfileScreen = ({ navigation }) => {
             style={styles.input}
             value={password}
             onChangeText={setPassword}
-            placeholder="Leave blank to keep current"
+            placeholder="*************"
             placeholderTextColor={COLORS.placeholder}
             secureTextEntry
             autoCapitalize="none"
@@ -141,28 +205,28 @@ const EditProfileScreen = ({ navigation }) => {
           </TouchableOpacity>
         </ScrollView>
 
-        <View
-          style={styles.footer}
-          onLayout={(e) => setFooterSize(e.nativeEvent.layout)}
-        >
-          <ShapedBackground size={footerSize} fill={COLORS.warmCream} flipped />
-          <TouchableOpacity
-            style={[styles.footerBtn, styles.cancelBtn]}
-            onPress={() => navigation.goBack()}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.cancelLabel}>Cancel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.footerBtn, styles.saveBtn]}
-            onPress={handleSave}
-            activeOpacity={0.85}
-            disabled={saving}
-          >
-            <Text style={styles.saveLabel}>
-              {saving ? "Saving..." : "Save"}
-            </Text>
-          </TouchableOpacity>
+        <View style={styles.footer}>
+          <AuthFooterTray fill={COLORS.warmCream}>
+            <View style={styles.footerRow}>
+              <TouchableOpacity
+                style={[styles.footerBtn, styles.cancelBtn]}
+                onPress={() => navigation.goBack()}
+                activeOpacity={0.85}
+              >
+                <Text style={styles.cancelLabel}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.footerBtn, styles.saveBtn]}
+                onPress={handleSave}
+                activeOpacity={0.85}
+                disabled={saving}
+              >
+                <Text style={styles.saveLabel}>
+                  {saving ? "Saving..." : "Save"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </AuthFooterTray>
         </View>
       </KeyboardAvoidingView>
 

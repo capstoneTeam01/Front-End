@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
-  ActivityIndicator,
+  Animated,
   Pressable,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import OnboardingIdentifying from "../components/Mascot/OnboardingIdentifying.svg";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
+import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
 import HexTile from "../components/HexTile/HexTile";
 import COLORS from "../constants/colors";
-import {
-  AnalysisHeroHexagon,
-  BottomActionBackground,
-  TopBackgroundPattern,
-} from "./AnalyzingScreenShapes";
+import { TopBackgroundPattern } from "./AnalyzingScreenShapes";
 import styles from "./AnalyzingScreenStyle";
 
 const analysisSteps = [
@@ -24,9 +28,12 @@ const analysisSteps = [
 ];
 
 const STEP_DURATION_MS = 1250;
+const ACTIVE_DOT_PULSE_MS = 650;
+const FIGMA_FRAME_WIDTH = 402;
+const TOP_BACKGROUND_AREA_HEIGHT = 116;
+const ANALYSIS_HERO_HEIGHT = 400;
+const ANALYSIS_HERO_TO_STEPS_GAP = 16;
 
-// The first three steps complete automatically.
-// The fourth step keeps loading until this screen is replaced.
 const AUTO_COMPLETED_STEP_COUNT =
   analysisSteps.length - 1;
 
@@ -34,6 +41,39 @@ const StepStatusIcon = ({
   isActive,
   isCompleted,
 }) => {
+  const dotScale = useRef(
+    new Animated.Value(1)
+  ).current;
+
+  useEffect(() => {
+    if (!isActive) {
+      dotScale.setValue(1);
+      return undefined;
+    }
+
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(dotScale, {
+          toValue: 1.45,
+          duration: ACTIVE_DOT_PULSE_MS,
+          useNativeDriver: true,
+        }),
+        Animated.timing(dotScale, {
+          toValue: 1,
+          duration: ACTIVE_DOT_PULSE_MS,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    animation.start();
+
+    return () => {
+      animation.stop();
+      dotScale.setValue(1);
+    };
+  }, [dotScale, isActive]);
+
   let backgroundColor = COLORS.warmCream;
 
   if (isCompleted) {
@@ -60,9 +100,15 @@ const StepStatusIcon = ({
         ) : null}
 
         {isActive ? (
-          <ActivityIndicator
-            size="small"
-            color={COLORS.secondary}
+          <Animated.View
+            style={[
+              styles.activeDot,
+              {
+                transform: [
+                  { scale: dotScale },
+                ],
+              },
+            ]}
           />
         ) : null}
       </HexTile>
@@ -71,6 +117,8 @@ const StepStatusIcon = ({
 };
 
 const AnalyzingScreen = ({ onCancel }) => {
+  const { width: screenWidth } = useWindowDimensions();
+  const layoutScale = screenWidth / FIGMA_FRAME_WIDTH;
   const [
     completedStepCount,
     setCompletedStepCount,
@@ -102,70 +150,89 @@ const AnalyzingScreen = ({ onCancel }) => {
         style={styles.topPattern}
       />
 
-      <View style={styles.content}>
-        <View style={styles.heroContainer}>
-          <AnalysisHeroHexagon
-            style={styles.heroGraphic}
-          />
-
+      <View
+        style={[
+          styles.heroContainer,
+          {
+            top: TOP_BACKGROUND_AREA_HEIGHT * layoutScale,
+            left: 24 * layoutScale,
+            width: 354 * layoutScale,
+            height: ANALYSIS_HERO_HEIGHT * layoutScale,
+          },
+        ]}
+      >
+        <HeroHexagon width={354 * layoutScale}>
           <View style={styles.heroContent}>
-            <View
-              style={styles.userHexagonContainer}
-            >
-              <HexTile
-                size={78}
-                flatTop={false}
-                fill={COLORS.lightHoney}
-              >
-                <Ionicons
-                  name="person-outline"
-                  size={42}
-                  color={COLORS.secondary}
-                  style={styles.userIcon}
-                />
-              </HexTile>
-            </View>
+            <OnboardingIdentifying
+              width={134 * layoutScale}
+              height={225 * layoutScale}
+              style={[
+                styles.mascot,
+                {
+                  top: 28 * layoutScale,
+                  left: 110 * layoutScale,
+                },
+              ]}
+            />
 
-            <Text style={styles.heroTitle}>
-              Analyzing Issue
+            <Text
+              style={[
+                styles.heroTitle,
+                { top: 286 * layoutScale },
+              ]}
+            >
+              Analyzing Issue..
             </Text>
           </View>
-        </View>
-
-        <View style={styles.stepsCard}>
-          {analysisSteps.map(
-            (step, index) => {
-              const isCompleted =
-                index < completedStepCount;
-
-              const isActive =
-                index === completedStepCount;
-
-              return (
-                <View
-                  key={step}
-                  style={styles.stepRow}
-                >
-                  <StepStatusIcon
-                    isActive={isActive}
-                    isCompleted={isCompleted}
-                  />
-
-                  <Text style={styles.stepText}>
-                    {step}
-                  </Text>
-                </View>
-              );
-            }
-          )}
-        </View>
+        </HeroHexagon>
       </View>
 
-      <View style={styles.bottomArea}>
-        <BottomActionBackground
-          style={styles.bottomBackground}
-        />
+      <View
+        style={[
+          styles.stepsCard,
+          {
+            top:
+              (TOP_BACKGROUND_AREA_HEIGHT +
+                ANALYSIS_HERO_HEIGHT +
+                ANALYSIS_HERO_TO_STEPS_GAP) *
+              layoutScale,
+            left: 24 * layoutScale,
+            right: 24 * layoutScale,
+            minHeight: 238 * layoutScale,
+          },
+        ]}
+      >
+        {analysisSteps.map(
+          (step, index) => {
+            const isCompleted =
+              index < completedStepCount;
 
+            const isActive =
+              index === completedStepCount;
+
+            return (
+              <View
+                key={step}
+                style={styles.stepRow}
+              >
+                <StepStatusIcon
+                  isActive={isActive}
+                  isCompleted={isCompleted}
+                />
+
+                <Text style={styles.stepText}>
+                  {step}
+                </Text>
+              </View>
+            );
+          }
+        )}
+      </View>
+
+      <AuthFooterTray
+        fill={COLORS.warmCream}
+        style={styles.bottomArea}
+      >
         <Pressable
           onPress={onCancel}
           style={({ pressed }) => [
@@ -179,7 +246,7 @@ const AnalyzingScreen = ({ onCancel }) => {
             Cancel
           </Text>
         </Pressable>
-      </View>
+      </AuthFooterTray>
     </View>
   );
 };

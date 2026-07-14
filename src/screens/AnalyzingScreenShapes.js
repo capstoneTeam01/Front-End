@@ -1,43 +1,48 @@
 import React from "react";
-import Svg, { Path, Polygon, Rect } from "react-native-svg";
+import { View, useWindowDimensions } from "react-native";
+import Svg, { Path, Polygon } from "react-native-svg";
 
+import PolygonAsset from "../components/PolygonAsset";
 import COLORS from "../constants/colors";
 
 const TopBackgroundPattern = ({ style }) => {
-  return (
-    <Svg
-      style={style}
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-    >
-      <Rect
-        width="100"
-        height="100"
-        fill={COLORS.warmCream}
-      />
+  const { width: screenWidth } = useWindowDimensions();
+  const frameScale = screenWidth / 402;
+  const polygonWidth = 346.41 * frameScale;
+  const polygonHeight = 393.81 * frameScale;
+  const leftOffset = -157.21 * frameScale;
+  const rightOffset = 215.79 * frameScale;
+  const topOffset = -195.91 * frameScale;
 
-      <Path
-        d="
-          M43 0
-          H57
-          V35
-          C57 43 61 48 68 53
-          L100 78
-          V100
-          H96
-          L62 73
-          C56 68 52 62 50 56
-          C48 62 44 68 38 73
-          L4 100
-          H0
-          V78
-          L32 53
-          C39 48 43 43 43 35
-          Z
-        "
-        fill={COLORS.white}
+  return (
+    <View style={style} pointerEvents="none">
+      <PolygonAsset
+        variant="polygon8"
+        width={polygonWidth}
+        height={polygonHeight}
+        fill={COLORS.warmCream}
+        stroke="transparent"
+        preserveAspectRatio="none"
+        style={{
+          position: "absolute",
+          left: leftOffset,
+          top: topOffset,
+        }}
       />
-    </Svg>
+      <PolygonAsset
+        variant="polygon8"
+        width={polygonWidth}
+        height={polygonHeight}
+        fill={COLORS.warmCream}
+        stroke="transparent"
+        preserveAspectRatio="none"
+        style={{
+          position: "absolute",
+          left: rightOffset,
+          top: topOffset,
+        }}
+      />
+    </View>
   );
 };
 

@@ -1,14 +1,15 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   button: {
-    height: 56,
-    borderRadius: 16,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.lightHoney,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
   },
   buttonDisabled: {
     opacity: 0.55,
@@ -18,16 +19,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  googleG: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#EA4335",
+  googleIcon: {
     marginRight: 10,
   },
   label: {
-    fontSize: 16,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...TYPE.button,
   },
 });
 

@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 import { SIDE_PADDING, RADIUS, TYPE } from "../constants/layout";
+import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   safe: {
@@ -27,24 +28,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerTitle: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...TYPE.sectionTitle,
   },
   scroll: {
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 16,
-    paddingBottom: 24,
+    paddingTop: 24,
+    paddingBottom: 132,
   },
   avatarWrap: {
-    alignItems: "left",
+    alignItems: "flex-start",
     marginVertical: 16,
+    position: "relative",
+  },
+  avatarLoading: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255,255,255,0.45)",
+    borderRadius: 16,
   },
   label: {
-    fontSize: TYPE.body.fontSize,
     color: COLORS.textPrimary,
-    marginTop: 18,
+    marginTop: 16,
     marginBottom: 8,
+    ...TYPE.small,
   },
   input: {
     height: 52,
@@ -52,11 +60,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.greyText,
     paddingHorizontal: 16,
-    fontSize: TYPE.body.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.small,
   },
   inputDisabled: {
-    backgroundColor: COLORS.surface,
     color: COLORS.textMuted,
   },
   cityField: {
@@ -70,18 +77,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   cityText: {
-    fontSize: TYPE.body.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.small,
   },
   cityPlaceholder: {
     color: COLORS.placeholder,
   },
   footer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  footerRow: {
     flexDirection: "row",
-    gap: 12,
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: 16,
-    paddingBottom: 16,
+    gap: 20,
   },
   footerBtn: {
     flex: 1,
@@ -94,17 +104,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightHoney,
   },
   cancelLabel: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
-    color: COLORS.textPrimary,
+    color: COLORS.secondary,
+    ...HEADER_FOOTER.footerButton,
   },
   saveBtn: {
     backgroundColor: COLORS.primary,
   },
   saveLabel: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
-    color: COLORS.textPrimary,
+    color: COLORS.secondary,
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

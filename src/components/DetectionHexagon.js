@@ -3,6 +3,7 @@ import Svg, { Polygon } from "react-native-svg";
 
 import { pointsToAttr } from "./outlineTracking";
 import { useLiveOutline } from "./useLiveOutline";
+import { TYPE } from "../constants/layout";
 
 const DetectionHexagon = ({
   detection,
@@ -62,8 +63,7 @@ const styles = StyleSheet.create({
     left: 24,
     right: 24,
     textAlign: "center",
-    fontSize: 14,
-    fontWeight: "700",
+    ...TYPE.body,
     textShadowColor: "rgba(0, 0, 0, 0.8)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,

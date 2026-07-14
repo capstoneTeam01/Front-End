@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Alert,
   Image,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,6 +13,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import { uploadPhoto } from "../api/uploadPhoto";
 import { loadProvidersByIds } from "../localDb/businessDirectoryProviderLocalDb";
@@ -23,10 +23,10 @@ import {
   sendProviderQuoteRequestFromPreview,
 } from "../services/providerQuoteEmailService";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
+import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const clean = (value) => String(value || "").trim();
-const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
+const isPublicImageUrl = (value) => /^https?:\/\//i.test(clean(value));
 
 const getIssueTitle = (routeParams = {}) =>
   clean(routeParams.fromIssue) ||
@@ -178,11 +178,20 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         hasUri: Boolean(asset.uri),
       });
       const uploaded = await uploadPhoto(asset);
+      const publicImageUrl = clean(
+        uploaded.uploadedImageUrl || uploaded.url,
+      );
+
+      if (!isPublicImageUrl(publicImageUrl)) {
+        throw new Error(
+          "The image uploaded, but a shareable image URL was not returned.",
+        );
+      }
 
       setQuoteImages((current) => [
         ...current,
         {
-          url: uploaded.uploadedImageUrl || uploaded.url || "",
+          url: publicImageUrl,
           thumbnailUri: asset.uri,
           label: `Issue Photo ${current.length + 1}`,
         },
@@ -225,6 +234,27 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
       Alert.alert(
         "Provider email missing",
         "None of the selected providers has an email address in the local provider cache.",
+      );
+      return;
+    }
+
+    if (!clean(draft?.photoId)) {
+      Alert.alert(
+        "Issue report unavailable",
+        "The analyzed photo ID is missing, so the PDF report cannot be attached. Please restart from the issue photo.",
+      );
+      return;
+    }
+
+    const emailImages = Array.isArray(draft?.images) ? draft.images : [];
+    const hasUnsharedImage = emailImages.some(
+      (image) => !isPublicImageUrl(image?.url),
+    );
+
+    if (!emailImages.length || hasUnsharedImage) {
+      Alert.alert(
+        "Image upload incomplete",
+        "One or more issue photos are not ready to include in the email. Please remove them and add them again.",
       );
       return;
     }
@@ -380,15 +410,17 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         </View>
       </ScrollView>
 
-      <View style={[styles.bottomCta, { paddingBottom: bottomButtonSpace }]}>
-        {sending ? (
-          <ActivityIndicator />
-        ) : (
-          <ProviderPlainButton
-            title="Send Quote Request"
-            onPress={handleSendRequest}
-          />
-        )}
+      <View style={styles.bottomCta}>
+        <AuthFooterTray fill={COLORS.warmCream}>
+          {sending ? (
+            <ActivityIndicator />
+          ) : (
+            <ProviderPlainButton
+              title="Send Quote Request"
+              onPress={handleSendRequest}
+            />
+          )}
+        </AuthFooterTray>
       </View>
     </View>
   );
@@ -400,92 +432,74 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   content: {
-    paddingHorizontal: 24,
-    paddingTop: 20,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: SPACING.section,
     paddingBottom: 130,
   },
   title: {
-    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
-    fontSize: 19,
-    fontWeight: "800",
+    ...TYPE.cardTitle,
   },
   subtitle: {
-    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
-    fontSize: 12,
-    lineHeight: 17,
-    marginTop: 6,
-    marginBottom: 20,
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.card,
+    ...TYPE.caption,
   },
   mailCard: {
     backgroundColor: COLORS.white,
-    borderRadius: 18,
-    padding: 18,
+    borderRadius: RADIUS.big,
+    padding: SPACING.card,
     borderWidth: 1,
     borderColor: COLORS.providerLightGray,
   },
   mailLabel: {
-    fontFamily: FONT.bold,
     color: COLORS.providerMidGray,
-    fontSize: 12,
-    fontWeight: "700",
-    marginTop: 12,
+    marginTop: SPACING.card,
     marginBottom: 4,
+    ...TYPE.caption,
   },
   mailLink: {
-    fontFamily: FONT.bold,
     color: COLORS.honeyDark,
-    fontSize: 13,
-    fontWeight: "700",
     marginBottom: 2,
+    ...TYPE.small,
   },
   subject: {
-    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
-    fontSize: 13,
-    fontWeight: "800",
     marginBottom: 4,
+    ...TYPE.small,
   },
   bodyText: {
-    fontFamily: FONT.regular,
     color: COLORS.textPrimary,
-    fontSize: 12,
-    lineHeight: 17,
+    ...TYPE.small,
   },
   bodyInput: {
-    fontFamily: FONT.regular,
     minHeight: 250,
     color: COLORS.textPrimary,
-    fontSize: 12,
-    lineHeight: 17,
     padding: 0,
     margin: 0,
+    ...TYPE.small,
   },
   imagesHeaderRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 18,
-    marginBottom: 8,
+    marginTop: SPACING.card,
+    marginBottom: SPACING.sm,
   },
   imagesTitle: {
-    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
-    fontSize: 13,
-    fontWeight: "800",
+    ...TYPE.small,
   },
   imagesHint: {
-    fontFamily: FONT.bold,
     color: COLORS.providerMidGray,
-    fontSize: 10,
-    fontWeight: "700",
+    ...TYPE.caption,
   },
   imagesRow: {
     flexDirection: "row",
     alignItems: "flex-start",
     flexWrap: "wrap",
-    gap: 13,
+    gap: SPACING.card,
   },
   imageTile: {
     width: 68,
@@ -495,7 +509,7 @@ const styles = StyleSheet.create({
   thumbnail: {
     width: 62,
     height: 62,
-    borderRadius: 12,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.providerLightGray,
   },
   removeImageButton: {
@@ -512,24 +526,19 @@ const styles = StyleSheet.create({
     borderColor: COLORS.white,
   },
   removeImageText: {
-    fontFamily: FONT.extraBold,
     color: COLORS.providerBrown,
-    fontSize: 16,
-    lineHeight: 18,
-    fontWeight: "900",
+    ...TYPE.body,
   },
   imageLabel: {
-    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
-    fontSize: 9,
-    fontWeight: "700",
     marginTop: 5,
     textAlign: "center",
+    ...TYPE.caption,
   },
   addImageTile: {
     width: 62,
     height: 62,
-    borderRadius: 12,
+    borderRadius: RADIUS.field,
     borderWidth: 1,
     borderColor: COLORS.honeyLight,
     backgroundColor: COLORS.honeyCream,
@@ -537,24 +546,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   addImageText: {
-    fontFamily: FONT.regular,
     color: COLORS.honey,
-    fontSize: 25,
-    fontWeight: "300",
+    ...TYPE.sectionTitle,
   },
   bottomCta: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: 22,
-    paddingTop: 12,
-    backgroundColor: COLORS.honeyCream,
   },
   pdfTile: {
     width: 62,
     height: 62,
-    borderRadius: 12,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.honeyCream,
     paddingHorizontal: 8,
     paddingTop: 7,
@@ -563,11 +567,8 @@ const styles = StyleSheet.create({
   },
 
   pdfTileText: {
-    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
-    fontSize: 9,
-    lineHeight: 13,
-    fontWeight: "700",
+    ...TYPE.caption,
   },
 
   pdfTileAccent: {

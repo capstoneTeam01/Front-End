@@ -1,44 +1,73 @@
-import React from "react";
-import { View } from "react-native";
-import Svg, { Polygon } from "react-native-svg";
+import React, { useId } from "react";
+import { Pressable, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Svg, { ClipPath, Defs, Image as SvgImage, Path } from "react-native-svg";
 
 import COLORS from "../../constants/colors";
+import PolygonAsset, { POLYGON_ASSETS } from "../PolygonAsset";
 import styles from "./HexAvatarStyle";
 
-const HexAvatar = ({ size = 110, showEditBadge = false, onEditPress }) => {
-  
-  const w = size;
-  const h = size;
-  const points = [
-    [w * 0.5, 0],
-    [w, h * 0.25],
-    [w, h * 0.75],
-    [w * 0.5, h],
-    [0, h * 0.75],
-    [0, h * 0.25],
-  ]
-    .map(([x, y]) => `${x},${y}`)
-    .join(" ");
+const HEX_PATH = POLYGON_ASSETS.polygon9.path;
+
+const HexAvatar = ({
+  size = 110,
+  imageUri = null,
+  showEditBadge = false,
+  onEditPress,
+}) => {
+  const height = (size * 89) / 80;
+  const clipId = useId().replace(/:/g, "");
+  const hasImage = Boolean(imageUri);
 
   return (
-    <View style={[styles.wrap, { width: size, height: size }]}>
-      <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <Polygon points={points} fill={COLORS.lightHoney} />
-      </Svg>
-
-      <View style={styles.iconLayer}>
-        <Ionicons
-          name="person-outline"
-          size={size * 0.32}
-          color={COLORS.honeyBrown}
-        />
-      </View>
+    <View style={[styles.wrap, { width: size, height }]}>
+      {hasImage ? (
+        <Svg width={size} height={height} viewBox="0 0 80 89">
+          <Defs>
+            <ClipPath id={clipId}>
+              <Path d={HEX_PATH} />
+            </ClipPath>
+          </Defs>
+          <Path d={HEX_PATH} fill={COLORS.lightHoney} />
+          <SvgImage
+            href={imageUri}
+            x="0"
+            y="0"
+            width="80"
+            height="89"
+            preserveAspectRatio="xMidYMid slice"
+            clipPath={`url(#${clipId})`}
+          />
+        </Svg>
+      ) : (
+        <>
+          <PolygonAsset
+            variant="polygon9"
+            width={size}
+            height={height}
+            fill={COLORS.lightHoney}
+            style={styles.polygon}
+          />
+          <View style={styles.iconLayer}>
+            <Ionicons
+              name="person-outline"
+              size={size * 0.34}
+              color={COLORS.secondary}
+            />
+          </View>
+        </>
+      )}
 
       {showEditBadge && (
-        <View style={styles.editBadge}>
+        <Pressable
+          onPress={onEditPress}
+          style={styles.editBadge}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="Edit profile photo"
+        >
           <Ionicons name="pencil" size={14} color={COLORS.white} />
-        </View>
+        </Pressable>
       )}
     </View>
   );

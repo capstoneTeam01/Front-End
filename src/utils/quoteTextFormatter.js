@@ -1,6 +1,11 @@
 import { buildPreferredScheduleText } from "./scheduleFormatter";
 
 const clean = (value) => String(value || "").trim();
+const capitalizeFirstLetter = (value) => {
+  const text = clean(value);
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
+};
+
 export const sentenceCase = (value, fallback = "Repair issue") => {
   const text = clean(value) || fallback;
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -183,12 +188,10 @@ const renderPlainLines = (lines = []) =>
     .filter(Boolean)
     .map(
       (line) =>
-        `<div style="font-size:16px;line-height:1.55;color:#ffffff;margin-top:8px;">${escapeHtml(line)}</div>`,
+        `<div style="font-size:16px;line-height:1.5;color:#ffffff;margin-top:8px;">${escapeHtml(line)}</div>`,
     )
     .join("");
 
-// Gmail deep links and Android mail intents usually open a plain-text compose screen.
-// Keep this body as simple plain text so Gmail does not need HTML to preserve it.
 export const buildPlainQuoteEmailBody = ({
   issueTitle,
   detectedObject,
@@ -202,13 +205,10 @@ export const buildPlainQuoteEmailBody = ({
   imageUrl,
   requesterName,
   requesterEmail,
-  requestReference,
 }) => {
   const schedule = buildPreferredScheduleText({ date, time });
   const serviceAddress = splitServiceAddress(fullAddress);
 
-  // Keep urgency/cost/time available for app screens, but do not include them in
-  // provider emails. The email is meant to stay concise and request-focused.
   console.log("[FixBee][QuoteEmail] omitted internal estimate fields from email body", {
     hasUrgency: Boolean(clean(urgency)),
     hasEstimatedCostRange: Boolean(clean(estimatedCostRange)),
@@ -223,29 +223,28 @@ export const buildPlainQuoteEmailBody = ({
     "The user is requesting help with the following home repair issue:",
     "",
     `Issue: ${issueTitle}`,
-    detectedObject ? `Detected object: ${sentenceCase(detectedObject, detectedObject)}` : "",
+    detectedObject ? `Detected Object: ${sentenceCase(detectedObject, detectedObject)}` : "",
     "",
-    "Service request:",
+    "Service Request:",
     `Location: ${serviceAddress.location}`,
     serviceAddress.city ? `City: ${serviceAddress.city}` : "",
-    `Preferred date: ${schedule.preferredDate}`,
-    `Preferred time: ${schedule.preferredTime}`,
+    `Preferred Date: ${schedule.preferredDate}`,
+    `Preferred Time: ${schedule.preferredTime}`,
     "",
-    `Additional notes: ${clean(notes) || "None"}`,
+    `Additional Notes: ${clean(notes) || "None"}`,
     "",
     imageUrl
-      ? "Issue photo: Image thumbnail will be included in the email."
-      : "Issue photo: Image thumbnail was not available for this preview.",
+      ? "Issue Photo: Image thumbnail will be included in the email."
+      : "Issue Photo: Image thumbnail was not available for this preview.",
     "",
     "Could you please reply to the user as soon as possible with your availability or next steps?",
     "",
-    `User email: ${clean(requesterEmail) || "Included in CC by FixBee"}`,
+    `User Email: ${clean(requesterEmail) || "Included in CC by FixBee"}`,
     "",
     "Warm Regards,",
     "FixBee Team",
     "",
-    `Request submitted by: ${clean(requesterName) || "FixBee User"}`,
-    clean(requestReference) ? `Request reference: ${clean(requestReference)}` : "",
+    `Request Submitted By: ${clean(requesterName) || "FixBee User"}`,
   ].join("\n");
 };
 
@@ -264,7 +263,6 @@ export const buildHtmlQuoteEmailBody = ({
   requesterName,
   requesterEmail,
   editedBody,
-  requestReference,
 }) => {
   const schedule = buildPreferredScheduleText({ date, time });
   const edited = clean(editedBody) ? parseEditedQuoteBody(editedBody) : null;
@@ -304,86 +302,84 @@ export const buildHtmlQuoteEmailBody = ({
     photoItems.push({ url: clean(imageUrl), label: "Issue Photo" });
   }
 
-  const photoHtml = photoItems.length
-    ? photoItems
-        .map(
-          (image) => `
-            <td style="padding-right:12px;padding-bottom:8px;text-align:center;vertical-align:top;">
+  const photoCells = photoItems.map(
+    (image) => `
+            <td style="padding-right:16px;padding-bottom:8px;text-align:center;vertical-align:top;">
               <a href="${escapeHtml(image.url)}" target="_blank" style="text-decoration:none;">
-                <img src="${escapeHtml(image.url)}" alt="${escapeHtml(image.label)}" style="width:128px;height:128px;object-fit:cover;border-radius:14px;border:1px solid #303030;display:block;" />
+                <img src="${escapeHtml(image.url)}" alt="${escapeHtml(image.label)}" style="width:128px;height:128px;object-fit:cover;border-radius:12px;border:1px solid #303030;display:block;" />
               </a>
-              <div style="font-size:12px;color:#aaa;margin-top:8px;">${escapeHtml(image.label)}</div>
+              <div style="font-size:12px;line-height:16px;font-weight:500;color:#aaa;margin-top:8px;">${escapeHtml(capitalizeFirstLetter(image.label))}</div>
             </td>
           `,
-        )
-        .join("")
-    : `<td style="font-size:14px;color:#fff;">Image thumbnail will be included in the email.</td>`;
+  );
+
+  const photoHtml = photoCells.length
+    ? Array.from({ length: Math.ceil(photoCells.length / 2) }, (_, rowIndex) => {
+        const rowStart = rowIndex * 2;
+        return `<tr>${photoCells.slice(rowStart, rowStart + 2).join("")}</tr>`;
+      }).join("")
+    : `<tr><td style="font-size:14px;line-height:20px;color:#ffffff;">Image thumbnail will be included in the email.</td></tr>`;
 
   return `
-  <div style="margin:0;padding:22px;background:#202010;font-family:Arial,Helvetica,sans-serif;color:#ffffff;">
-    <div style="max-width:620px;margin:0 auto;background:#25230f;border:1px solid #4d4516;border-radius:18px;padding:26px;">
-      <div style="font-size:15px;font-weight:700;color:#f2d8bf;margin-bottom:12px;">FixBee Service Request</div>
-      <h1 style="font-size:28px;line-height:1.2;margin:0 0 24px 0;color:#ffffff;">${escapeHtml(finalIssueTitle)}</h1>
+  <div style="margin:0;padding:24px;background:#202010;font-family:Rubik,Arial,Helvetica,sans-serif;color:#ffffff;">
+    <div style="max-width:620px;margin:0 auto;background:#25230f;border:1px solid #4d4516;border-radius:20px;padding:24px;">
+      <div style="font-size:12px;line-height:16px;font-weight:500;color:#f2d8bf;margin-bottom:8px;">FixBee Service Request</div>
+      <h1 style="font-size:28px;line-height:34px;font-weight:600;margin:0 0 24px 0;color:#ffffff;">${escapeHtml(finalIssueTitle)}</h1>
 
-      <p style="font-size:17px;line-height:1.55;margin:0 0 24px 0;color:#ffffff;">Hello Team,</p>
-      <p style="font-size:17px;line-height:1.55;margin:0 0 24px 0;color:#ffffff;">
+      <p style="font-size:16px;line-height:24px;margin:0 0 16px 0;color:#ffffff;">Hello Team,</p>
+      <p style="font-size:16px;line-height:24px;margin:0 0 24px 0;color:#ffffff;">
         FixBee is sending this service request on behalf of a user who needs help with a home repair issue.
         Please review the details below and reply to the user with your availability or next steps.
       </p>
       ${edited?.introLines?.length ? renderPlainLines(edited.introLines) : ""}
 
-      <div style="background:#121212;border:1px solid #3a3a3a;border-radius:16px;padding:18px;margin-bottom:18px;">
-        <div style="font-size:18px;font-weight:800;color:#f2d8bf;margin-bottom:12px;">Issue Summary</div>
-        <div style="font-size:16px;line-height:1.55;color:#ffffff;"><strong>Issue:</strong> ${escapeHtml(finalIssueTitle)}</div>
+      <div style="background:#121212;border:1px solid #3a3a3a;border-radius:16px;padding:16px;margin-bottom:16px;">
+        <div style="font-size:18px;line-height:24px;font-weight:500;color:#f2d8bf;margin-bottom:12px;">Issue Summary</div>
+        <div style="font-size:16px;line-height:24px;color:#ffffff;"><strong>Issue:</strong> ${escapeHtml(finalIssueTitle)}</div>
         ${
           finalDetectedObject
-            ? `<div style="font-size:16px;line-height:1.55;color:#ffffff;"><strong>Detected object:</strong> ${escapeHtml(sentenceCase(finalDetectedObject, finalDetectedObject))}</div>`
+            ? `<div style="font-size:16px;line-height:24px;color:#ffffff;"><strong>Detected Object:</strong> ${escapeHtml(sentenceCase(finalDetectedObject, finalDetectedObject))}</div>`
             : ""
         }
         ${edited?.issueLines?.length ? renderPlainLines(edited.issueLines) : ""}
       </div>
 
-      <div style="background:#121212;border:1px solid #3a3a3a;border-radius:16px;padding:18px;margin-bottom:18px;">
-        <div style="font-size:18px;font-weight:800;color:#f2d8bf;margin-bottom:12px;">Service Request</div>
-        <div style="font-size:16px;line-height:1.55;color:#ffffff;"><strong>Location:</strong> ${escapeHtml(finalAddress)}</div>
-        ${finalCity ? `<div style="font-size:16px;line-height:1.55;color:#ffffff;"><strong>City:</strong> ${escapeHtml(finalCity)}</div>` : ""}
-        <div style="font-size:16px;line-height:1.55;color:#ffffff;"><strong>Preferred date:</strong> ${escapeHtml(finalPreferredDate)}</div>
-        <div style="font-size:16px;line-height:1.55;color:#ffffff;"><strong>Preferred time:</strong> ${escapeHtml(finalPreferredTime)}</div>
+      <div style="background:#121212;border:1px solid #3a3a3a;border-radius:16px;padding:16px;margin-bottom:16px;">
+        <div style="font-size:18px;line-height:24px;font-weight:500;color:#f2d8bf;margin-bottom:12px;">Service Request</div>
+        <div style="font-size:16px;line-height:24px;color:#ffffff;"><strong>Location:</strong> ${escapeHtml(finalAddress)}</div>
+        ${finalCity ? `<div style="font-size:16px;line-height:24px;color:#ffffff;"><strong>City:</strong> ${escapeHtml(finalCity)}</div>` : ""}
+        <div style="font-size:16px;line-height:24px;color:#ffffff;"><strong>Preferred Date:</strong> ${escapeHtml(finalPreferredDate)}</div>
+        <div style="font-size:16px;line-height:24px;color:#ffffff;"><strong>Preferred Time:</strong> ${escapeHtml(finalPreferredTime)}</div>
         ${edited?.serviceLines?.length ? renderPlainLines(edited.serviceLines) : ""}
       </div>
 
-      <div style="background:#121212;border:1px solid #3a3a3a;border-radius:16px;padding:18px;margin-bottom:18px;">
-        <div style="font-size:18px;font-weight:800;color:#f2d8bf;margin-bottom:12px;">Additional Notes</div>
+      <div style="background:#121212;border:1px solid #3a3a3a;border-radius:16px;padding:16px;margin-bottom:16px;">
+        <div style="font-size:18px;line-height:24px;font-weight:500;color:#f2d8bf;margin-bottom:12px;">Additional Notes</div>
         ${renderPlainLines(finalNotesLines)}
       </div>
 
-      <div style="background:#121212;border:1px solid #3a3a3a;border-radius:16px;padding:18px;margin-bottom:24px;">
-        <div style="font-size:18px;font-weight:800;color:#f2d8bf;margin-bottom:14px;">Issue Photo</div>
+      <div style="background:#121212;border:1px solid #3a3a3a;border-radius:16px;padding:16px;margin-bottom:24px;">
+        <div style="font-size:18px;line-height:24px;font-weight:500;color:#f2d8bf;margin-bottom:16px;">Issue Photo</div>
         <table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-          <tr>${photoHtml}</tr>
+          ${photoHtml}
         </table>
         ${edited?.photoLines?.length ? renderPlainLines(edited.photoLines) : ""}
       </div>
 
       ${renderPlainLines(finalClosingLines)}
 
-      <p style="font-size:16px;line-height:1.55;margin:0 0 24px 0;color:#ffffff;">
-        <strong>User email:</strong> ${escapeHtml(clean(finalRequesterEmail) || "Included in CC by FixBee")}
+      <p style="font-size:16px;line-height:24px;margin:0 0 24px 0;color:#ffffff;">
+        <strong>User Email:</strong> ${escapeHtml(clean(finalRequesterEmail) || "Included in CC by FixBee")}
       </p>
 
-      <p style="font-size:17px;line-height:1.55;margin:0;color:#ffffff;">
+      <p style="font-size:16px;line-height:24px;margin:0;color:#ffffff;">
         Warm Regards,<br/>
         FixBee Team
       </p>
 
-      <p style="font-size:15px;line-height:1.55;margin:28px 0 0 0;color:#ffffff;">
-        Request submitted by: ${escapeHtml(clean(finalRequesterName) || "FixBee User")}
+      <p style="font-size:14px;line-height:20px;margin:24px 0 0 0;color:#ffffff;">
+        Request Submitted By: ${escapeHtml(clean(finalRequesterName) || "FixBee User")}
       </p>
-      ${
-        clean(requestReference)
-          ? `<p style="font-size:13px;line-height:1.45;margin:8px 0 0 0;color:#aaa;">Request reference: ${escapeHtml(requestReference)}</p>`
-          : ""
-      }
     </div>
   </div>
   `.trim();

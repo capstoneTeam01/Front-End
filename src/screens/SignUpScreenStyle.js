@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
+import { BUTTON_HEIGHT, FIELD_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   flex: {
@@ -8,66 +9,70 @@ const styles = StyleSheet.create({
   },
   topShape: {
     position: "absolute",
-    top: -70,
-    right: -40,
-    width: 240,
-    height: 240,
-    borderRadius: 40,
-    backgroundColor: COLORS.whiteOverlayFaint,
-    transform: [{ rotate: "18deg" }],
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 250,
   },
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: 150,
-    paddingBottom: 40,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 200,
+    paddingBottom: SPACING.section,
   },
   title: {
-    fontSize: 30,
-    fontWeight: "800",
-    color: COLORS.textPrimary,
-    marginBottom: 16,
+    color: COLORS.secondary,
+    ...TYPE.screenTitle,
   },
   fieldLabel: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: COLORS.surfaceDark,
-    marginBottom: 8,
-    marginTop: 14,
+    color: COLORS.honeyBrown,
+    marginBottom: SPACING.sm,
+    marginTop: SPACING.card,
+    ...TYPE.small,
+  },
+  field: {
+    height: FIELD_HEIGHT,
+    borderRadius: RADIUS.field,
   },
   createWrap: {
-    marginTop: 24,
+    marginTop: SPACING.card,
+  },
+  formButton: {
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
+  },
+  formButtonLabel: {
+    ...TYPE.button,
   },
   orRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 18,
+    height: 24,
+    marginVertical: SPACING.card,
   },
   orLine: {
     flex: 1,
     height: 1,
-    backgroundColor: COLORS.whiteOverlayHalf,
+    backgroundColor: "rgba(138, 86, 17, 0.22)",
   },
   orText: {
     marginHorizontal: 12,
     color: COLORS.white,
-    fontWeight: "600",
-    fontSize: 14,
+    ...TYPE.body,
   },
   footerRow: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    marginTop: SPACING.card,
   },
   footerText: {
-    fontSize: 14,
-    color: COLORS.textPrimary,
+    color: COLORS.honeyBrown,
+    ...TYPE.body,
   },
   footerLink: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: COLORS.white,
+    color: COLORS.textPrimary,
+    ...TYPE.body,
   },
 });
 

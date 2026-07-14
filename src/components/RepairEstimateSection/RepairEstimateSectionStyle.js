@@ -21,9 +21,8 @@ const styles = StyleSheet.create({
   estimateRow: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    gap: SPACING.sm,
   },
 
   estimateTile: {
@@ -40,38 +39,27 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
 
-  dollarIcon: {
-    fontSize: 25,
-    fontWeight: "400",
-    lineHeight: 27,
-    color: COLORS.secondary,
-    textAlign: "center",
-  },
-
   iconContainer: {
-    height: 24,
+    height: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 2,
+    marginBottom: 5,
   },
 
   estimateLabel: {
-    fontSize: 12,
-    fontWeight: "400",
     color: COLORS.honeyBrown,
     textAlign: "center",
-    lineHeight: 15,
     marginBottom: 3,
+    ...TYPE.caption,
   },
 
   estimateValue: {
-    fontSize: 14,
-    fontWeight: "500",
     color: COLORS.secondary,
     textAlign: "center",
-    lineHeight: 18,
+    textTransform: "capitalize",
     width: "100%",
     paddingHorizontal: 2,
+    ...TYPE.small,
   },
 });
 

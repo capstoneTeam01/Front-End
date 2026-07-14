@@ -5,7 +5,10 @@ import styles from "./UserActionButtonsStyle";
 const UserActionButtons = ({
   onFindExpertsPress,
   onDiyPress,
+  findExpertsLabel = "Find Experts",
   showDiy = false,
+  buttonStyle,
+  textStyle,
 }) => {
   const findExpertsStyle = showDiy
     ? styles.findExpertsWithDiyButton
@@ -18,11 +21,12 @@ const UserActionButtons = ({
         style={({ pressed }) => [
           styles.button,
           findExpertsStyle,
+          buttonStyle,
           pressed ? styles.buttonPressed : null,
         ]}
       >
-        <Text style={styles.buttonText}>
-          Find Experts
+        <Text style={[styles.buttonText, textStyle]}>
+          {findExpertsLabel}
         </Text>
       </Pressable>
 
@@ -32,10 +36,11 @@ const UserActionButtons = ({
           style={({ pressed }) => [
             styles.button,
             styles.diyButton,
+            buttonStyle,
             pressed ? styles.buttonPressed : null,
           ]}
         >
-          <Text style={styles.buttonText}>
+          <Text style={[styles.buttonText, textStyle]}>
             DIY
           </Text>
         </Pressable>

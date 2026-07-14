@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import { RADIUS, SIDE_PADDING } from "../../constants/layout";
+import { HEADER_FOOTER } from "../../constants/typography";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   backdrop: {
@@ -12,46 +13,43 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
-    paddingHorizontal: SIDE_PADDING,
     paddingTop: 12,
-    paddingBottom: 40,
   },
   handle: {
     width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: COLORS.gray500,
+    backgroundColor: COLORS.gray700,
     alignSelf: "center",
-    marginBottom: 20,
+    marginBottom: 36,
+  },
+  guide: {
+    paddingHorizontal: SIDE_PADDING,
   },
   title: {
-    fontFamily: "Rubik_400Regular",
-    fontSize: 22,
-    lineHeight: 28,
     color: COLORS.textPrimary,
     textAlign: "left",
-    marginBottom: 8,
+    marginBottom: SPACING.card,
+    ...TYPE.sectionTitle,
   },
   subtitle: {
-    fontFamily: "Rubik_400Regular",
-    fontSize: 16,
-    lineHeight: 20,
-    color: COLORS.textMuted,
+    color: COLORS.mediumGrey,
     textAlign: "left",
-    marginBottom: 24,
+    marginBottom: SPACING.card,
+    ...TYPE.body,
   },
   tipsCard: {
     borderWidth: 1,
     borderColor: COLORS.divider,
-    borderRadius: RADIUS.medium,
+    borderRadius: RADIUS.big,
     overflow: "hidden",
-    marginBottom: 24,
   },
   tipRow: {
+    minHeight: 68,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingHorizontal: SPACING.card,
+    paddingVertical: 12,
     gap: 14,
   },
   tipDivider: {
@@ -59,27 +57,28 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.divider,
   },
   tipIconWrap: {
-    width: 44,
+    width: 50,
     alignItems: "center",
   },
   tipText: {
     flex: 1,
-    fontFamily: "Rubik_400Regular",
-    fontSize: 16,
-    lineHeight: 20,
     color: COLORS.textPrimary,
+    ...TYPE.body,
+  },
+  footer: {
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: SPACING.card,
   },
   scanButton: {
+    height: BUTTON_HEIGHT,
     backgroundColor: COLORS.primary,
     borderRadius: RADIUS.field,
-    paddingVertical: 16,
     alignItems: "center",
+    justifyContent: "center",
   },
   scanButtonText: {
     color: COLORS.secondary,
-    fontFamily: "Rubik_400Regular",
-    fontSize: 16,
-    lineHeight: 20,
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

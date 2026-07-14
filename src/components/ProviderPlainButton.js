@@ -1,7 +1,8 @@
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
+import { HEADER_FOOTER } from "../constants/typography";
+import { BUTTON_HEIGHT, RADIUS, SPACING } from "../constants/layout";
 
 const ProviderPlainButton = ({ title, onPress, disabled = false, variant = "primary", style }) => {
   const isSecondary = variant === "secondary";
@@ -17,7 +18,12 @@ const ProviderPlainButton = ({ title, onPress, disabled = false, variant = "prim
         style,
       ]}
     >
-      <Text style={[styles.buttonText, isSecondary ? styles.secondaryButtonText : null]}>
+      <Text
+        style={[styles.buttonText, isSecondary ? styles.secondaryButtonText : null]}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.85}
+      >
         {String(title || "Button")}
       </Text>
     </Pressable>
@@ -26,9 +32,9 @@ const ProviderPlainButton = ({ title, onPress, disabled = false, variant = "prim
 
 const styles = StyleSheet.create({
   button: {
-    minHeight: 46,
-    borderRadius: 13,
-    paddingHorizontal: 18,
+    minHeight: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
+    paddingHorizontal: SPACING.section,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -47,10 +53,8 @@ const styles = StyleSheet.create({
     opacity: 0.82,
   },
   buttonText: {
-    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
-    fontSize: 13,
-    fontWeight: "700",
+    ...HEADER_FOOTER.footerButton,
   },
   secondaryButtonText: {
     color: COLORS.providerBrown,

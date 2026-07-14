@@ -41,6 +41,11 @@ yarn-error.*
 /ios
 /android
 
+#otherFolders
+/currentScreenPics
+/mockups
+
+
 # local env files
 .env
 .env*.local
@@ -48,3 +53,4 @@ yarn-error.*
 # local API config with auth token (copy config.example.js locally as config.js)
 src/constants/config.js
 
+package-lock.json

@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
 
   loadingText: {
     marginTop: 12,
-    fontSize: TYPE.small.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.small,
   },
 
   summaryCard: {
@@ -37,43 +37,41 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gray300,
     borderRadius: RADIUS.big,
     backgroundColor: COLORS.white,
-    padding: 18,
-    marginBottom: 28,
+    padding: 16,
+    marginBottom: 24,
   },
 
   label: {
-    fontSize: TYPE.caption.fontSize,
     color: COLORS.mediumGrey,
     marginBottom: 8,
+    ...TYPE.caption,
   },
 
   title: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "600",
     color: COLORS.secondary,
     marginBottom: 14,
+    ...TYPE.sectionTitle,
   },
 
   meta: {
-    fontSize: TYPE.small.fontSize,
     color: COLORS.honeyBrown,
     marginTop: 4,
+    ...TYPE.small,
   },
 
   section: {
-    marginBottom: 28,
+    marginBottom: 24,
   },
 
   sectionTitle: {
-    fontSize: TYPE.cardTitle.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
     marginBottom: 14,
+    ...TYPE.cardTitle,
   },
 
   emptyText: {
-    fontSize: TYPE.small.fontSize,
     color: COLORS.mediumGrey,
+    ...TYPE.small,
   },
 
   providerCard: {
@@ -111,15 +109,14 @@ const styles = StyleSheet.create({
   },
 
   providerName: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "600",
     color: COLORS.secondary,
     marginBottom: 4,
+    ...TYPE.body,
   },
 
   providerMeta: {
-    fontSize: TYPE.small.fontSize,
     color: COLORS.mediumGrey,
+    ...TYPE.small,
   },
 
   primaryButton: {
@@ -136,9 +133,8 @@ const styles = StyleSheet.create({
   },
 
   primaryButtonText: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: TYPE.button.fontWeight,
     color: COLORS.secondary,
+    ...TYPE.button,
   },
   modalOverlay: {
   flex: 1,
@@ -154,11 +150,10 @@ feedbackModal: {
 },
 
 modalTitle: {
-  fontSize: 18,
-  fontWeight: "600",
   color: COLORS.textPrimary,
   marginBottom: 16,
   textAlign: "center",
+  ...TYPE.cardTitle,
 },
 
 starRow: {
@@ -172,10 +167,11 @@ feedbackInput: {
   minHeight: 90,
   borderWidth: 1,
   borderColor: COLORS.gray300,
-  borderRadius: 14,
+  borderRadius: RADIUS.field,
   padding: 14,
   marginBottom: 18,
   color: COLORS.textPrimary,
+  ...TYPE.small,
 },
 });
 

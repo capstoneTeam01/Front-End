@@ -1,34 +1,38 @@
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import HeaderBellButton from "../components/AppHeader/HeaderBellButton";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import ProviderHexAvatar from "../components/ProviderHexAvatar";
 import ProviderRating from "../components/ProviderRating";
+import ProviderSelectionLimitPopup from "../components/ProviderSelectionLimitPopup/ProviderSelectionLimitPopup";
 import { loadProviderDetails } from "../localDb/businessDirectoryProviderLocalDb";
 import { MAX_SELECTED_PROVIDERS } from "../utils/providerConstants";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
-
-const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
+import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const normalizeSelectedIds = (ids = []) => {
   if (!Array.isArray(ids)) return [];
-  return [...new Set(ids.filter(Boolean).map((id) => String(id)))];
+  return [...new Set(ids.filter(Boolean).map((id) => String(id)))].slice(
+    0,
+    MAX_SELECTED_PROVIDERS,
+  );
 };
 
 const ProviderDetailsScreen = ({ navigation, route }) => {
   const providerId = route?.params?.providerId;
   const [provider, setProvider] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [limitPopupVisible, setLimitPopupVisible] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -59,13 +63,18 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
     const selectedIds = normalizeSelectedIds(route?.params?.selectedProviderIds);
     let nextSelectedIds = selectedIds;
 
-    if (!selectedIds.includes(provider.id)) {
+    const normalizedProviderId = String(provider.id);
+
+    if (!selectedIds.includes(normalizedProviderId)) {
       if (selectedIds.length >= MAX_SELECTED_PROVIDERS) {
-        Alert.alert("Selection limit", `You can select up to ${MAX_SELECTED_PROVIDERS} providers.`);
+        setLimitPopupVisible(true);
         return;
       }
 
-      nextSelectedIds = normalizeSelectedIds([...selectedIds, provider.id]);
+      nextSelectedIds = normalizeSelectedIds([
+        ...selectedIds,
+        normalizedProviderId,
+      ]);
     }
 
     console.log("[FixBee][ProviderDetails] add to list", {
@@ -81,7 +90,15 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.safe}>
-      <AppHeader title="Experts List" onBack={() => navigation.goBack()} />
+      <AppHeader
+        title="Providers"
+        onBack={() => navigation.goBack()}
+        right={
+          <HeaderBellButton
+            onPress={() => navigation.navigate("Notifications")}
+          />
+        }
+      />
 
       {loading ? (
         <View style={styles.centerState}>
@@ -100,32 +117,56 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
       {provider ? (
         <>
           <ScrollView contentContainerStyle={styles.content}>
-            <ProviderHexAvatar label={provider.businessName} size={70} />
-            <Text style={styles.name}>{provider.businessName || "Provider"}</Text>
-            <ProviderRating rating={provider.rating} reviewCount={provider.reviewCount} showGoogle />
-
-            <View style={styles.metaRow}>
-              <View style={styles.categoryPill}>
-                <Text style={styles.categoryPillText}>
-                  {provider.primaryCategory || provider.providerType || "Plumbing"}
-                </Text>
-              </View>
-              <View style={styles.availabilityPill}>
-                <Text style={styles.availabilityPillText}>24/7</Text>
-              </View>
+            <View style={styles.providerSummary}>
+              <ProviderHexAvatar label={provider.businessName} size={100} />
+              <Text style={styles.name}>
+                {provider.businessName || "Provider"}
+              </Text>
+              <ProviderRating
+                rating={provider.rating}
+                reviewCount={provider.reviewCount}
+                showGoogle
+              />
             </View>
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Description</Text>
-              <Text style={styles.description}>{provider.businessDescription || "Licensed repair professional available for residential maintenance and repair requests."}</Text>
+              <Text style={styles.description}>
+                {provider.businessDescription ||
+                  "Licensed repair professional available for residential maintenance and repair requests."}
+              </Text>
+
+              <View style={styles.metaRow}>
+                <View style={styles.categoryPill}>
+                  <Text style={styles.categoryPillText}>
+                    {provider.primaryCategory ||
+                      provider.providerType ||
+                      "Plumbing"}
+                  </Text>
+                </View>
+                <View style={styles.availabilityPill}>
+                  <Text style={styles.availabilityPillText}>24/7</Text>
+                </View>
+              </View>
             </View>
           </ScrollView>
 
-          <View style={[styles.bottomCta, { paddingBottom: bottomButtonSpace }]}>
-            <ProviderPlainButton title="Add To List" onPress={handleAddToList} />
+          <View style={styles.bottomCta}>
+            <AuthFooterTray fill={COLORS.warmCream}>
+              <ProviderPlainButton
+                title="Add to List"
+                onPress={handleAddToList}
+              />
+            </AuthFooterTray>
           </View>
         </>
       ) : null}
+
+      <ProviderSelectionLimitPopup
+        visible={limitPopupVisible}
+        limit={MAX_SELECTED_PROVIDERS}
+        onClose={() => setLimitPopupVisible(false)}
+      />
     </View>
   );
 };
@@ -136,16 +177,19 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   content: {
-    paddingHorizontal: 26,
-    paddingTop: 28,
-    paddingBottom: 120,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 40,
+    paddingBottom: 118,
+  },
+  providerSummary: {
+    minHeight: 210,
+    alignItems: "flex-start",
   },
   name: {
-    fontFamily: FONT.extraBold,
-    marginTop: 16,
-    color: COLORS.textPrimary,
-    fontSize: 20,
-    fontWeight: "800",
+    marginTop: SPACING.card,
+    marginBottom: SPACING.sm,
+    color: COLORS.secondary,
+    ...TYPE.sectionTitle,
   },
   metaRow: {
     flexDirection: "row",
@@ -156,67 +200,53 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.providerLightGray,
     paddingHorizontal: 12,
     paddingVertical: 7,
-    borderRadius: 13,
+    borderRadius: RADIUS.field,
   },
   categoryPillText: {
-    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
-    fontSize: 12,
-    fontWeight: "700",
+    ...TYPE.caption,
   },
   availabilityPill: {
     backgroundColor: COLORS.honey,
     paddingHorizontal: 12,
     paddingVertical: 7,
-    borderRadius: 13,
+    borderRadius: RADIUS.field,
   },
   availabilityPillText: {
-    fontFamily: FONT.extraBold,
     color: COLORS.providerBrown,
-    fontSize: 12,
-    fontWeight: "800",
+    ...TYPE.caption,
   },
   section: {
-    marginTop: 24,
+    paddingTop: 20,
   },
   sectionTitle: {
-    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
-    fontSize: 15,
-    fontWeight: "800",
-    marginBottom: 8,
+    marginBottom: SPACING.card,
+    ...TYPE.sectionTitle,
   },
   description: {
-    fontFamily: FONT.regular,
-    color: COLORS.textPrimary,
-    fontSize: 13,
-    lineHeight: 20,
+    color: COLORS.textSecondary,
+    ...TYPE.body,
   },
   centerState: {
-    padding: 24,
+    padding: SIDE_PADDING,
     alignItems: "center",
   },
   stateTitle: {
-    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
-    fontSize: 15,
-    fontWeight: "700",
-    marginBottom: 8,
+    marginBottom: SPACING.sm,
+    ...TYPE.body,
   },
   stateText: {
-    fontFamily: FONT.regular,
     color: COLORS.textSecondary,
-    fontSize: 12,
-    marginTop: 8,
+    marginTop: SPACING.sm,
+    ...TYPE.caption,
   },
   bottomCta: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: 22,
-    paddingTop: 12,
-    backgroundColor: COLORS.honeyCream,
   },
 });
 

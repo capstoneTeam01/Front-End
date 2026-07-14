@@ -1,25 +1,30 @@
 import { Text, View } from "react-native";
 import styles from "./RecommendedActionsListStyle";
 
+const capitalizeFirstLetter = (value) => {
+  const text = String(value || "").trim();
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
+};
+
 const getActionText = (action) => {
   if (typeof action === "string") {
-    return action;
+    return capitalizeFirstLetter(action);
   }
 
   if (action && action.label) {
-    return action.label;
+    return capitalizeFirstLetter(action.label);
   }
 
   if (action && action.title) {
-    return action.title;
+    return capitalizeFirstLetter(action.title);
   }
 
   if (action && action.type) {
-    return action.type;
+    return capitalizeFirstLetter(action.type);
   }
 
   if (action && action.action) {
-    return action.action;
+    return capitalizeFirstLetter(action.action);
   }
 
   return "Recommended action";

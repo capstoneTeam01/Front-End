@@ -1,39 +1,53 @@
 import React from "react";
 import { Platform, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import ProviderPlainButton from "../components/ProviderPlainButton";
-import ProviderHexAvatar from "../components/ProviderHexAvatar";
+import PolygonAsset from "../components/PolygonAsset";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, TYPE } from "../constants/layout";
 
 const androidTopSpace = Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
 
 const ProviderConfirmationScreen = ({ navigation, route }) => {
-  const count = route?.params?.selectedProviderIds?.length || 0;
   const sent = route?.params?.quoteStatus === "email-sent";
 
   return (
     <SafeAreaView style={styles.safe}>
       <View style={[styles.wrap, { paddingTop: 26 + androidTopSpace }]}>
         <View style={styles.card}>
+          <View style={styles.handle} />
+
           <View style={styles.successIconWrap}>
-            <ProviderHexAvatar label="✓" size={54} selected />
-            <Text style={styles.checkOverlay}>✓</Text>
+            <PolygonAsset
+              variant="polygon9"
+              width={78}
+              height={87}
+              fill={COLORS.lightHoney}
+            >
+              <Ionicons
+                name="checkmark-sharp"
+                size={36}
+                color={COLORS.secondary}
+              />
+            </PolygonAsset>
           </View>
 
           <Text style={styles.title}>{sent ? "Email Sent" : "Request Prepared"}</Text>
           <Text style={styles.subtitle}>
             {sent
-              ? `Your request has been sent to ${count} selected provider${count === 1 ? "" : "s"}.`
+              ? "Your request has been sent to selected providers."
               : "Your request was prepared, but it was not sent."}
           </Text>
 
-          {route?.params?.quoteRequestId ? (
-            <Text style={styles.reference}>Reference: {route.params.quoteRequestId}</Text>
-          ) : null}
+          <View style={styles.actionsSpacer} />
 
           <View style={styles.actions}>
             <View style={styles.actionButton}>
-              <ProviderPlainButton title="Recent Scans" onPress={() => navigation.navigate("MyRepairs")} />
+              <ProviderPlainButton
+                title="Recent Scans"
+                onPress={() => navigation.navigate("MyRepairs")}
+                style={styles.recentButton}
+              />
             </View>
             <Pressable style={styles.homeButton} onPress={() => navigation.navigate("Home")}>
               <Text style={styles.homeText}>Home</Text>
@@ -53,73 +67,77 @@ const styles = StyleSheet.create({
   wrap: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
   },
   card: {
+    minHeight: 420,
     backgroundColor: COLORS.white,
-    borderRadius: 26,
-    paddingHorizontal: 24,
-    paddingVertical: 30,
+    borderRadius: RADIUS.big,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 18,
+    paddingBottom: 104,
     alignItems: "center",
     borderWidth: 1,
     borderColor: COLORS.providerLightGray,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.12,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  handle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: COLORS.gray700,
+    marginBottom: 30,
   },
   successIconWrap: {
-    width: 60,
-    height: 60,
+    width: 78,
+    height: 87,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 18,
-  },
-  checkOverlay: {
-    fontFamily: FONT.extraBold,
-    position: "absolute",
-    color: COLORS.providerBrown,
-    fontWeight: "900",
-    fontSize: 17,
+    marginBottom: 30,
   },
   title: {
-    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
-    fontSize: 21,
-    fontWeight: "800",
-    marginBottom: 10,
+    marginBottom: 26,
+    ...TYPE.screenTitle,
   },
   subtitle: {
-    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
-    fontSize: 13,
     textAlign: "center",
-    lineHeight: 19,
+    paddingHorizontal: 10,
+    ...TYPE.cardTitle,
   },
-  reference: {
-    fontFamily: FONT.regular,
-    color: COLORS.providerMidGray,
-    fontSize: 10,
-    marginTop: 14,
+  actionsSpacer: {
+    flex: 1,
+    minHeight: 86,
   },
   actions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 14,
-    marginTop: 30,
+    gap: 16,
+    width: "100%",
+    marginBottom: 8,
   },
   actionButton: {
-    width: 142,
+    flex: 1,
+  },
+  recentButton: {
+    paddingHorizontal: 8,
   },
   homeButton: {
-    width: 112,
-    minHeight: 46,
-    borderRadius: 13,
+    flex: 1,
+    minHeight: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.honeyLight,
     alignItems: "center",
     justifyContent: "center",
   },
   homeText: {
-    fontFamily: FONT.bold,
     color: COLORS.providerBrown,
-    fontSize: 13,
-    fontWeight: "700",
+    ...TYPE.button,
   },
 });
 

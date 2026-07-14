@@ -1,14 +1,16 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
+import { HEADER_FOOTER } from "../../constants/typography";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   button: {
-    height: 56,
-    borderRadius: 16,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.lightHoney, 
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 24,
+    paddingHorizontal: SIDE_PADDING,
   },
   buttonSecondary: {
     backgroundColor: COLORS.white,
@@ -19,9 +21,8 @@ const styles = StyleSheet.create({
     opacity: 0.55,
   },
   label: {
-    fontSize: 16,
-    fontWeight: "600",
     color: COLORS.textPrimary,
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

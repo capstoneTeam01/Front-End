@@ -1,5 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
+import { HEADER_FOOTER } from "../constants/typography";
+import { BUTTON_HEIGHT, FIELD_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   container: {
@@ -8,41 +10,42 @@ const styles = StyleSheet.create({
   },
   slide: {
     flex: 1,
-    paddingTop: 80,
+    paddingTop: 88,
     alignItems: "center",
   },
-hexHero: {
-    marginTop: 40,
-    marginBottom: 48,
+  hexHero: {
+    marginBottom: 49,
     alignItems: "center",
   },
-
+  heroContent: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
   textBlock: {
-    paddingHorizontal: 32,
+    width: "100%",
+    paddingHorizontal: SIDE_PADDING,
     alignItems: "center",
   },
   title: {
-    fontSize: 26,
-    fontWeight: "800",
-    color: COLORS.textPrimary,
-    marginBottom: 12,
+    color: COLORS.secondary,
+    marginBottom: SPACING.card,
     textAlign: "center",
+    ...TYPE.screenTitle,
   },
   body: {
-    fontSize: 15,
-    color: COLORS.surfaceDark,
+    color: COLORS.secondary,
     textAlign: "center",
-    lineHeight: 22,
+    ...TYPE.body,
   },
   cityField: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: COLORS.white,
-    borderRadius: 16,
-    height: 56,
-    paddingHorizontal: 18,
-    marginTop: 28,
+    borderRadius: RADIUS.field,
+    height: FIELD_HEIGHT,
+    paddingHorizontal: SPACING.card,
+    marginTop: SPACING.card,
     width: "100%",
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
@@ -51,8 +54,8 @@ hexHero: {
     elevation: 2,
   },
   cityText: {
-    fontSize: 15,
     color: COLORS.textPrimary,
+    ...TYPE.body,
   },
   cityPlaceholder: {
     color: COLORS.placeholder,
@@ -65,25 +68,26 @@ hexHero: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 12,
+    gap: 10,
+    marginBottom: 24,
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: COLORS.whiteOverlayHalf,
-    marginHorizontal: 4,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: COLORS.goldenHoney,
   },
   dotActive: {
-    backgroundColor: COLORS.white,
-    width: 9,
-    height: 9,
-    borderRadius: 4.5,
+    backgroundColor: COLORS.warmCream,
   },
-  footer: {
-    paddingHorizontal: 24,
-    paddingBottom: 36,
-    paddingTop: 4,
+  nextButton: {
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
+    backgroundColor: COLORS.primary,
+  },
+  nextButtonLabel: {
+    color: COLORS.secondary,
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

@@ -12,6 +12,7 @@ import styles from "./LoginScreenStyle";
 import AppTextField from "../components/AppTextField/AppTextField";
 import AuthButton from "../components/AuthButton/AuthButton";
 import GoogleButton from "../components/GoogleButton/GoogleButton";
+import HoneycombBackground from "../components/HoneycombBackground";
 import useGoogleAuth from "../features/auth/hooks/useGoogleAuth";
 import {
   loginUser,
@@ -82,7 +83,7 @@ const LoginScreen = ({ navigation }) => {
       style={styles.flex}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <View style={styles.topShape} />
+      <HoneycombBackground variant="login" style={styles.topShape} />
       <ScrollView
         contentContainerStyle={styles.scroll}
         keyboardShouldPersistTaps="handled"
@@ -94,7 +95,7 @@ const LoginScreen = ({ navigation }) => {
         <AppTextField
           value={email}
           onChangeText={setEmail}
-          placeholder="youremail@example.com"
+          placeholder="Enter your email"
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
@@ -104,7 +105,7 @@ const LoginScreen = ({ navigation }) => {
         <AppTextField
           value={password}
           onChangeText={setPassword}
-          placeholder="Your Password"
+          placeholder="Enter your password"
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
@@ -126,7 +127,7 @@ const LoginScreen = ({ navigation }) => {
         </View>
 
         <GoogleButton
-          label="Log In using Google"
+          label="Log In With Google"
           onPress={handleGoogle}
           loading={googleLoading}
         />

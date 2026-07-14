@@ -1,25 +1,43 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { useWindowDimensions, View, Text } from "react-native";
 import styles from "./WelcomeScreenStyle.js";
-import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
 import AuthButton from "../components/AuthButton/AuthButton";
 import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
+import HoneycombBackground from "../components/HoneycombBackground";
+import PolygonAsset from "../components/PolygonAsset";
 import Welcome from "../components/Mascot/Welcome.svg";
 
+const FIGMA_FRAME_WIDTH = 402;
+const HERO_WIDTH = 354;
+const MASCOT_WIDTH = 150;
+const MASCOT_HEIGHT = 174;
+
 const WelcomeScreen = ({ navigation }) => {
+  const { width } = useWindowDimensions();
+  const scale = width / FIGMA_FRAME_WIDTH;
+
   return (
     <View style={styles.container}>
+      <HoneycombBackground variant="welcome" />
+
       <View style={styles.heroWrap}>
-        <HeroHexagon flatTop width={280} contentOffsetY={16}>
-          <Welcome width={150} height={150} />
-        </HeroHexagon>
+        <PolygonAsset
+          variant="polygon5"
+          width={Math.round(HERO_WIDTH * scale)}
+          contentStyle={styles.heroContent}
+        >
+          <Welcome
+            width={Math.round(MASCOT_WIDTH * scale)}
+            height={Math.round(MASCOT_HEIGHT * scale)}
+          />
+        </PolygonAsset>
       </View>
 
       <View style={styles.textBlock}>
         <Text style={styles.title}>Welcome to FixBee</Text>
         <Text style={styles.body}>
-          Your home repair companion. Identify issues, get solutions and connect
-          with trusted professionals.
+          Your home repair companion.{"\n"}
+          Identify issues, get solutions and connect with trusted professionals.
         </Text>
       </View>
 
@@ -29,12 +47,16 @@ const WelcomeScreen = ({ navigation }) => {
             <AuthButton
               label="Sign Up"
               onPress={() => navigation.navigate("SignUp")}
+              style={styles.welcomeButton}
+              labelStyle={styles.welcomeButtonLabel}
             />
           </View>
           <View style={styles.buttonHalf}>
             <AuthButton
               label="Login"
               onPress={() => navigation.navigate("Login")}
+              style={styles.welcomeButton}
+              labelStyle={styles.welcomeButtonLabel}
             />
           </View>
         </View>

@@ -37,17 +37,15 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: TYPE.cardTitle.fontSize,
-    fontWeight: "600",
     color: COLORS.secondary,
-    lineHeight: 22,
     marginBottom: 8,
+    ...TYPE.cardTitle,
   },
 
   date: {
-    fontSize: TYPE.small.fontSize,
     color: COLORS.mediumGrey,
     marginBottom: 12,
+    ...TYPE.small,
   },
 
   badge: {
@@ -59,9 +57,8 @@ const styles = StyleSheet.create({
   },
 
   badgeText: {
-    fontSize: TYPE.caption.fontSize,
-    fontWeight: "600",
     color: COLORS.secondary,
+    ...TYPE.caption,
   },
 });
 

@@ -10,19 +10,20 @@ const styles = StyleSheet.create({
 
   content: {
     alignItems: "center",
-    gap: 6,
+    gap: 7,
   },
 
   iconWrap: {
-    width: 28,
-    height: 28,
+    width: 24,
+    height: 24,
     justifyContent: "center",
     alignItems: "center",
   },
 
   label: {
     fontSize: TYPE.small.fontSize,
-    fontWeight: "500",
+    lineHeight: 18,
+    fontWeight: "400",
     color: COLORS.textPrimary,
   },
 });

@@ -6,6 +6,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  polygon: {
+    position: "absolute",
+  },
   iconLayer: {
     ...StyleSheet.absoluteFillObject,
     alignItems: "center",
@@ -13,11 +16,11 @@ const styles = StyleSheet.create({
   },
   editBadge: {
     position: "absolute",
-    right: 2,
-    bottom: 6,
-    width: 30,
-    height: 30,
-    borderRadius: 8,
+    right: -3,
+    bottom: 13,
+    width: 28,
+    height: 28,
+    borderRadius: 9,
     backgroundColor: COLORS.secondary,
     alignItems: "center",
     justifyContent: "center",

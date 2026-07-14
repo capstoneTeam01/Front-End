@@ -1,19 +1,16 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
+import { FIELD_HEIGHT, RADIUS, SPACING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   container: {
-    height: 57.333,
-    paddingTop: 16.667,
-    paddingRight: 32,
-    paddingBottom: 16.667,
-    paddingLeft: 16.667,
+    height: FIELD_HEIGHT,
+    paddingHorizontal: SPACING.card,
     justifyContent: "center",
-    alignItems: "center",
 
-    borderRadius: 16,
-    borderWidth: 0.667,
-    borderColor: "#F3F4F6",
+    borderRadius: RADIUS.field,
+    borderWidth: 1,
+    borderColor: COLORS.greyText,
     backgroundColor: COLORS.white,
 
     shadowColor: COLORS.black,
@@ -29,10 +26,9 @@ const styles = StyleSheet.create({
 
   input: {
     alignSelf: "stretch",
-    fontSize: 14,
-    fontWeight: "400",
-    color: "rgba(10, 10, 10, 0.5)",
+    color: COLORS.textPrimary,
     padding: 0,
+    ...TYPE.small,
   },
 });
 

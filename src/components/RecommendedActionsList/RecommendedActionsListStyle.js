@@ -1,47 +1,41 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import {
-  RADIUS,
-  SPACING,
-  TYPE,
-} from "../../constants/layout";
+import { RADIUS, SPACING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   sectionTitle: {
-    ...TYPE.sectionTitle,
-    color: COLORS.textPrimary,
-    marginBottom: 10,
+    color: COLORS.secondary,
+    marginBottom: SPACING.card,
+    ...TYPE.cardTitle,
   },
 
   actionsCard: {
     backgroundColor: COLORS.white,
     borderWidth: 1,
     borderColor: COLORS.gray500,
-    borderRadius: RADIUS.medium,
+    borderRadius: RADIUS.big,
     overflow: "hidden",
-    marginBottom: SPACING.section,
+    marginBottom: 24,
   },
 
   actionItem: {
-    paddingVertical: 14,
+    minHeight: 54,
+    justifyContent: "center",
+    paddingVertical: 12,
     paddingHorizontal: SPACING.card,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.divider,
   },
 
   actionText: {
+    color: COLORS.textSecondary,
     ...TYPE.small,
-    fontSize: 15,
-    fontWeight: "500",
-    color: COLORS.textPrimary,
   },
 
   emptyText: {
-    ...TYPE.small,
-    fontSize: 15,
     color: COLORS.textSecondary,
     padding: SPACING.card,
-    lineHeight: 22,
+    ...TYPE.small,
   },
 });
 

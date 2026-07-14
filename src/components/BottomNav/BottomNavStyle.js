@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import { TYPE } from "../../constants/layout";
+import { HEADER_FOOTER } from "../../constants/typography";
+import { BOTTOM_NAV_HEIGHT } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   floatWrap: {
@@ -8,38 +9,45 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    // paddingHorizontal: 16,
+    zIndex: 10,
+    elevation: 10,
   },
 
-  bar: {
+  menu: {
+    height: BOTTOM_NAV_HEIGHT,
+    overflow: "hidden",
+  },
+
+  shape: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
+  barContent: {
+    ...StyleSheet.absoluteFillObject,
     flexDirection: "row",
-    alignItems: "center",
-    height: 100,
+    alignItems: "stretch",
     paddingHorizontal: 8,
-    paddingTop: 10,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 6,
   },
 
   navItem: {
     flex: 1,
-    alignItems: "center",
+    flexBasis: 0,
+    alignSelf: "stretch",
+    flexDirection: "column",
     justifyContent: "center",
-    gap: 4,
+    alignItems: "center",
+    gap: 8,
   },
 
   navLabel: {
-    fontSize: TYPE.caption.fontSize,
-    fontWeight: "500",
-    color: COLORS.mediumGrey,
+    color: COLORS.navInactiveLabel,
+    ...HEADER_FOOTER.bottomNavLabel,
   },
 
   navLabelActive: {
-    color: COLORS.textPrimary,
-    fontWeight: "700",
+    color: COLORS.secondary,
+    textAlign: "center",
+    ...HEADER_FOOTER.bottomNavLabelActive,
   },
 });
 

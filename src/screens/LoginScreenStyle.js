@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
+import { SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   flex: {
@@ -8,72 +9,64 @@ const styles = StyleSheet.create({
   },
   topShape: {
     position: "absolute",
-    top: -60,
-    right: -40,
-    width: 260,
-    height: 260,
-    borderRadius: 40,
-    backgroundColor: COLORS.whiteOverlayFaint,
-    transform: [{ rotate: "18deg" }],
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 250,
   },
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: 260,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 286,
     paddingBottom: 40,
   },
   title: {
-    fontSize: 30,
-    fontWeight: "800",
-    color: COLORS.textPrimary,
-    marginBottom: 24,
+    color: COLORS.secondary,
+    marginBottom: SPACING.section,
+    ...TYPE.screenTitle,
   },
   fieldLabel: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: COLORS.surfaceDark,
-    marginBottom: 8,
-    marginTop: 16,
+    color: COLORS.honeyBrown,
+    marginBottom: SPACING.sm,
+    marginTop: SPACING.card,
+    ...TYPE.small,
   },
   forgotWrap: {
-    marginTop: 16,
-    marginBottom: 24,
+    marginTop: SPACING.card,
+    marginBottom: SPACING.section,
   },
   forgotText: {
-    fontSize: 15,
-    color: COLORS.surfaceDark,
-    fontWeight: "500",
+    color: COLORS.honeyBrown,
+    ...TYPE.small,
   },
   orRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 20,
+    marginVertical: SPACING.card,
   },
   orLine: {
     flex: 1,
     height: 1,
-    backgroundColor: COLORS.whiteOverlayHalf,
+    backgroundColor: "rgba(138, 86, 17, 0.22)",
   },
   orText: {
     marginHorizontal: 12,
     color: COLORS.white,
-    fontWeight: "600",
-    fontSize: 14,
+    ...TYPE.small,
   },
   footerRow: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 24,
+    marginTop: SPACING.section,
   },
   footerText: {
-    fontSize: 14,
-    color: COLORS.surfaceDark,
+    color: COLORS.honeyBrown,
+    ...TYPE.small,
   },
   footerLink: {
-    fontSize: 14,
-    fontWeight: "700",
     color: COLORS.textPrimary,
+    ...TYPE.small,
   },
 });
 

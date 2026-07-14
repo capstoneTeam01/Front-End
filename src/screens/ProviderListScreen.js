@@ -2,17 +2,20 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import HeaderBellButton from "../components/AppHeader/HeaderBellButton";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import ProviderCard from "../components/ProviderCard";
+import ProviderSelectionLimitPopup from "../components/ProviderSelectionLimitPopup/ProviderSelectionLimitPopup";
 import { useBusinessDirectoryProviderList } from "../hooks/useBusinessDirectoryProviderList";
 import { useBusinessDirectoryProviderSync } from "../hooks/useBusinessDirectoryProviderSync";
 import { normalizeProviderCategory } from "../utils/issueProviderRouteMapper";
@@ -27,13 +30,14 @@ import {
   getCurrentCityFromGps,
 } from "../utils/locationHelper";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
-
-const bottomButtonSpace = Platform.OS === "android" ? 28 : 18;
+import { SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const normalizeSelectedIds = (ids = []) => {
   if (!Array.isArray(ids)) return [];
-  return [...new Set(ids.filter(Boolean).map((id) => String(id)))];
+  return [...new Set(ids.filter(Boolean).map((id) => String(id)))].slice(
+    0,
+    MAX_SELECTED_PROVIDERS,
+  );
 };
 
 const ProviderListScreen = ({ navigation, route }) => {
@@ -132,6 +136,7 @@ const ProviderListScreen = ({ navigation, route }) => {
   const [selectedIds, setSelectedIds] = useState(() =>
     normalizeSelectedIds(route?.params?.selectedProviderIds),
   );
+  const [limitPopupVisible, setLimitPopupVisible] = useState(false);
 
   const { providers, loading, reloadProviders } =
     useBusinessDirectoryProviderList({ city, category });
@@ -139,7 +144,10 @@ const ProviderListScreen = ({ navigation, route }) => {
     useBusinessDirectoryProviderSync({ city, category, limit: 20 });
 
   const selectedProviders = useMemo(
-    () => providers.filter((provider) => selectedIds.includes(provider.id)),
+    () =>
+      providers.filter((provider) =>
+        selectedIds.includes(String(provider.id)),
+      ),
     [providers, selectedIds],
   );
 
@@ -190,31 +198,29 @@ const ProviderListScreen = ({ navigation, route }) => {
   }, [route?.params?.selectedProviderIds]);
 
   const toggleProvider = (providerId) => {
-    setSelectedIds((current) => {
-      if (current.includes(providerId)) {
-        const next = current.filter((id) => id !== providerId);
-        console.log("[FixBee][ProviderList] provider unselected", {
-          providerId,
-          count: next.length,
-        });
-        return next;
-      }
+    const normalizedProviderId = String(providerId);
 
-      if (current.length >= MAX_SELECTED_PROVIDERS) {
-        Alert.alert(
-          "Selection limit",
-          `You can select up to ${MAX_SELECTED_PROVIDERS} providers.`,
-        );
-        return current;
-      }
-
-      const next = [...current, providerId];
-      console.log("[FixBee][ProviderList] provider selected", {
+    if (selectedIds.includes(normalizedProviderId)) {
+      const next = selectedIds.filter((id) => id !== normalizedProviderId);
+      console.log("[FixBee][ProviderList] provider unselected", {
         providerId,
         count: next.length,
       });
-      return next;
+      setSelectedIds(next);
+      return;
+    }
+
+    if (selectedIds.length >= MAX_SELECTED_PROVIDERS) {
+      setLimitPopupVisible(true);
+      return;
+    }
+
+    const next = [...selectedIds, normalizedProviderId];
+    console.log("[FixBee][ProviderList] provider selected", {
+      providerId,
+      count: next.length,
     });
+    setSelectedIds(next);
   };
 
   const openProvider = (provider) => {
@@ -260,12 +266,20 @@ const ProviderListScreen = ({ navigation, route }) => {
 
   const initialLoading = (loading || syncing) && providers.length === 0;
   const selectedSummary = selectedIds.length
-    ? `Mail to ${selectedIds.length} selected request expert${selectedIds.length > 1 ? "s" : ""}.`
-    : "Select up to 10 request experts.";
+    ? `${selectedIds.length} of ${MAX_SELECTED_PROVIDERS} providers selected.`
+    : `Max ${MAX_SELECTED_PROVIDERS} to request quotes.`;
 
   return (
     <View style={styles.safe}>
-      <AppHeader title="Experts List" onBack={() => navigation.goBack()} />
+      <AppHeader
+        title="Experts List"
+        onBack={() => navigation.goBack()}
+        right={
+          <HeaderBellButton
+            onPress={() => navigation.navigate("Notifications")}
+          />
+        }
+      />
 
       <View style={styles.headerBlock}>
         <Text style={styles.title}>Repair Experts</Text>
@@ -311,20 +325,28 @@ const ProviderListScreen = ({ navigation, route }) => {
           <ProviderCard
             key={provider.id}
             provider={provider}
-            selected={selectedIds.includes(provider.id)}
+            selected={selectedIds.includes(String(provider.id))}
             onPress={() => openProvider(provider)}
             onToggle={() => toggleProvider(provider.id)}
           />
         ))}
       </ScrollView>
 
-      <View style={[styles.bottomCta, { paddingBottom: bottomButtonSpace }]}>
-        <ProviderPlainButton
-          title="Next"
-          onPress={handleNext}
-          disabled={!selectedProviders.length}
-        />
+      <View style={styles.bottomCta}>
+        <AuthFooterTray fill={COLORS.warmCream}>
+          <ProviderPlainButton
+            title="Next"
+            onPress={handleNext}
+            disabled={!selectedProviders.length}
+          />
+        </AuthFooterTray>
       </View>
+
+      <ProviderSelectionLimitPopup
+        visible={limitPopupVisible}
+        limit={MAX_SELECTED_PROVIDERS}
+        onClose={() => setLimitPopupVisible(false)}
+      />
     </View>
   );
 };
@@ -335,35 +357,30 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   headerBlock: {
-    paddingHorizontal: 22,
-    paddingTop: 20,
-    paddingBottom: 8,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: SPACING.card,
+    paddingBottom: SPACING.card,
   },
   title: {
-    fontFamily: FONT.extraBold,
     color: COLORS.textPrimary,
-    fontSize: 19,
-    fontWeight: "800",
+    ...TYPE.sectionTitle,
   },
   subtitle: {
-    fontFamily: FONT.regular,
     color: COLORS.providerMidGray,
-    fontSize: 12,
-    marginTop: 4,
+    marginTop: 10,
+    ...TYPE.body,
   },
   countText: {
-    fontFamily: FONT.semiBold,
     color: COLORS.providerBrown,
-    fontSize: 12,
-    fontWeight: "600",
-    marginTop: 9,
+    marginTop: 10,
+    ...TYPE.small,
   },
   list: {
     flex: 1,
   },
   listContent: {
-    paddingHorizontal: 22,
-    paddingTop: 8,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 0,
     paddingBottom: 110,
   },
   centerState: {
@@ -371,27 +388,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   stateTitle: {
-    fontFamily: FONT.bold,
     color: COLORS.textPrimary,
-    fontSize: 15,
-    fontWeight: "700",
-    marginBottom: 8,
+    marginBottom: SPACING.sm,
+    ...TYPE.body,
   },
   stateText: {
-    fontFamily: FONT.regular,
     color: COLORS.textSecondary,
-    fontSize: 12,
-    marginTop: 8,
+    marginTop: SPACING.sm,
     textAlign: "center",
+    ...TYPE.caption,
   },
   bottomCta: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: 22,
-    paddingTop: 12,
-    backgroundColor: COLORS.honeyCream,
   },
 });
 

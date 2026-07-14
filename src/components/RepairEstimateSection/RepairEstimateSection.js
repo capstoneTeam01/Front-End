@@ -1,12 +1,21 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import CostIcon from "../../../assets/icons/cost_Icon.svg";
+import SeverityIcon from "../../../assets/icons/severity_Icon.svg";
+import TimeIcon from "../../../assets/icons/Time_Icon.svg";
 import HexTile from "../HexTile/HexTile";
 import COLORS from "../../constants/colors";
 import styles from "./RepairEstimateSectionStyle";
 
 const ESTIMATE_TILE_SIZE = 96;
+const ESTIMATE_ICON_SIZE = 20;
+
+const ESTIMATE_ICONS = {
+  cost: CostIcon,
+  severity: SeverityIcon,
+  time: TimeIcon,
+};
 
 const formatCostValue = (value) => {
   if (!value || value === "N/A") {
@@ -45,29 +54,12 @@ const formatTimeValue = (value) => {
 };
 
 const EstimateIcon = ({ type }) => {
-  if (type === "severity") {
-    return (
-      <MaterialCommunityIcons
-        name="gauge"
-        size={24}
-        color={COLORS.secondary}
-      />
-    );
-  }
-
-  if (type === "cost") {
-    return (
-      <Text style={styles.dollarIcon}>
-        $
-      </Text>
-    );
-  }
+  const Icon = ESTIMATE_ICONS[type] || TimeIcon;
 
   return (
-    <MaterialCommunityIcons
-      name="clock-outline"
-      size={24}
-      color={COLORS.secondary}
+    <Icon
+      width={ESTIMATE_ICON_SIZE}
+      height={ESTIMATE_ICON_SIZE}
     />
   );
 };

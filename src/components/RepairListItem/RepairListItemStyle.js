@@ -4,10 +4,11 @@ import { TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   row: {
+    minHeight: 76,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 16,
+    paddingVertical: 14,
     paddingHorizontal: 16,
   },
 
@@ -37,16 +38,18 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "600",
-    color: COLORS.textPrimary,
+    fontSize: TYPE.small.fontSize,
+    lineHeight: 18,
+    fontWeight: "400",
+    color: COLORS.honeyBrown,
     marginBottom: 2,
   },
 
   subtitle: {
-    fontSize: TYPE.caption.fontSize,
+    fontSize: TYPE.small.fontSize,
+    lineHeight: 18,
     fontWeight: "400",
-    color: COLORS.textMuted,
+    color: COLORS.mediumGrey,
   },
 });
 

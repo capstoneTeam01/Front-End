@@ -3,43 +3,48 @@ import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
+import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import styles from "./RecentScansScreenStyle";
 import COLORS from "../constants/colors";
 
 const FILTERS = ["All", "DIY", "Emergency", "Service Requested"];
 
+const capitalizeFirstLetter = (value) => {
+  const text = String(value || "").trim();
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
+};
+
 const RecentScansScreen = ({ navigation, route }) => {
   const scans = route?.params?.scans || [];
   const [activeFilter, setActiveFilter] = useState("All");
 
- const filteredScans = scans.filter((item) => {
-  const urgency = String(item.analysis?.urgency || "").toLowerCase();
-  const diyStatus = String(item.diyGenerationStatus || "").toLowerCase();
+  const filteredScans = scans.filter((item) => {
+    const urgency = String(item.analysis?.urgency || "").toLowerCase();
+    const diyStatus = String(item.diyGenerationStatus || "").toLowerCase();
 
-  if (activeFilter === "All") {
+    if (activeFilter === "All") {
+      return true;
+    }
+
+    if (activeFilter === "DIY") {
+      return diyStatus === "completed";
+    }
+
+    if (activeFilter === "Emergency") {
+      return urgency === "critical" || urgency === "high";
+    }
+
+    if (activeFilter === "Service Requested") {
+      return item.providerRequested === true;
+    }
+
     return true;
-  }
-
-  if (activeFilter === "DIY") {
-    return diyStatus === "completed";
-  }
-
-  if (activeFilter === "Emergency") {
-    return urgency === "critical" || urgency === "high";
-  }
-
-  if (activeFilter === "Service Requested") {
-    return item.providerRequested === true;
-  }
-
-  return true;
-});
+  });
 
   return (
     <View style={styles.safe}>
       <AppHeader
         title="Recent Scans"
-        showBack
         onBack={() => navigation?.goBack()}
       />
 
@@ -91,7 +96,7 @@ const RecentScansScreen = ({ navigation, route }) => {
             </View>
 
             <View style={styles.cardContent}>
-              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.title}>{capitalizeFirstLetter(item.title)}</Text>
               <Text style={styles.meta}>
                 <Text style={styles.categoryText}>Plumbing</Text> {item.date}
               </Text>
@@ -100,12 +105,17 @@ const RecentScansScreen = ({ navigation, route }) => {
         )}
       />
 
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation?.goBack()}
-      >
-        <Text style={styles.backText}>Back</Text>
-      </TouchableOpacity>
+      <View style={styles.footer}>
+        <AuthFooterTray fill={COLORS.warmCream}>
+          <TouchableOpacity
+            style={styles.footerButton}
+            onPress={() => navigation?.goBack()}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.footerButtonText}>Back</Text>
+          </TouchableOpacity>
+        </AuthFooterTray>
+      </View>
     </View>
   );
 };

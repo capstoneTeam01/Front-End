@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
 
 import COLORS from "../../constants/colors";
+import { HEADER_FOOTER } from "../../constants/typography";
 import {
   BUTTON_HEIGHT,
   RADIUS,
-  TYPE,
 } from "../../constants/layout";
 
 const styles = StyleSheet.create({
@@ -39,10 +39,9 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "500",
     color: COLORS.secondary,
     textAlign: "center",
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

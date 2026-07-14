@@ -1,14 +1,13 @@
-import { Platform, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 import COLORS from "../constants/colors";
 import {
+  BUTTON_HEIGHT,
+  RADIUS,
   SIDE_PADDING,
   SPACING,
   TYPE,
 } from "../constants/layout";
-
-const bottomSafeSpace =
-  Platform.OS === "android" ? 28 : 18;
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +22,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     backgroundColor: COLORS.white,
-    paddingBottom: 120,
+    paddingBottom: 102,
   },
 
   /*
@@ -46,7 +45,7 @@ const styles = StyleSheet.create({
     width: "100%",
     // Starts at the very top of the screen (under the floating
     // header), so the height includes the area behind the header.
-    height: 400,
+    height: 520,
     position: "relative",
     backgroundColor: COLORS.charcoal,
     overflow: "hidden",
@@ -84,17 +83,15 @@ const styles = StyleSheet.create({
   },
 
   issueTitle: {
-    fontSize: 22,
-    fontWeight: "500",
     color: COLORS.white,
-    lineHeight: 28,
-    marginBottom: SPACING.sm,
+    marginBottom: 12,
+    textTransform: "capitalize",
+    ...TYPE.cardTitle,
   },
 
   issueDescription: {
-    ...TYPE.body,
     color: COLORS.white,
-    lineHeight: 22,
+    ...TYPE.small,
   },
 
   /*
@@ -104,13 +101,13 @@ const styles = StyleSheet.create({
     position: "relative",
     backgroundColor: COLORS.white,
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 48,
+    paddingTop: 36,
     paddingBottom: SPACING.large,
   },
 
   riskBadgePosition: {
     position: "absolute",
-    top: -58,
+    top: -46,
     right: SIDE_PADDING,
     zIndex: 5,
   },
@@ -132,14 +129,15 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 20,
-    backgroundColor: COLORS.warmCream,
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: 12,
-    paddingBottom: bottomSafeSpace,
   },
 
   bottomActionContent: {
     width: "100%",
+  },
+
+  findExpertsButton: {
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
   },
 });
 

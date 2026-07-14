@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import { SIDE_PADDING, SPACING, RADIUS, TYPE } from "../constants/layout";
+import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   safe: {
@@ -10,41 +10,44 @@ const styles = StyleSheet.create({
 
   scroll: {
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: SPACING.card,
     paddingBottom: 40,
   },
 
-  banner: {
-    marginTop: SPACING.card,
+  heroWrap: {
     alignItems: "center",
-    paddingHorizontal: 16,
   },
 
   bannerTitle: {
-    fontSize: TYPE.screenTitle.fontSize,
-    fontWeight: TYPE.screenTitle.fontWeight,
-    color: COLORS.textPrimary,
+    color: COLORS.secondary,
     textAlign: "center",
-    marginBottom: 12,
+    marginBottom: SPACING.card,
+    ...TYPE.screenTitle,
   },
 
   bannerSubtitle: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "400",
-    color: COLORS.textSecondary,
+    color: COLORS.honeyBrown,
     textAlign: "center",
-    lineHeight: 22,
-    paddingHorizontal: 24,
+    ...TYPE.body,
   },
 
   scanWrap: {
     alignItems: "center",
-    marginTop: SPACING.large,
-    marginBottom: SPACING.large,
+    zIndex: 2,
   },
 
   popularHeader: {
+    marginTop: 24,
     marginBottom: SPACING.card,
+  },
+
+  popularTitle: {
+    color: COLORS.textPrimary,
+    ...TYPE.cardTitle,
+  },
+
+  popularAction: {
+    color: COLORS.goldenHoney,
+    ...TYPE.small,
   },
 
   repairsCard: {

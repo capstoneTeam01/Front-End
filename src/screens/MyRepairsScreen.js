@@ -246,7 +246,7 @@ setCompletedRepairs(completedScans);
 
         <View style={styles.completedList}>
           {completedRepairs.length === 0 ? (
-            <Text>No completed repairs.</Text>
+            <Text style={styles.emptyText}>No Completed Repairs Found.</Text>
           ) : (
             completedRepairs.map((item) => (
               <RepairListItem

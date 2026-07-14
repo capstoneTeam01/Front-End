@@ -11,7 +11,9 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import LogoutIcon from "../../../assets/icons/Logout_Icon.svg";
 import COLORS from "../../constants/colors";
+import PolygonAsset from "../PolygonAsset";
 import styles from "./ConfirmPopupStyle";
 
 const ConfirmPopup = ({
@@ -52,12 +54,23 @@ const ConfirmPopup = ({
           <View style={styles.sheet}>
             <View style={styles.handle} />
 
-            <View style={[styles.iconHex, isDelete ? styles.iconHexDanger : styles.iconHexNeutral]}>
-              <Ionicons
-                name={isDelete ? "warning-outline" : "log-out-outline"}
-                size={24}
-                color={COLORS.white}
-              />
+            <View style={styles.iconHex}>
+              <PolygonAsset
+                variant="polygon9"
+                width={80}
+                height={89}
+                fill={isDelete ? COLORS.riskHigh : COLORS.primary}
+              >
+                {isDelete ? (
+                  <Ionicons
+                    name="warning-outline"
+                    size={36}
+                    color={COLORS.white}
+                  />
+                ) : (
+                  <LogoutIcon width={34} height={34} />
+                )}
+              </PolygonAsset>
             </View>
 
             <Text style={styles.title}>{title}</Text>

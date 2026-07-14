@@ -1,11 +1,7 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import {
-  SIDE_PADDING,
-  BUTTON_HEIGHT,
-  RADIUS,
-  TYPE,
-} from "../constants/layout";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, TYPE } from "../constants/layout";
+import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   safe: {
@@ -17,28 +13,25 @@ const styles = StyleSheet.create({
     width: 354,
     alignSelf: "center",
     paddingTop: 24,
-    paddingBottom: 130,
+    paddingBottom: 120,
   },
 
   title: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    fontWeight: "400",
     color: COLORS.textPrimary,
     marginBottom: 10,
+    ...TYPE.sectionTitle,
   },
 
   subtitle: {
-    fontSize: TYPE.small.fontSize,
-    lineHeight: 20,
     color: COLORS.mediumGrey,
-    marginBottom: 26,
+    marginBottom: 24,
+    ...TYPE.small,
   },
 
   sectionTitle: {
-    fontSize: TYPE.cardTitle.fontSize,
-    fontWeight: "500",
     color: COLORS.textPrimary,
     marginBottom: 16,
+    ...TYPE.cardTitle,
   },
 
   toolCard: {
@@ -59,17 +52,17 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.divider,
   },
 
-  hexIcon: {
-    width: 34,
-    height: 34,
-    backgroundColor: COLORS.lightHoney,
+  toolIcon: {
+    width: 46,
+    height: 50,
     marginRight: 16,
-    borderRadius: 9,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   toolText: {
-    fontSize: TYPE.body.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.body,
   },
 
   stepsBox: {
@@ -79,33 +72,43 @@ const styles = StyleSheet.create({
   stepRow: {
     flexDirection: "row",
     minHeight: 76,
+    paddingBottom: 16,
   },
 
   stepLeft: {
-    width: 44,
+    width: 58,
     alignItems: "center",
   },
 
-  stepCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 9,
-    backgroundColor: COLORS.lightHoney,
+  stepMarker: {
     alignItems: "center",
     justifyContent: "center",
   },
 
-  stepCircleActive: {
-    backgroundColor: COLORS.primary,
+  stepMarkerLayer: {
+    width: 48,
+    height: 54,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
-  stepCircleDone: {
-    backgroundColor: COLORS.primary,
+  stepMarkerBack: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+  },
+
+  stepMarkerFront: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   stepNumber: {
-    fontSize: TYPE.caption.fontSize,
-    fontWeight: "600",
+    color: COLORS.white,
+    ...TYPE.caption,
+  },
+
+  stepNumberActive: {
     color: COLORS.white,
   },
 
@@ -126,15 +129,15 @@ const styles = StyleSheet.create({
   },
 
   stepTitle: {
-    fontSize: 15,
-    fontWeight: "500",
     color: COLORS.secondary,
     marginBottom: 7,
+    ...TYPE.small,
   },
 
   stepDesc: {
+    ...TYPE.caption,
     fontSize: 13,
-    lineHeight: 18,
+    lineHeight: 20,
     color: COLORS.honeyBrown,
   },
 
@@ -147,30 +150,29 @@ const styles = StyleSheet.create({
   },
 
   warningBox: {
-    minHeight: 92,
-    borderRadius: RADIUS.big,
+    minHeight: 100,
+    borderRadius: 24,
     padding: 20,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 18,
-    backgroundColor: COLORS.lightHoney,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#C0001A",
+    backgroundColor: "#FFF4F5",
   },
 
   warningIcon: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    backgroundColor: COLORS.primary,
+    width: 60,
+    height: 60,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 18,
+    marginRight: 16,
   },
 
   warningText: {
     flex: 1,
-    fontSize: 13,
-    lineHeight: 19,
-    color: COLORS.textPrimary,
+    color: COLORS.secondary,
+    ...TYPE.small,
   },
 
   helpBox: {
@@ -182,82 +184,77 @@ const styles = StyleSheet.create({
   },
 
   helpTitle: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
     marginBottom: 10,
+    ...TYPE.body,
   },
 
   helpText: {
-    fontSize: 13,
     color: COLORS.mediumGrey,
     textAlign: "center",
+    ...TYPE.caption,
   },
 
-  bottomBar: {
+  footer: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: 22,
-    paddingBottom: 28,
-    backgroundColor: COLORS.warmCream,
+  },
+
+  footerRow: {
     flexDirection: "row",
-    gap: 16,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    gap: 12,
   },
 
-  secondaryButton: {
+  footerBtn: {
     flex: 1,
-    height: BUTTON_HEIGHT,
-    borderRadius: RADIUS.field,
-    backgroundColor: COLORS.lightHoney,
+    height: 46,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
   },
 
-  secondaryText: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: TYPE.button.fontWeight,
-    color: COLORS.secondary,
-  },
-
-  diyButton: {
-    flex: 1,
-    height: BUTTON_HEIGHT,
-    borderRadius: RADIUS.field,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  diyButtonDisabled: {
+  findExpertsBtn: {
     backgroundColor: COLORS.lightHoney,
   },
 
-  diyButtonActive: {
+  diyDoneBtnDisabled: {
+    backgroundColor: COLORS.lightHoney,
+    opacity: 0.6,
+  },
+
+  diyDoneBtnActive: {
     backgroundColor: COLORS.primary,
   },
 
-  diyButtonText: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: TYPE.button.fontWeight,
+  footerBtnText: {
     color: COLORS.secondary,
+    ...HEADER_FOOTER.footerButton,
   },
 
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.35)",
-    justifyContent: "flex-end",
+    justifyContent: "center",
+    paddingHorizontal: SIDE_PADDING,
   },
 
   completeModal: {
+    minHeight: 420,
     backgroundColor: COLORS.white,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: 24,
+    borderRadius: RADIUS.big,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 18,
+    paddingBottom: 40,
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: COLORS.providerLightGray,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.12,
+    shadowRadius: 22,
+    elevation: 6,
   },
 
   modalHandle: {
@@ -265,52 +262,51 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 10,
     backgroundColor: COLORS.gray700,
-    marginBottom: 16,
+    marginBottom: 30,
   },
 
   modalIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: COLORS.primary,
+    width: 78,
+    height: 87,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 18,
+    marginBottom: 30,
   },
 
   modalTitle: {
-    fontSize: TYPE.cardTitle.fontSize,
-    fontWeight: "600",
     color: COLORS.textPrimary,
-    marginBottom: 8,
+    marginBottom: 26,
+    ...TYPE.screenTitle,
   },
 
   modalText: {
-    fontSize: 13,
-    color: COLORS.textSecondary,
+    color: COLORS.providerMidGray,
     textAlign: "center",
-    marginBottom: 24,
+    paddingHorizontal: 10,
+    ...TYPE.cardTitle,
   },
 
   modalButtons: {
     flexDirection: "row",
-    gap: 12,
+    gap: 16,
     width: "100%",
+    marginTop: "auto",
   },
 
   modalDarkButton: {
     flex: 1,
-    height: 44,
-    borderRadius: RADIUS.small,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 8,
   },
 
   modalLightButton: {
     flex: 1,
-    height: 44,
-    borderRadius: RADIUS.small,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     backgroundColor: COLORS.lightHoney,
     alignItems: "center",
     justifyContent: "center",
@@ -318,14 +314,12 @@ const styles = StyleSheet.create({
 
   modalDarkText: {
     color: COLORS.secondary,
-    fontSize: 13,
-    fontWeight: "500",
+    ...TYPE.button,
   },
 
   modalLightText: {
     color: COLORS.secondary,
-    fontSize: 13,
-    fontWeight: "500",
+    ...TYPE.button,
   },
 
   stepCheckIcon: {
@@ -333,14 +327,9 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
 
-  warningIconStyle: {
-    fontSize: 22,
-    color: COLORS.textPrimary,
-  },
-
   modalCheckIcon: {
-    fontSize: 26,
-    color: COLORS.white,
+    fontSize: 36,
+    color: COLORS.secondary,
   },
 
   loadingBox: {
@@ -351,8 +340,8 @@ const styles = StyleSheet.create({
 
   loadingText: {
     marginTop: 12,
-    fontSize: TYPE.small.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.small,
   },
 });
 

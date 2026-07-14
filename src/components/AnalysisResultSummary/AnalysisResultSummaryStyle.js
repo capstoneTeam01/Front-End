@@ -18,18 +18,16 @@ const styles = StyleSheet.create({
   },
 
   issueTitle: {
-    fontSize: 24,
-    fontWeight: "700",
     color: COLORS.textPrimary,
     marginBottom: SPACING.sm,
     textTransform: "capitalize",
+    ...TYPE.sectionTitle,
   },
 
   issueDescription: {
-    fontSize: 15,
     color: COLORS.textSecondary,
-    lineHeight: 22,
     marginBottom: 14,
+    ...TYPE.body,
   },
 
   warningCard: {
@@ -44,16 +42,14 @@ const styles = StyleSheet.create({
   },
 
   emergencyTitle: {
-    fontSize: 24,
-    fontWeight: "700",
     color: COLORS.white,
     marginBottom: SPACING.sm,
+    ...TYPE.sectionTitle,
   },
 
   emergencyDescription: {
-    fontSize: 15,
     color: COLORS.gray300,
-    lineHeight: 22,
+    ...TYPE.body,
   },
 
   sectionTitle: {
@@ -72,13 +68,12 @@ const styles = StyleSheet.create({
   },
 
   riskText: {
-    fontSize: 15,
     color: COLORS.textPrimary,
-    fontWeight: "500",
     paddingVertical: 14,
     paddingHorizontal: SPACING.card,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.divider,
+    ...TYPE.body,
   },
 });
 

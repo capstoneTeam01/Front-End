@@ -1,7 +1,8 @@
 import { StyleSheet } from "react-native";
 
 import COLORS from "../../constants/colors";
-import { RADIUS, TYPE } from "../../constants/layout";
+import { HEADER_FOOTER } from "../../constants/typography";
+import { BUTTON_HEIGHT, RADIUS, SPACING } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   container: {
@@ -11,27 +12,37 @@ const styles = StyleSheet.create({
   image: {
     ...StyleSheet.absoluteFillObject,
   },
-  header: {
+  headerLayer: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
+    zIndex: 2,
+  },
+  headerStatusFill: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 58,
+    backgroundColor: COLORS.lightHoney,
+  },
+  header: {
+    zIndex: 1,
   },
   actionBar: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: 24,
-    paddingTop: 34,
   },
   actionRow: {
     flexDirection: "row",
-    gap: 12,
+    gap: SPACING.card,
   },
   retakeButton: {
     flex: 1,
-    height: 52,
+    height: BUTTON_HEIGHT,
     borderRadius: RADIUS.field,
     alignItems: "center",
     justifyContent: "center",
@@ -39,12 +50,11 @@ const styles = StyleSheet.create({
   },
   retakeText: {
     color: COLORS.secondary,
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
+    ...HEADER_FOOTER.footerButton,
   },
   confirmButton: {
     flex: 1,
-    height: 52,
+    height: BUTTON_HEIGHT,
     borderRadius: RADIUS.field,
     alignItems: "center",
     justifyContent: "center",
@@ -55,8 +65,7 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     color: COLORS.secondary,
-    fontSize: TYPE.button.fontSize,
-    fontWeight: "600",
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

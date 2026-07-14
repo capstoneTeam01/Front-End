@@ -3,6 +3,11 @@ import { Text, View } from "react-native";
 import UrgencyBadge from "../UrgencyBadge/UrgencyBadge";
 import styles from "./AnalysisResultSummaryStyle";
 
+const capitalizeFirstLetter = (value) => {
+  const text = String(value || "").trim();
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
+};
+
 const formatIssueTitle = (issue) => {
   if (!issue) {
     return "Repair Issue Detected";
@@ -55,17 +60,17 @@ const AnalysisResultSummary = (props) => {
 
         <View style={styles.riskCard}>
           <Text style={styles.riskText}>
-            {detectedIssue || "Possible emergency repair issue"}
+            {capitalizeFirstLetter(detectedIssue) || "Possible emergency repair issue"}
           </Text>
 
           <Text style={styles.riskText}>
             {detectedObject
-              ? `Detected object: ${detectedObject}`
-              : "Object details not available"}
+              ? `Detected Object: ${capitalizeFirstLetter(detectedObject)}`
+              : "Object Details Not Available"}
           </Text>
 
           <Text style={styles.riskText}>
-            Urgency level: {urgency || "Unknown"}
+            Urgency Level: {capitalizeFirstLetter(urgency) || "Unknown"}
           </Text>
         </View>
       </View>
@@ -79,7 +84,7 @@ const AnalysisResultSummary = (props) => {
       </Text>
 
       <Text style={styles.issueDescription}>
-        {description}
+        {capitalizeFirstLetter(description)}
       </Text>
 
       <UrgencyBadge urgency={urgency} />

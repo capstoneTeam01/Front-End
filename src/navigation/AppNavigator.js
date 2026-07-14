@@ -1,5 +1,8 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import SplashScreen from "../screens/SplashScreen";
@@ -13,6 +16,7 @@ import RepairStatusScreen from "../screens/RepairStatusScreen";
 
 import HomeScreen from "../screens/HomeScreen";
 import CategoryScreen from "../screens/CategoryScreen";
+import ScanDashboardScreen from "../screens/ScanDashboardScreen";
 import ScanScreen from "../screens/ScanScreen";
 import NotificationsScreen from "../screens/NotificationsScreen";
 import MyRepairsScreen from "../screens/MyRepairsScreen";
@@ -26,11 +30,19 @@ import ProfileScreen from "../screens/ProfileScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import RecentScansScreen from "../screens/RecentScansScreen";
 
+// Ref so non-component code (e.g. the API layer on a 401) can navigate.
+export const navigationRef = createNavigationContainerRef();
+
 const Stack = createNativeStackNavigator();
+
+const bottomTabScreenOptions = {
+  contentStyle: { backgroundColor: "#FDFDFD" },
+  safeAreaInsets: { bottom: 0 },
+};
 
 const AppNavigator = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{ headerShown: false }}
@@ -44,11 +56,24 @@ const AppNavigator = () => {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
 
         {/* Main app */}
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={bottomTabScreenOptions}
+        />
         <Stack.Screen name="Category" component={CategoryScreen} />
-        <Stack.Screen name="Scan" component={ScanScreen} />
+        <Stack.Screen
+          name="Scan"
+          component={ScanDashboardScreen}
+          options={bottomTabScreenOptions}
+        />
+        <Stack.Screen name="ScanCamera" component={ScanScreen} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} />
-        <Stack.Screen name="MyRepairs" component={MyRepairsScreen} />
+        <Stack.Screen
+          name="MyRepairs"
+          component={MyRepairsScreen}
+          options={bottomTabScreenOptions}
+        />
         <Stack.Screen name="DIYSolution" component={DIYSolutionScreen} />
         <Stack.Screen name="ProviderList" component={ProviderListScreen} />
         <Stack.Screen
@@ -69,10 +94,17 @@ const AppNavigator = () => {
         />
         <Stack.Screen name="RecentScans" component={RecentScansScreen} />
         <Stack.Screen name="RepairStatus" component={RepairStatusScreen} />
-        <Stack.Screen name="CompletedRepairs" component={CompletedRepairsScreen} />
+        <Stack.Screen
+          name="CompletedRepairs"
+          component={CompletedRepairsScreen}
+        />
 
         {/* Profile */}
-        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={bottomTabScreenOptions}
+        />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>

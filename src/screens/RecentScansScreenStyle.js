@@ -1,38 +1,12 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import {
-  SIDE_PADDING,
-  BUTTON_HEIGHT,
-  RADIUS,
-  TYPE,
-} from "../constants/layout";
+import { SIDE_PADDING, RADIUS, TYPE } from "../constants/layout";
+import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: COLORS.white,
-  },
-
-  header: {
-    height: 128,
-    paddingTop: 52,
-    paddingHorizontal: SIDE_PADDING,
-    backgroundColor: COLORS.lightHoney,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: COLORS.secondary,
-  },
-
-  headerSpace: {
-    width: 24,
   },
 
   filterRow: {
@@ -54,19 +28,18 @@ const styles = StyleSheet.create({
   },
 
   filterText: {
-    fontSize: 12,
     color: COLORS.mediumGrey,
+    ...TYPE.caption,
   },
 
   filterTextActive: {
     color: COLORS.secondary,
-    fontWeight: "500",
   },
 
   list: {
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 18,
-    paddingBottom: 130,
+    paddingBottom: 120,
   },
 
   card: {
@@ -97,47 +70,46 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: TYPE.body.fontSize,
-    fontWeight: "500",
     color: COLORS.secondary,
     marginBottom: 8,
+    ...TYPE.body,
   },
 
   meta: {
-    fontSize: TYPE.small.fontSize,
     color: COLORS.mediumGrey,
+    ...TYPE.small,
   },
 
   categoryText: {
     color: COLORS.primary,
-    fontWeight: "500",
+    ...TYPE.caption,
   },
 
-  bottomBar: {
+  emptyText: {
+    color: COLORS.textMuted,
+    textAlign: "center",
+    paddingVertical: 32,
+    ...TYPE.body,
+  },
+
+  footer: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: 26,
-    paddingBottom: 28,
-    backgroundColor: COLORS.warmCream,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
   },
 
-  backButton: {
-    height: BUTTON_HEIGHT,
-    borderRadius: RADIUS.field,
+  footerButton: {
+    height: 46,
+    borderRadius: 14,
     backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
   },
 
-  backText: {
-    fontSize: TYPE.button.fontSize,
-    fontWeight: TYPE.button.fontWeight,
+  footerButtonText: {
     color: COLORS.secondary,
+    ...HEADER_FOOTER.footerButton,
   },
 });
 

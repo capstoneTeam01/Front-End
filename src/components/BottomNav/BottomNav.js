@@ -1,79 +1,44 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
+import Svg, { Path } from "react-native-svg";
 
-import { ShapedBackground } from "../AppHeader/AppHeader";
-import CategoryPopup from "../CategoryPopup/CategoryPopup";
+import BottomNavTabIcon from "./BottomNavTabIcon";
 import COLORS from "../../constants/colors";
+import { BOTTOM_NAV_HEIGHT } from "../../constants/layout";
 import styles from "./BottomNavStyle";
 
+const NAV_MENU_PATH =
+  "M0 44 L20 10 C26 3.5 36 0 48 0 H354 C366 0 376 3.5 382 10 L402 44 V102 H0 Z";
+
 const TABS = [
-  {
-    key: "Home",
-    label: "Home",
-    icon: "home-outline",
-    iconActive: "home",
-    route: "Home",
-  },
-  {
-    key: "Scan",
-    label: "Scan",
-    icon: "scan-outline",
-    iconActive: "scan",
-    route: "Scan",
-  },
-  {
-    key: "Repairs",
-    label: "Repairs",
-    icon: "build-outline",
-    iconActive: "build",
-    route: "MyRepairs",
-  },
-  {
-    key: "Profile",
-    label: "Profile",
-    icon: "person-outline",
-    iconActive: "person",
-    route: "Profile",
-  },
+  { key: "Home", label: "Home", route: "Home" },
+  { key: "Scan", label: "Scan", route: "Scan" },
+  { key: "Repairs", label: "Repairs", route: "MyRepairs" },
+  { key: "Profile", label: "Profile", route: "Profile" },
 ];
 
-// Shared bottom tab bar. Owns the category popup so the Scan tab
-// always opens category selection first (never jumps to the camera),
-// on every screen that renders BottomNav.
 const BottomNav = ({ active }) => {
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
-  const [barSize, setBarSize] = useState({ width: 0, height: 0 });
-  const [popupVisible, setPopupVisible] = useState(false);
 
   const handlePress = (tab) => {
-    if (tab.key === "Scan") {
-      setPopupVisible(true);
-      return;
-    }
-
     if (tab.key === active) return;
-
     navigation.navigate(tab.route);
   };
 
-  const goToCategory = (cat) => {
-    setPopupVisible(false);
-    navigation.navigate("Category", { categoryId: cat.id, title: cat.label });
-  };
-
   return (
-    <>
-      <View style={styles.floatWrap} pointerEvents="box-none">
-        <View
-          style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 12) }]}
-          onLayout={(e) => setBarSize(e.nativeEvent.layout)}
+    <View style={styles.floatWrap} pointerEvents="box-none">
+      <View style={styles.menu}>
+        <Svg
+          pointerEvents="none"
+          style={styles.shape}
+          viewBox={`0 0 402 ${BOTTOM_NAV_HEIGHT}`}
+          preserveAspectRatio="none"
         >
-          <ShapedBackground size={barSize} fill={COLORS.lightHoney} flipped />
+          <Path d={NAV_MENU_PATH} fill={COLORS.lightHoney} />
+        </Svg>
 
+        <View style={styles.barContent}>
           {TABS.map((tab) => {
             const isActive = tab.key === active;
             return (
@@ -83,13 +48,9 @@ const BottomNav = ({ active }) => {
                 onPress={() => handlePress(tab)}
                 activeOpacity={0.7}
               >
-                <Ionicons
-                  name={isActive ? tab.iconActive : tab.icon}
-                  size={22}
-                  color={isActive ? COLORS.primary : COLORS.mediumGrey}
-                />
+                <BottomNavTabIcon tabKey={tab.key} isActive={isActive} />
                 <Text
-                  style={[styles.navLabel, isActive && styles.navLabelActive]}
+                  style={isActive ? styles.navLabelActive : styles.navLabel}
                 >
                   {tab.label}
                 </Text>
@@ -98,13 +59,7 @@ const BottomNav = ({ active }) => {
           })}
         </View>
       </View>
-
-      <CategoryPopup
-        visible={popupVisible}
-        onClose={() => setPopupVisible(false)}
-        onSelectCategory={goToCategory}
-      />
-    </>
+    </View>
   );
 };
 
