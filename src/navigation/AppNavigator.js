@@ -38,6 +38,16 @@ const Stack = createNativeStackNavigator();
 const bottomTabScreenOptions = {
   contentStyle: { backgroundColor: "#FDFDFD" },
   safeAreaInsets: { bottom: 0 },
+  animation: "fade",
+};
+
+const authScreenOptions = {
+  animation: "fade",
+};
+
+const confirmationScreenOptions = {
+  animation: "slide_from_bottom",
+  gestureDirection: "vertical",
 };
 
 const AppNavigator = () => {
@@ -45,15 +55,48 @@ const AppNavigator = () => {
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName="Splash"
-        screenOptions={{ headerShown: false }}
+        screenOptions={{
+          headerShown: false,
+          animation: "slide_from_right",
+          gestureEnabled: true,
+          fullScreenGestureEnabled: true,
+          animationMatchesGesture: true,
+          contentStyle: {
+            backgroundColor: "#FDFDFD",
+          },
+        }}
       >
         {/* Auth & onboarding flow */}
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={{ animation: "none" }}
+        />
+        <Stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+          options={authScreenOptions}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={authScreenOptions}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUpScreen}
+          options={authScreenOptions}
+        />
+        <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPasswordScreen}
+          options={authScreenOptions}
+        />
+        <Stack.Screen
+          name="Onboarding"
+          component={OnboardingScreen}
+          options={authScreenOptions}
+        />
 
         {/* Main app */}
         <Stack.Screen
@@ -91,6 +134,7 @@ const AppNavigator = () => {
         <Stack.Screen
           name="ProviderConfirmation"
           component={ProviderConfirmationScreen}
+          options={confirmationScreenOptions}
         />
         <Stack.Screen name="RecentScans" component={RecentScansScreen} />
         <Stack.Screen name="RepairStatus" component={RepairStatusScreen} />
