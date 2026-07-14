@@ -3,7 +3,6 @@ import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
-import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import styles from "./RecentScansScreenStyle";
 import COLORS from "../constants/colors";
 import { capitalizeFirstLetter } from "../utils/textFormatters";
@@ -100,18 +99,6 @@ const RecentScansScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         )}
       />
-
-      <View style={styles.footer}>
-        <AuthFooterTray fill={COLORS.warmCream}>
-          <TouchableOpacity
-            style={styles.footerButton}
-            onPress={() => navigation?.goBack()}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.footerButtonText}>Back</Text>
-          </TouchableOpacity>
-        </AuthFooterTray>
-      </View>
     </View>
   );
 };

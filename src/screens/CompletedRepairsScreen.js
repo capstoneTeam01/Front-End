@@ -1,11 +1,20 @@
 import React, { useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
-import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import styles from "./RecentScansScreenStyle";
 import COLORS from "../constants/colors";
+import {
+  capitalizeFirstLetter,
+  formatTitle,
+} from "../utils/textFormatters";
 
 const FILTERS = ["All", "DIY", "Emergency", "Service Requested"];
 
@@ -69,18 +78,31 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.card}>
             <View style={styles.iconBox}>
-              <Ionicons
-                name="camera-outline"
-                size={24}
-                color={COLORS.textMuted}
-              />
+              {item.imageUrl ? (
+                <Image
+                  source={{ uri: item.imageUrl }}
+                  style={styles.cardImage}
+                  resizeMode="cover"
+                />
+              ) : (
+                <Ionicons
+                  name="camera-outline"
+                  size={24}
+                  color={COLORS.textMuted}
+                />
+              )}
             </View>
 
             <View style={styles.cardContent}>
-              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.title}>
+                {formatTitle(item.title)}
+              </Text>
               <Text style={styles.meta}>
                 <Text style={styles.categoryText}>
-                  {item.analysis?.category || "Repair"}
+                  {capitalizeFirstLetter(
+                    item.analysis?.category ||
+                      "Repair"
+                  )}
                 </Text>{" "}
                 • {item.date}
               </Text>
@@ -88,18 +110,6 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         )}
       />
-
-      <View style={styles.footer}>
-        <AuthFooterTray fill={COLORS.warmCream}>
-          <TouchableOpacity
-            style={styles.footerButton}
-            onPress={() => navigation.goBack()}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.footerButtonText}>Back</Text>
-          </TouchableOpacity>
-        </AuthFooterTray>
-      </View>
     </View>
   );
 };
