@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   estimateRow: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
+    gap: 16,
     alignItems: "center",
   },
 
@@ -35,30 +35,32 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 6,
-    paddingVertical: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
   },
 
   iconContainer: {
     height: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 5,
+    marginBottom: 6,
   },
 
   estimateLabel: {
     color: COLORS.honeyBrown,
     textAlign: "center",
-    marginBottom: 3,
+    lineHeight: 14,
+    marginBottom: 4,
     ...TYPE.caption,
   },
 
   estimateValue: {
     color: COLORS.secondary,
     textAlign: "center",
+    lineHeight: 16,
     textTransform: "capitalize",
     width: "100%",
-    paddingHorizontal: 2,
+    paddingHorizontal: 4,
     ...TYPE.small,
   },
 });

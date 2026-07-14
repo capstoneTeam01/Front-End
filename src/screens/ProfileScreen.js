@@ -12,12 +12,17 @@ import HomeTopBackground from "./HomeTopBackground";
 import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
 import HexAvatar from "../components/HexAvatar/HexAvatar";
 import ProfileMenuRow from "../components/ProfileMenuRow/ProfileMenuRow";
+import ToggleRow from "../components/ToggleRow/ToggleRow";
 import ConfirmPopup from "../components/ConfirmPopup/ConfirmPopup";
 import NotificationSettingsModal from "../components/NotificationSettingsModal/NotificationSettingsModal";
 import BottomNav from "../components/BottomNav/BottomNav";
 
 import { getMe } from "../api/getMe";
-import { deleteAccount, updateNotificationSetting } from "../api/profileApi";
+import {
+  deleteAccount,
+  updateLocalAiSetting,
+  updateNotificationSetting,
+} from "../api/profileApi";
 import { logoutUser } from "../features/auth/services/authSessionService";
 import styles from "./ProfileScreenStyle";
 
@@ -36,6 +41,10 @@ const ProfileScreen = ({ navigation }) => {
   const [displayName, setDisplayName] = useState("User Name");
   const [email, setEmail] = useState("");
   const [profileImage, setProfileImage] = useState(null);
+  const [useLocalLlm, setUseLocalLlm] =
+    useState(false);
+  const [updatingLocalAi, setUpdatingLocalAi] =
+    useState(false);
   const [notif, setNotif] = useState({
     push: true,
     appointmentReminders: true,
@@ -52,6 +61,9 @@ const ProfileScreen = ({ navigation }) => {
       if (name) setDisplayName(name);
       if (user?.email) setEmail(user.email);
       setProfileImage(user?.profileImage || null);
+      setUseLocalLlm(
+        user?.aiSettings?.useLocalLlm === true
+      );
       if (user?.notificationSettings) {
         setNotif({
           push: user.notificationSettings.push !== false,
@@ -117,6 +129,23 @@ const ProfileScreen = ({ navigation }) => {
     }
   };
 
+  const handleToggleLocalAi = async (value) => {
+    setUseLocalLlm(value);
+    setUpdatingLocalAi(true);
+
+    try {
+      await updateLocalAiSetting(value);
+    } catch (error) {
+      setUseLocalLlm(!value);
+      Alert.alert(
+        "Couldn't update Local AI",
+        error?.message || "Please try again."
+      );
+    } finally {
+      setUpdatingLocalAi(false);
+    }
+  };
+
   return (
     <View style={styles.safe}>
       <ScrollView
@@ -160,6 +189,12 @@ const ProfileScreen = ({ navigation }) => {
             label="Notification Settings"
             showDivider={false}
             onPress={() => setNotifVisible(true)}
+          />
+          <ToggleRow
+            label="Local AI (Ollama)"
+            value={useLocalLlm}
+            onValueChange={handleToggleLocalAi}
+            disabled={updatingLocalAi}
           />
           <ProfileMenuRow
             icon="log-out-outline"

@@ -54,6 +54,17 @@ export const updateNotificationSetting = async (key, value) => {
   });
 };
 
+export const updateLocalAiSetting = async (useLocalLlm) => {
+  return apiRequest("/api/users/update", {
+    method: "PUT",
+    json: {
+      aiSettings: {
+        useLocalLlm: Boolean(useLocalLlm),
+      },
+    },
+  });
+};
+
 export const deleteAccount = async (password) => {
   return apiRequest("/api/users/delete", {
     method: "DELETE",

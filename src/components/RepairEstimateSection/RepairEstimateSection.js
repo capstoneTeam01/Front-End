@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View } from "react-native";
 
 import CostIcon from "../../../assets/icons/cost_Icon.svg";
@@ -8,7 +8,8 @@ import HexTile from "../HexTile/HexTile";
 import COLORS from "../../constants/colors";
 import styles from "./RepairEstimateSectionStyle";
 
-const ESTIMATE_TILE_SIZE = 96;
+const DEFAULT_ESTIMATE_TILE_SIZE = 96;
+const ESTIMATE_TILE_GAP = 16;
 const ESTIMATE_ICON_SIZE = 20;
 
 const ESTIMATE_ICONS = {
@@ -68,11 +69,12 @@ const EstimateItem = ({
   iconType,
   label,
   value,
+  size,
 }) => {
   return (
     <View style={styles.estimateTile}>
       <HexTile
-        size={ESTIMATE_TILE_SIZE}
+        size={size}
         flatTop={false}
         fill={COLORS.lightHoney}
       >
@@ -83,16 +85,16 @@ const EstimateItem = ({
 
           <Text
             style={styles.estimateLabel}
-            numberOfLines={1}
+            numberOfLines={2}
           >
             {label}
           </Text>
 
           <Text
             style={styles.estimateValue}
-            numberOfLines={1}
+            numberOfLines={2}
             adjustsFontSizeToFit
-            minimumFontScale={0.7}
+            minimumFontScale={0.65}
           >
             {value || "N/A"}
           </Text>
@@ -109,6 +111,20 @@ const RepairEstimateSection = ({
   showSeverity = true,
   showTitle = true,
 }) => {
+  const [rowWidth, setRowWidth] =
+    useState(0);
+
+  const estimateCount =
+    showSeverity ? 3 : 2;
+
+  const tileSize = rowWidth > 0
+    ? (
+        rowWidth -
+        ESTIMATE_TILE_GAP *
+          (estimateCount - 1)
+      ) / estimateCount
+    : DEFAULT_ESTIMATE_TILE_SIZE;
+
   const displayedCost =
     formatCostValue(estimatedCostRange);
 
@@ -123,12 +139,20 @@ const RepairEstimateSection = ({
         </Text>
       ) : null}
 
-      <View style={styles.estimateRow}>
+      <View
+        style={styles.estimateRow}
+        onLayout={(event) => {
+          setRowWidth(
+            event.nativeEvent.layout.width
+          );
+        }}
+      >
         {showSeverity ? (
           <EstimateItem
             iconType="severity"
             label="Severity Level"
             value={urgency || "N/A"}
+            size={tileSize}
           />
         ) : null}
 
@@ -136,12 +160,14 @@ const RepairEstimateSection = ({
           iconType="cost"
           label="Estimate Cost"
           value={displayedCost}
+          size={tileSize}
         />
 
         <EstimateItem
           iconType="time"
           label="Estimate Time"
           value={displayedTime}
+          size={tileSize}
         />
       </View>
     </View>
