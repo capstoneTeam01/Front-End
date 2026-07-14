@@ -12,6 +12,7 @@ import {
   Modal,
   ActivityIndicator,
   Alert,
+  Image,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -21,6 +22,7 @@ import AppHeader from "../components/AppHeader/AppHeader";
 import styles from "./DIYSolutionScreenStyle";
 import { getDiyInstructions } from "../api/getDiyInstructions";
 import { updateRepairStatus } from "../api/updateRepairStatus";
+import { resolveApiUrl } from "../api/resolveApiUrl";
 
 const MAX_PENDING_CHECKS = 30;
 const PENDING_CHECK_DELAY = 500;
@@ -39,6 +41,25 @@ const wait = (milliseconds) => {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
   });
+};
+
+const getToolDetails = (tool) => {
+  if (typeof tool === "string") {
+    return {
+      name: tool,
+      imageUrl: null,
+    };
+  }
+
+  const imageUrl = tool?.imageUrl;
+
+  return {
+    name: tool?.name || "Tool",
+    imageUrl:
+      imageUrl?.startsWith("/")
+        ? `${resolveApiUrl()}${imageUrl}`
+        : imageUrl || null,
+  };
 };
 
 const DIYSolutionScreen = ({
@@ -318,28 +339,41 @@ for (
           }
         >
           {toolsNeeded.map(
-            (item, index) => (
-              <TouchableOpacity
-                key={`${item}-${index}`}
-                style={
-                  styles.toolRow
-                }
-              >
-                <View
-                  style={
-                    styles.hexIcon
-                  }
-                />
+            (item, index) => {
+              const tool =
+                getToolDetails(item);
 
-                <Text
+              return (
+                <TouchableOpacity
+                  key={`${tool.name}-${index}`}
                   style={
-                    styles.toolText
+                    styles.toolRow
                   }
                 >
-                  {item}
-                </Text>
-              </TouchableOpacity>
-            )
+                  {tool.imageUrl ? (
+                    <Image
+                      source={{
+                        uri: tool.imageUrl,
+                      }}
+                      style={styles.hexIcon}
+                      resizeMode="contain"
+                    />
+                  ) : (
+                    <View
+                      style={styles.hexIcon}
+                    />
+                  )}
+
+                  <Text
+                    style={
+                      styles.toolText
+                    }
+                  >
+                    {tool.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }
           )}
         </View>
 
