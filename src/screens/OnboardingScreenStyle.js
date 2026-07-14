@@ -8,6 +8,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.primary,
   },
+  footerButtons: {
+    flexDirection: "row",
+    gap: SPACING.card,
+  },
+  skipButton: {
+    flex: 1,
+    height: BUTTON_HEIGHT,
+    backgroundColor: COLORS.lightHoney,
+    borderRadius: RADIUS.field,
+  },
+  skipButtonLabel: {
+    color: COLORS.secondary,
+    ...HEADER_FOOTER.footerButton,
+  },
   slide: {
     flex: 1,
     paddingTop: 88,
@@ -81,6 +95,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.warmCream,
   },
   nextButton: {
+    flex: 1,
     height: BUTTON_HEIGHT,
     borderRadius: RADIUS.field,
     backgroundColor: COLORS.primary,

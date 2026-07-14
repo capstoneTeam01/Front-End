@@ -18,6 +18,7 @@ import OnboardingIdentifying from "../components/Mascot/OnboardingIdentifying.sv
 import Onboarding2 from "../components/Mascot/Onboarding2.svg";
 import Onboarding3 from "../components/Mascot/Onboarding3.svg";
 import OnboardingCity from "../components/Mascot/OnboardingCity.svg";
+import COLORS from "../constants/colors";
 
 const FIGMA_FRAME_WIDTH = 402;
 const HERO_WIDTH = 354;
@@ -166,14 +167,28 @@ const OnboardingScreen = ({ navigation }) => {
         ))}
       </View>
 
-      <AuthFooterTray>
-        <AuthButton
-          label="Next"
-          onPress={handleNext}
-          loading={saving}
-          style={styles.nextButton}
-          labelStyle={styles.nextButtonLabel}
-        />
+      <AuthFooterTray fill={COLORS.warmCream}>
+        <View style={styles.footerButtons}>
+          {!isLast ? (
+            <AuthButton
+              label="Skip"
+              variant="secondary"
+              onPress={() =>
+                goToSlide(SLIDES.length - 1)
+              }
+              style={styles.skipButton}
+              labelStyle={styles.skipButtonLabel}
+            />
+          ) : null}
+
+          <AuthButton
+            label="Next"
+            onPress={handleNext}
+            loading={saving}
+            style={styles.nextButton}
+            labelStyle={styles.nextButtonLabel}
+          />
+        </View>
       </AuthFooterTray>
 
       <CityPickerSheet
