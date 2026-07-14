@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text } from "react-native";
 import COLORS from "../constants/colors";
 import { HEADER_FOOTER } from "../constants/typography";
 import { BUTTON_HEIGHT, RADIUS, SPACING } from "../constants/layout";
+import { formatTitle } from "../utils/textFormatters";
 
 const ProviderPlainButton = ({ title, onPress, disabled = false, variant = "primary", style }) => {
   const isSecondary = variant === "secondary";
@@ -24,7 +25,7 @@ const ProviderPlainButton = ({ title, onPress, disabled = false, variant = "prim
         adjustsFontSizeToFit
         minimumFontScale={0.85}
       >
-        {String(title || "Button")}
+        {formatTitle(title || "Button")}
       </Text>
     </Pressable>
   );

@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import COLORS from "../../constants/colors";
 import styles from "./ProfileMenuRowStyle";
+import { formatTitle } from "../../utils/textFormatters";
 
 
 const ProfileMenuRow = ({
@@ -25,7 +26,9 @@ const ProfileMenuRow = ({
     >
       <View style={styles.left}>
         <Ionicons name={icon} size={22} color={iconColor} />
-        <Text style={[styles.label, { color: textColor }]}>{label}</Text>
+        <Text style={[styles.label, { color: textColor }]}>
+          {formatTitle(label)}
+        </Text>
       </View>
       <Ionicons name="chevron-forward" size={22} color={chevronColor} />
     </TouchableOpacity>

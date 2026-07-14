@@ -22,13 +22,12 @@ import {
 
 import COLORS from "../constants/colors";
 import styles from "./RecommendationScreenStyle";
+import {
+  capitalizeFirstLetter,
+  formatTitle,
+} from "../utils/textFormatters";
 
 const clean = (value) => String(value || "").trim();
-
-const capitalizeFirstLetter = (value) => {
-  const text = clean(value);
-  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
-};
 
 const getFirstText = (...values) => {
   for (const value of values) {
@@ -307,7 +306,7 @@ const RecommendationScreen = ({
 
           <View style={styles.heroTextContainer}>
             <Text style={styles.issueTitle}>
-              {displayedIssue}
+              {formatTitle(displayedIssue)}
             </Text>
 
             <Text style={styles.issueDescription}>

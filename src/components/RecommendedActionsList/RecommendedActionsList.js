@@ -1,10 +1,9 @@
 import { Text, View } from "react-native";
+import {
+  capitalizeFirstLetter,
+  formatTitle,
+} from "../../utils/textFormatters";
 import styles from "./RecommendedActionsListStyle";
-
-const capitalizeFirstLetter = (value) => {
-  const text = String(value || "").trim();
-  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
-};
 
 const getActionText = (action) => {
   if (typeof action === "string") {
@@ -39,7 +38,9 @@ const RecommendedActionsList = ({
 
   return (
     <View>
-      <Text style={styles.sectionTitle}>{title}</Text>
+      <Text style={styles.sectionTitle}>
+        {formatTitle(title)}
+      </Text>
 
       <View style={styles.actionsCard}>
         {actionList.length > 0 ? (
@@ -53,7 +54,9 @@ const RecommendedActionsList = ({
             );
           })
         ) : (
-          <Text style={styles.emptyText}>{emptyMessage}</Text>
+          <Text style={styles.emptyText}>
+            {capitalizeFirstLetter(emptyMessage)}
+          </Text>
         )}
       </View>
     </View>

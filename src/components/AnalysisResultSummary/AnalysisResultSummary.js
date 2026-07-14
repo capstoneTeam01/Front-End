@@ -1,12 +1,11 @@
 import { Text, View } from "react-native";
 
 import UrgencyBadge from "../UrgencyBadge/UrgencyBadge";
+import {
+  capitalizeFirstLetter,
+  formatTitle,
+} from "../../utils/textFormatters";
 import styles from "./AnalysisResultSummaryStyle";
-
-const capitalizeFirstLetter = (value) => {
-  const text = String(value || "").trim();
-  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
-};
 
 const formatIssueTitle = (issue) => {
   if (!issue) {
@@ -16,10 +15,10 @@ const formatIssueTitle = (issue) => {
   const lowerCaseIssue = issue.toLowerCase();
 
   if (lowerCaseIssue.includes("detected")) {
-    return issue;
+    return formatTitle(issue);
   }
 
-  return `${issue} Detected`;
+  return `${formatTitle(issue)} Detected`;
 };
 
 const AnalysisResultSummary = (props) => {

@@ -9,6 +9,10 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./RecentScanCardStyle";
 import COLORS from "../../constants/colors";
+import {
+  capitalizeFirstLetter,
+  formatTitle,
+} from "../../utils/textFormatters";
 
 const RecentScanCard = ({ item, onPress }) => {
   const hasImage = Boolean(item.imageUrl);
@@ -42,7 +46,7 @@ const RecentScanCard = ({ item, onPress }) => {
           style={styles.title}
           numberOfLines={2}
         >
-          {item.title}
+          {formatTitle(item.title)}
         </Text>
 
         <Text style={styles.date}>
@@ -51,7 +55,7 @@ const RecentScanCard = ({ item, onPress }) => {
 
         <View style={styles.badge}>
           <Text style={styles.badgeText}>
-            {item.status}
+            {capitalizeFirstLetter(item.status)}
           </Text>
         </View>
       </View>

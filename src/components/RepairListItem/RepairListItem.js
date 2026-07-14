@@ -4,6 +4,10 @@ import { Ionicons } from "@expo/vector-icons";
 import HexIconChip from "../HexIconChip/HexIconChip.js";
 import styles from "./RepairListItemStyle";
 import COLORS from "../../constants/colors";
+import {
+  capitalizeFirstLetter,
+  formatTitle,
+} from "../../utils/textFormatters";
 
 const RepairListItem = ({ icon, title, subtitle, onPress, showDivider }) => {
   return (
@@ -17,10 +21,10 @@ const RepairListItem = ({ icon, title, subtitle, onPress, showDivider }) => {
 
         <View style={styles.text}>
           <Text style={styles.title} numberOfLines={1}>
-            {title}
+            {formatTitle(title)}
           </Text>
           <Text style={styles.subtitle} numberOfLines={1}>
-            {subtitle}
+            {capitalizeFirstLetter(subtitle)}
           </Text>
         </View>
       </View>

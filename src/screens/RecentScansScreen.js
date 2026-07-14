@@ -6,13 +6,9 @@ import AppHeader from "../components/AppHeader/AppHeader";
 import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import styles from "./RecentScansScreenStyle";
 import COLORS from "../constants/colors";
+import { capitalizeFirstLetter } from "../utils/textFormatters";
 
 const FILTERS = ["All", "DIY", "Emergency", "Service Requested"];
-
-const capitalizeFirstLetter = (value) => {
-  const text = String(value || "").trim();
-  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
-};
 
 const RecentScansScreen = ({ navigation, route }) => {
   const scans = route?.params?.scans || [];

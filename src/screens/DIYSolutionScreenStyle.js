@@ -10,15 +10,16 @@ const styles = StyleSheet.create({
   },
 
   scroll: {
-    width: 354,
+    width: "100%",
     alignSelf: "center",
+    paddingHorizontal: SIDE_PADDING,
     paddingTop: 24,
     paddingBottom: 120,
   },
 
   title: {
     color: COLORS.textPrimary,
-    marginBottom: 10,
+    marginBottom: 12,
     ...TYPE.sectionTitle,
   },
 
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gray500,
     borderRadius: RADIUS.big,
     backgroundColor: COLORS.white,
-    marginBottom: 28,
+    marginBottom: 24,
     overflow: "hidden",
   },
 
@@ -96,6 +97,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
+    width: 48,
+    height: 54,
   },
 
   stepMarkerFront: {
@@ -130,7 +133,7 @@ const styles = StyleSheet.create({
 
   stepTitle: {
     color: COLORS.secondary,
-    marginBottom: 7,
+    marginBottom: 8,
     ...TYPE.small,
   },
 
@@ -185,7 +188,7 @@ const styles = StyleSheet.create({
 
   helpTitle: {
     color: COLORS.textPrimary,
-    marginBottom: 10,
+    marginBottom: 12,
     ...TYPE.body,
   },
 
@@ -233,6 +236,14 @@ const styles = StyleSheet.create({
     ...HEADER_FOOTER.footerButton,
   },
 
+  toolModalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: SIDE_PADDING,
+  },
+
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.35)",
@@ -245,8 +256,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: RADIUS.big,
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 18,
-    paddingBottom: 40,
+    paddingTop: 16,
+    paddingBottom: 24,
     alignItems: "center",
     borderWidth: 1,
     borderColor: COLORS.providerLightGray,
@@ -262,7 +273,7 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 10,
     backgroundColor: COLORS.gray700,
-    marginBottom: 30,
+    marginBottom: 24,
   },
 
   modalIcon: {
@@ -270,12 +281,12 @@ const styles = StyleSheet.create({
     height: 87,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 30,
+    marginBottom: 24,
   },
 
   modalTitle: {
     color: COLORS.textPrimary,
-    marginBottom: 26,
+    marginBottom: 24,
     ...TYPE.screenTitle,
   },
 

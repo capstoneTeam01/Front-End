@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Svg, { Polygon } from "react-native-svg";
 
 import COLORS from "../../constants/colors";
+import { formatTitle } from "../../utils/textFormatters";
 import styles from "./AppHeaderStyle";
 
 const CUT_X = 28; // how far the diagonal cut goes sideways
@@ -82,7 +83,7 @@ const AppHeader = ({
               </Pressable>
             ) : null}
             <Text style={titleStyle} numberOfLines={1}>
-              {title || ""}
+              {formatTitle(title)}
             </Text>
           </View>
           <View style={styles.sideRight}>{right}</View>
@@ -102,7 +103,7 @@ const AppHeader = ({
             ) : null}
           </View>
           <Text style={titleStyle} numberOfLines={1}>
-            {title || ""}
+            {formatTitle(title)}
           </Text>
           <View style={[styles.side, styles.sideRight]}>{right}</View>
         </View>

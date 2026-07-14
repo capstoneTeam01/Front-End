@@ -3,11 +3,14 @@ import { View, Text, Switch } from "react-native";
 
 import COLORS from "../../constants/colors";
 import styles from "./ToggleRowStyle";
+import { formatTitle } from "../../utils/textFormatters";
 
 const ToggleRow = ({ label, value, onValueChange, disabled = false }) => {
   return (
     <View style={styles.row}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label}>
+        {formatTitle(label)}
+      </Text>
       <Switch
         value={value}
         onValueChange={onValueChange}

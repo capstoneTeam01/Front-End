@@ -1,6 +1,7 @@
 import React, {
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -12,10 +13,11 @@ import {
   Modal,
   ActivityIndicator,
   Alert,
-  Image,
+  Animated,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import { SvgUri } from "react-native-svg";
 import { getProviderRouteParamsFromIssue } from "../utils/issueProviderRouteMapper";
 
 import RepairIcon from "../../assets/icons/Repair_Icon.svg";
@@ -27,9 +29,16 @@ import styles from "./DIYSolutionScreenStyle";
 import { getDiyInstructions } from "../api/getDiyInstructions";
 import { updateRepairStatus } from "../api/updateRepairStatus";
 import { resolveApiUrl } from "../api/resolveApiUrl";
+import {
+  capitalizeFirstLetter,
+  formatTitle,
+} from "../utils/textFormatters";
 
 const MAX_PENDING_CHECKS = 30;
 const PENDING_CHECK_DELAY = 500;
+const STEP_PULSE_OUT_MS = 700;
+const STEP_PULSE_IN_MS = 700;
+const STEP_PULSE_PAUSE_MS = 550;
 const STEP_MARKER_BACK_SIZE = {
   width: 48,
   height: 54,
@@ -57,24 +66,117 @@ const wait = (milliseconds) => {
   });
 };
 
+const getToolDetails = (tool) => {
+  if (typeof tool === "string") {
+    return {
+      name: tool,
+      imageUrl: null,
+    };
+  }
+
+  const imageUrl = tool?.imageUrl;
+
+  return {
+    name: tool?.name || "Tool",
+    imageUrl:
+      imageUrl?.startsWith("/")
+        ? `${resolveApiUrl()}${imageUrl}`
+        : imageUrl || null,
+  };
+};
+
 const StepMarker = ({
   index,
   active,
   completed,
 }) => {
+  const pulseScale = useRef(
+    new Animated.Value(1)
+  ).current;
+  const pulseOpacity = useRef(
+    new Animated.Value(0.7)
+  ).current;
+
+  useEffect(() => {
+    if (!active) {
+      pulseScale.setValue(1);
+      pulseOpacity.setValue(0);
+      return undefined;
+    }
+
+    pulseScale.setValue(1);
+    pulseOpacity.setValue(0.7);
+
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(pulseScale, {
+            toValue: 1.16,
+            duration: STEP_PULSE_OUT_MS,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseOpacity, {
+            toValue: 0.4,
+            duration: STEP_PULSE_OUT_MS,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.parallel([
+          Animated.timing(pulseScale, {
+            toValue: 1,
+            duration: STEP_PULSE_IN_MS,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseOpacity, {
+            toValue: 0.7,
+            duration: STEP_PULSE_IN_MS,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.delay(
+          STEP_PULSE_PAUSE_MS
+        ),
+      ])
+    );
+
+    animation.start();
+
+    return () => {
+      animation.stop();
+      pulseScale.setValue(1);
+      pulseOpacity.setValue(0.7);
+    };
+  }, [
+    active,
+    pulseOpacity,
+    pulseScale,
+  ]);
+
   if (active) {
     return (
       <View style={styles.stepMarkerLayer}>
-        <PolygonAsset
-          variant="polygon6"
-          width={STEP_MARKER_BACK_SIZE.width}
-          height={STEP_MARKER_BACK_SIZE.height}
-          fill={COLORS.lightHoney}
-          style={styles.stepMarkerBack}
-        />
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.stepMarkerBack,
+            {
+              opacity: pulseOpacity,
+              transform: [
+                { scale: pulseScale },
+              ],
+            },
+          ]}
+        >
+          <PolygonAsset
+            variant="polygon9"
+            width={STEP_MARKER_BACK_SIZE.width}
+            height={STEP_MARKER_BACK_SIZE.height}
+            fill={COLORS.lightHoney}
+          />
+        </Animated.View>
 
         <PolygonAsset
-          variant="polygon5"
+          variant="polygon9"
           width={STEP_MARKER_FRONT_SIZE.width}
           height={STEP_MARKER_FRONT_SIZE.height}
           fill={COLORS.primary}
@@ -95,7 +197,7 @@ const StepMarker = ({
 
   return (
     <PolygonAsset
-      variant="polygon5"
+      variant="polygon9"
       width={STEP_MARKER_FRONT_SIZE.width}
       height={STEP_MARKER_FRONT_SIZE.height}
       fill={
@@ -139,6 +241,9 @@ const DIYSolutionScreen = ({
 
   const [modalVisible, setModalVisible] =
     useState(false);
+
+  const [selectedTool, setSelectedTool] =
+    useState(null);
 
   const [loading, setLoading] =
     useState(true);
@@ -367,7 +472,7 @@ for (
         <Text
           style={styles.title}
         >
-          {diyData.title ||
+          {formatTitle(diyData.title) ||
             "Fix Instructions"}
         </Text>
 
@@ -376,7 +481,7 @@ for (
             styles.subtitle
           }
         >
-          {diyData.summary ||
+          {capitalizeFirstLetter(diyData.summary) ||
             "Follow these steps carefully and stop if the condition becomes worse."}
         </Text>
 
@@ -394,38 +499,55 @@ for (
           }
         >
           {toolsNeeded.map(
-            (item, index) => (
-              <TouchableOpacity
-                key={`${item}-${index}`}
-                style={
-                  styles.toolRow
-                }
-              >
-                <View
+            (item, index) => {
+              const tool =
+                getToolDetails(item);
+
+              return (
+                <TouchableOpacity
+                  key={`${tool.name}-${index}`}
                   style={
-                    styles.toolIcon
+                    styles.toolRow
+                  }
+                  disabled={!tool.imageUrl}
+                  activeOpacity={0.75}
+                  onPress={() =>
+                    setSelectedTool(tool)
                   }
                 >
-                  <PolygonAsset
-                    variant="polygon9"
-                    width={42}
-                    height={47}
-                    fill={COLORS.lightHoney}
+                  <View
+                    style={
+                      styles.toolIcon
+                    }
                   >
-                    <RepairIcon
-                      width={20}
-                      height={20}
-                      color={COLORS.secondary}
-                    />
-                  </PolygonAsset>
-                </View>
+                    <PolygonAsset
+                      variant="polygon9"
+                      width={42}
+                      height={47}
+                      fill={COLORS.lightHoney}
+                    >
+                      {tool.imageUrl ? (
+                        <SvgUri
+                          width={24}
+                          height={24}
+                          uri={tool.imageUrl}
+                        />
+                      ) : (
+                        <RepairIcon
+                          width={20}
+                          height={20}
+                          color={COLORS.secondary}
+                        />
+                      )}
+                    </PolygonAsset>
+                  </View>
 
                   <Text
                     style={
                       styles.toolText
                     }
                   >
-                    {tool.name}
+                    {capitalizeFirstLetter(tool.name)}
                   </Text>
                 </TouchableOpacity>
               );
@@ -511,7 +633,7 @@ for (
                           styles.inactiveText,
                       ]}
                     >
-                      {item.title}
+                      {formatTitle(item.title)}
                     </Text>
 
                     <Text
@@ -523,7 +645,9 @@ for (
                       ]}
                     >
                       {
-                        item.instruction
+                        capitalizeFirstLetter(
+                          item.instruction
+                        )
                       }
                     </Text>
                   </View>
@@ -584,8 +708,9 @@ for (
               styles.helpText
             }
           >
-            {diyData
-              .professionalAdvice ||
+            {capitalizeFirstLetter(
+              diyData.professionalAdvice
+            ) ||
               "Get help from nearby professionals anytime."}
           </Text>
         </View>
@@ -630,6 +755,43 @@ for (
           </View>
         </AuthFooterTray>
       </View>
+
+      <Modal
+        transparent
+        visible={Boolean(selectedTool)}
+        animationType="fade"
+        onRequestClose={() =>
+          setSelectedTool(null)
+        }
+      >
+        <TouchableOpacity
+          style={styles.toolModalOverlay}
+          activeOpacity={1}
+          onPress={() =>
+            setSelectedTool(null)
+          }
+        >
+          <View
+            onStartShouldSetResponder={() => true}
+          >
+            <PolygonAsset
+              variant="polygon8"
+              width={300}
+              height={340}
+              fill={COLORS.white}
+              stroke="transparent"
+            >
+              {selectedTool?.imageUrl ? (
+                <SvgUri
+                  width={190}
+                  height={190}
+                  uri={selectedTool.imageUrl}
+                />
+              ) : null}
+            </PolygonAsset>
+          </View>
+        </TouchableOpacity>
+      </Modal>
 
       <Modal
         transparent

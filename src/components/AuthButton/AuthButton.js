@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import styles from "./AuthButtonStyle";
+import { formatTitle } from "../../utils/textFormatters";
 
 const AuthButton = ({
   label,
@@ -28,7 +29,9 @@ const AuthButton = ({
       {loading ? (
         <ActivityIndicator color="#0A0A0A" />
       ) : (
-        <Text style={[styles.label, labelStyle]}>{label}</Text>
+        <Text style={[styles.label, labelStyle]}>
+          {formatTitle(label)}
+        </Text>
       )}
     </TouchableOpacity>
   );

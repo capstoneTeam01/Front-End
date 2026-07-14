@@ -20,6 +20,10 @@ import {
 
 import COLORS from "../constants/colors";
 import styles from "./EmergencyIssueScreenStyle";
+import {
+  capitalizeFirstLetter,
+  formatTitle,
+} from "../utils/textFormatters";
 
 const getImmediateActions = (userActions) => {
   if (!Array.isArray(userActions)) {
@@ -130,11 +134,13 @@ const EmergencyIssueScreen = ({
 
           <View style={styles.heroTextContainer}>
             <Text style={styles.issueTitle}>
-              {displayedIssue}
+              {formatTitle(displayedIssue)}
             </Text>
 
             <Text style={styles.issueDescription}>
-              {displayedDescription}
+              {capitalizeFirstLetter(
+                displayedDescription
+              )}
             </Text>
           </View>
         </View>

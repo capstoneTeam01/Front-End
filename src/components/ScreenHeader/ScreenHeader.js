@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./ScreenHeaderStyle";
 import COLORS from "../../constants/colors";
+import { formatTitle } from "../../utils/textFormatters";
 
 const ScreenHeader = ({
   title,
@@ -31,7 +32,11 @@ const ScreenHeader = ({
                 />
               </TouchableOpacity>
             ) : null}
-            {title ? <Text style={styles.title}>{title}</Text> : null}
+            {title ? (
+              <Text style={styles.title}>
+                {formatTitle(title)}
+              </Text>
+            ) : null}
           </>
         )}
       </View>
