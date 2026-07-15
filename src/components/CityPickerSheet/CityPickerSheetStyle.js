@@ -1,32 +1,46 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import { RADIUS, SIDE_PADDING, SPACING, TYPE } from "../../constants/layout";
+import { RADIUS, SIDE_PADDING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.35)",
+    justifyContent: "flex-end",
   },
   sheet: {
     backgroundColor: COLORS.white,
-    borderTopLeftRadius: RADIUS.big,
-    borderTopRightRadius: RADIUS.big,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 12,
-    paddingBottom: 36,
+    paddingBottom: 32,
+    alignItems: "center",
   },
   handle: {
-    alignSelf: "center",
-    width: 44,
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: COLORS.gray500,
-    marginBottom: SPACING.card,
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: COLORS.gray700,
+    marginBottom: 16,
   },
   title: {
+    fontSize: TYPE.sectionTitle.fontSize,
+    lineHeight: 28,
+    fontWeight: "400",
     color: COLORS.textPrimary,
-    marginBottom: SPACING.sm,
-    ...TYPE.cardTitle,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: TYPE.small.fontSize,
+    lineHeight: 18,
+    fontWeight: "400",
+    color: COLORS.textSecondary,
+    textAlign: "center",
+    marginBottom: 16,
+  },
+  cityList: {
+    width: "100%",
   },
   row: {
     flexDirection: "row",

@@ -19,10 +19,12 @@ import HexAvatar from "../components/HexAvatar/HexAvatar";
 import CityPickerSheet from "../components/CityPickerSheet/CityPickerSheet";
 import { getMe } from "../api/getMe";
 import { updateProfile, uploadProfileImage } from "../api/profileApi";
+import { useLocation } from "../context/LocationContext";
 import COLORS from "../constants/colors";
 import styles from "./EditProfileScreenStyle";
 
 const EditProfileScreen = ({ navigation }) => {
+  const { setCity: setAppCity } = useLocation();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -112,6 +114,7 @@ const EditProfileScreen = ({ navigation }) => {
     setSaving(true);
     try {
       await updateProfile(fields);
+      if (fields.location) setAppCity(fields.location);
       navigation.goBack();
     } catch (error) {
       Alert.alert("Couldn't save", error?.message || "Please try again.");

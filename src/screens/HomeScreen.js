@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, useWindowDimensions } from "react-native";
+import {
+  Alert,
+  View,
+  Text,
+  ScrollView,
+  useWindowDimensions,
+} from "react-native";
 
 import HomeTabHeader, {
   FIGMA_FRAME_WIDTH,
@@ -10,13 +16,16 @@ import CategoryCard from "../components/CategoryCard/CategoryCard";
 import CategoryPopup from "../components/CategoryPopup/CategoryPopup";
 import CaptureInstructionsPopup from "../components/CaptureInstructionsPopup/CaptureInstructionsPopup";
 import BottomNav from "../components/BottomNav/BottomNav";
+import CityPickerSheet from "../components/CityPickerSheet/CityPickerSheet";
 import CategoryIcon from "../components/CategoryIcon";
 
 import { CATEGORIES } from "../data/repairData";
 import { getMe } from "../api/getMe";
+import { updateMyCity } from "../api/updateMyCity";
 import { getCurrentCityFromGps } from "../utils/locationHelper";
 import COLORS from "../constants/colors";
 import styles from "./HomeScreenStyle";
+import { useLocation } from "../context/LocationContext";
 
 const HomeScreen = ({ navigation }) => {
   const { width: screenWidth } = useWindowDimensions();
@@ -26,12 +35,25 @@ const HomeScreen = ({ navigation }) => {
   const [capturePopupVisible, setCapturePopupVisible] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
-  const [location, setLocation] = useState("Vancouver");
+  const {
+    city: location,
+    setCity: setLocation,
+  } = useLocation();
+  const [locationPickerVisible, setLocationPickerVisible] =
+    useState(false);
 
   useEffect(() => {
     let active = true;
 
     (async () => {
+      try {
+        const { location: savedCity } =
+          await getMe();
+        if (active && savedCity) {
+          setLocation(savedCity);
+          return;
+        }
+      } catch {}
       try {
         const current = await getCurrentCityFromGps({
           preferCached: true,
@@ -45,21 +67,33 @@ const HomeScreen = ({ navigation }) => {
           return;
         }
       } catch {}
-      try {
-        const { location: loc } = await getMe();
-        if (active && loc) setLocation(loc);
-      } catch {}
     })();
 
     return () => {
       active = false;
     };
-  }, []);
+  }, [setLocation]);
 
   const handleSelectCategory = (cat) => {
     setSelectedCategoryId(cat.id);
     setCategoryPopupVisible(false);
     setCapturePopupVisible(true);
+  };
+
+  const handleCitySelect = async (city) => {
+    const previousLocation = location;
+    setLocation(city);
+    setLocationPickerVisible(false);
+
+    try {
+      await updateMyCity(city);
+    } catch (error) {
+      setLocation(previousLocation);
+      Alert.alert(
+        "Couldn't update city",
+        error?.message || "Please try again."
+      );
+    }
   };
 
   const handleScanNow = () => {
@@ -86,6 +120,9 @@ const HomeScreen = ({ navigation }) => {
           variant="home"
           location={location}
           layoutScale={layoutScale}
+          onLocationPress={() =>
+            setLocationPickerVisible(true)
+          }
           onNotificationsPress={() => navigation?.navigate("Notifications")}
         />
 
@@ -137,6 +174,15 @@ const HomeScreen = ({ navigation }) => {
         visible={capturePopupVisible}
         onClose={() => setCapturePopupVisible(false)}
         onScanNow={handleScanNow}
+      />
+
+      <CityPickerSheet
+        visible={locationPickerVisible}
+        selectedCity={location}
+        onSelect={handleCitySelect}
+        onClose={() =>
+          setLocationPickerVisible(false)
+        }
       />
     </View>
   );

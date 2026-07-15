@@ -14,11 +14,9 @@ import CityPickerSheet from "../components/CityPickerSheet/CityPickerSheet";
 import { updateMyCity } from "../api/updateMyCity";
 import HoneycombBackground from "../components/HoneycombBackground";
 import PolygonAsset from "../components/PolygonAsset";
-import OnboardingIdentifying from "../components/Mascot/OnboardingIdentifying.svg";
-import Onboarding2 from "../components/Mascot/Onboarding2.svg";
-import Onboarding3 from "../components/Mascot/Onboarding3.svg";
-import OnboardingCity from "../components/Mascot/OnboardingCity.svg";
+import AnimatedBeeSvg from "../components/AnimatedBeeSvg";
 import COLORS from "../constants/colors";
+import { useLocation } from "../context/LocationContext";
 
 const FIGMA_FRAME_WIDTH = 402;
 const HERO_WIDTH = 354;
@@ -28,38 +26,40 @@ const SLIDES = [
     key: "spot",
     title: "Spot The Problem",
     body: "Take a photo of an issue and let FixBee identify what's wrong.",
-    Mascot: OnboardingIdentifying,
-    mascotWidth: 140,
+    animation: require("../assets/bee-animations/identifying.svganim"),
+    mascotWidth: 141,
     mascotHeight: 225,
   },
   {
     key: "solution",
     title: "Get Smart Solution",
     body: "Receive issue details, DIY guidance, and estimated repair costs instantly.",
-    Mascot: Onboarding2,
-    mascotWidth: 160,
-    mascotHeight: 171,
+    animation: require("../assets/bee-animations/found-solution.svganim"),
+    mascotWidth: 174,
+    mascotHeight: 225,
   },
   {
     key: "trusted",
     title: "Find Trusted Help",
     body: "Connect with trusted professionals when the repair needs expert attention.",
-    Mascot: Onboarding3,
-    mascotWidth: 162,
-    mascotHeight: 186,
+    animation: require("../assets/bee-animations/on-tablet.svganim"),
+    mascotWidth: 160,
+    mascotHeight: 225,
   },
   {
     key: "city",
     title: "Select Your City",
     body: "Choose your city so we can match you with nearby professionals.",
     isCity: true,
-    Mascot: OnboardingCity,
-    mascotWidth: 143,
-    mascotHeight: 188,
+    animation: require("../assets/bee-animations/all-done.svganim"),
+    mascotWidth: 161,
+    mascotHeight: 225,
   },
 ];
 
 const OnboardingScreen = ({ navigation }) => {
+  const { setCity: setAppCity } =
+    useLocation();
   const { width } = useWindowDimensions();
   const scrollRef = useRef(null);
   const [index, setIndex] = useState(0);
@@ -90,6 +90,7 @@ const OnboardingScreen = ({ navigation }) => {
     setSaving(true);
     try {
       await updateMyCity(city);
+      setAppCity(city);
       navigation.reset({ index: 0, routes: [{ name: "Home" }] });
     } catch (error) {
       Alert.alert(
@@ -128,7 +129,8 @@ const OnboardingScreen = ({ navigation }) => {
                 width={heroWidth}
                 contentStyle={styles.heroContent}
               >
-                <slide.Mascot
+                <AnimatedBeeSvg
+                  source={slide.animation}
                   width={Math.round(slide.mascotWidth * scale)}
                   height={Math.round(slide.mascotHeight * scale)}
                 />

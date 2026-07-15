@@ -17,6 +17,7 @@ const HomeTabHeader = ({
   location,
   layoutScale,
   onBack,
+  onLocationPress,
   onNotificationsPress,
 }) => {
   const scale = layoutScale ?? 1;
@@ -50,7 +51,14 @@ const HomeTabHeader = ({
             </Text>
           </TouchableOpacity>
         ) : (
-          <View style={styles.locationPill}>
+          <TouchableOpacity
+            style={styles.locationPill}
+            onPress={onLocationPress}
+            disabled={!onLocationPress}
+            activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Change city"
+          >
             <Ionicons
               name="location-outline"
               size={20}
@@ -59,7 +67,14 @@ const HomeTabHeader = ({
             <Text style={styles.locationText} numberOfLines={1}>
               {location}
             </Text>
-          </View>
+            {onLocationPress ? (
+              <Ionicons
+                name="chevron-down"
+                size={16}
+                color={COLORS.secondary}
+              />
+            ) : null}
+          </TouchableOpacity>
         )}
 
         <HeaderBellButton onPress={onNotificationsPress} />

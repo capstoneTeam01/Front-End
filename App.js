@@ -14,6 +14,7 @@ import { Rubik_400Regular } from "@expo-google-fonts/rubik";
 
 import AppNavigator from "./src/navigation/AppNavigator";
 import { NotificationsProvider } from "./src/context/NotificationsContext";
+import { LocationProvider } from "./src/context/LocationContext";
 import { warmUpFixBeeSession } from "./src/bootstrap/appStartupWarmup";
 import FONT from "./src/constants/typography";
 
@@ -50,7 +51,9 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <NotificationsProvider>
-        <AppNavigator />
+        <LocationProvider>
+          <AppNavigator />
+        </LocationProvider>
       </NotificationsProvider>
     </SafeAreaProvider>
   );

@@ -4,6 +4,7 @@ import {
   Text,
   ScrollView,
   FlatList,
+  Alert,
   useWindowDimensions,
 } from "react-native";
 import { getCurrentCityFromGps } from "../utils/locationHelper";
@@ -20,12 +21,15 @@ import RepairListItem from "../components/RepairListItem/RepairListItem";
 import CategoryPopup from "../components/CategoryPopup/CategoryPopup";
 import CaptureInstructionsPopup from "../components/CaptureInstructionsPopup/CaptureInstructionsPopup";
 import BottomNav from "../components/BottomNav/BottomNav";
+import CityPickerSheet from "../components/CityPickerSheet/CityPickerSheet";
 
 import { getMe } from "../api/getMe";
 import { getPhotoHistory } from "../api/getPhotoHistory";
+import { updateMyCity } from "../api/updateMyCity";
 
 import COLORS from "../constants/colors";
 import styles from "./ScanDashboardScreenStyle";
+import { useLocation } from "../context/LocationContext";
 
 const formatScanDate = (createdAt) => {
   if (!createdAt) {
@@ -58,7 +62,12 @@ const ScanDashboardScreen = ({ navigation }) => {
   const { width: screenWidth } = useWindowDimensions();
   const layoutScale = screenWidth / FIGMA_FRAME_WIDTH;
 
-  const [location, setLocation] = useState("Vancouver");
+  const {
+    city: location,
+    setCity: setLocation,
+  } = useLocation();
+  const [locationPickerVisible, setLocationPickerVisible] =
+    useState(false);
 
   const [categoryPopupVisible, setCategoryPopupVisible] = useState(false);
   const [capturePopupVisible, setCapturePopupVisible] = useState(false);
@@ -74,6 +83,14 @@ const ScanDashboardScreen = ({ navigation }) => {
 
     (async () => {
       try {
+        const { location: savedCity } =
+          await getMe();
+        if (active && savedCity) {
+          setLocation(savedCity);
+          return;
+        }
+      } catch {}
+      try {
         const current = await getCurrentCityFromGps({
           preferCached: true,
           allowCachedOnFailure: true,
@@ -86,16 +103,12 @@ const ScanDashboardScreen = ({ navigation }) => {
           return;
         }
       } catch {}
-      try {
-        const { location: loc } = await getMe();
-        if (active && loc) setLocation(loc);
-      } catch {}
     })();
 
     return () => {
       active = false;
     };
-  }, []);
+  }, [setLocation]);
 
   const loadPhotoHistory = async () => {
     try {
@@ -173,6 +186,22 @@ const ScanDashboardScreen = ({ navigation }) => {
     setCapturePopupVisible(true);
   };
 
+  const handleCitySelect = async (city) => {
+    const previousLocation = location;
+    setLocation(city);
+    setLocationPickerVisible(false);
+
+    try {
+      await updateMyCity(city);
+    } catch (error) {
+      setLocation(previousLocation);
+      Alert.alert(
+        "Couldn't update city",
+        error?.message || "Please try again."
+      );
+    }
+  };
+
   const handleScanNow = () => {
     const params = {
       categoryId: selectedCategoryId,
@@ -235,6 +264,9 @@ const ScanDashboardScreen = ({ navigation }) => {
           variant="home"
           location={location}
           layoutScale={layoutScale}
+          onLocationPress={() =>
+            setLocationPickerVisible(true)
+          }
           onNotificationsPress={() => navigation?.navigate("Notifications")}
         />
 
@@ -314,6 +346,15 @@ const ScanDashboardScreen = ({ navigation }) => {
         visible={capturePopupVisible}
         onClose={() => setCapturePopupVisible(false)}
         onScanNow={handleScanNow}
+      />
+
+      <CityPickerSheet
+        visible={locationPickerVisible}
+        selectedCity={location}
+        onSelect={handleCitySelect}
+        onClose={() =>
+          setLocationPickerVisible(false)
+        }
       />
     </View>
   );
