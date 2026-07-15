@@ -12,7 +12,7 @@ import AppHeader from "../components/AppHeader/AppHeader";
 import styles from "./RecentScansScreenStyle";
 import COLORS from "../constants/colors";
 import {
-  capitalizeFirstLetter,
+  formatDisplayLabel,
   formatTitle,
 } from "../utils/textFormatters";
 
@@ -99,7 +99,7 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
               </Text>
               <Text style={styles.meta}>
                 <Text style={styles.categoryText}>
-                  {capitalizeFirstLetter(
+                  {formatDisplayLabel(
                     item.analysis?.category ||
                       "Repair"
                   )}

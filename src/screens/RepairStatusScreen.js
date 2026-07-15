@@ -16,6 +16,7 @@ import { updateChosenProvider } from "../api/updateChosenProvider";
 import AppHeader from "../components/AppHeader/AppHeader";
 import COLORS from "../constants/colors";
 import { apiGet } from "../api/apiClient";
+import { formatDisplayLabel } from "../utils/textFormatters";
 import styles from "./RepairStatusScreenStyle";
 
 const getProviderName = (provider) => {
@@ -158,15 +159,17 @@ const RepairStatusScreen = ({ navigation, route }) => {
           </Text>
 
           <Text style={styles.meta}>
-            Status: {scan?.repairStatus || "open"}
+            Status: {formatDisplayLabel(scan?.repairStatus || "open")}
           </Text>
 
           <Text style={styles.meta}>
-            Flow: {scan?.repairFlow || "none"}
+            Flow: {formatDisplayLabel(scan?.repairFlow || "none")}
           </Text>
 
           <Text style={styles.meta}>
-            Provider Reply: {scan?.providerReplyStatus || "not_requested"}
+            Provider Reply: {formatDisplayLabel(
+              scan?.providerReplyStatus || "not_requested"
+            )}
           </Text>
         </View>
 

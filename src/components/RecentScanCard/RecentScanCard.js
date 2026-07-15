@@ -10,7 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import styles from "./RecentScanCardStyle";
 import COLORS from "../../constants/colors";
 import {
-  capitalizeFirstLetter,
+  formatDisplayLabel,
   formatTitle,
 } from "../../utils/textFormatters";
 
@@ -55,7 +55,7 @@ const RecentScanCard = ({ item, onPress }) => {
 
         <View style={styles.badge}>
           <Text style={styles.badgeText}>
-            {capitalizeFirstLetter(item.status)}
+            {formatDisplayLabel(item.status) || "Unknown"}
           </Text>
         </View>
       </View>

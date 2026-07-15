@@ -13,6 +13,7 @@ import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import ProviderPlainButton from "../components/ProviderPlainButton";
 import ProviderHexAvatar from "../components/ProviderHexAvatar";
 import ProviderRating from "../components/ProviderRating";
+import { formatDisplayLabel } from "../utils/textFormatters";
 import ProviderSelectionLimitPopup from "../components/ProviderSelectionLimitPopup/ProviderSelectionLimitPopup";
 import { loadProviderDetails } from "../localDb/businessDirectoryProviderLocalDb";
 import { MAX_SELECTED_PROVIDERS } from "../utils/providerConstants";
@@ -133,9 +134,11 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
               <View style={styles.metaRow}>
                 <View style={styles.categoryPill}>
                   <Text style={styles.categoryPillText}>
-                    {provider.primaryCategory ||
-                      provider.providerType ||
-                      "Plumbing"}
+                    {formatDisplayLabel(
+                      provider.primaryCategory ||
+                        provider.providerType ||
+                        "Plumbing"
+                    )}
                   </Text>
                 </View>
                 <View style={styles.availabilityPill}>

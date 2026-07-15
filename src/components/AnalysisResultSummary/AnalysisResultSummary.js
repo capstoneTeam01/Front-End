@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import UrgencyBadge from "../UrgencyBadge/UrgencyBadge";
 import {
   capitalizeFirstLetter,
+  formatDisplayLabel,
   formatTitle,
 } from "../../utils/textFormatters";
 import styles from "./AnalysisResultSummaryStyle";
@@ -69,7 +70,7 @@ const AnalysisResultSummary = (props) => {
           </Text>
 
           <Text style={styles.riskText}>
-            Urgency Level: {capitalizeFirstLetter(urgency) || "Unknown"}
+            Urgency Level: {formatDisplayLabel(urgency) || "Unknown"}
           </Text>
         </View>
       </View>

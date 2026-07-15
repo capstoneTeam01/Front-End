@@ -6,6 +6,7 @@ import SeverityIcon from "../../../assets/icons/severity_Icon.svg";
 import TimeIcon from "../../../assets/icons/Time_Icon.svg";
 import HexTile from "../HexTile/HexTile";
 import COLORS from "../../constants/colors";
+import { formatDisplayLabel } from "../../utils/textFormatters";
 import styles from "./RepairEstimateSectionStyle";
 
 const DEFAULT_ESTIMATE_TILE_SIZE = 96;
@@ -151,7 +152,7 @@ const RepairEstimateSection = ({
           <EstimateItem
             iconType="severity"
             label="Severity Level"
-            value={urgency || "N/A"}
+            value={formatDisplayLabel(urgency) || "N/A"}
             size={tileSize}
           />
         ) : null}
