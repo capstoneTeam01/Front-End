@@ -1,12 +1,11 @@
 import { resolveApiUrl } from "./resolveApiUrl";
 import {
   getTokenForRequest,
-  resetAuthSession,
 } from "../features/auth/services/authSessionService";
 import { markFixBeeWarmupStale } from "../bootstrap/appStartupWarmup";
 import { handleSessionExpired } from "../utils/sessionExpiry";
 
-const AUTH_RETRY_STATUSES = new Set([401, 403, 419, 440]);
+const AUTH_FAILURE_STATUSES = new Set([401, 419, 440]);
 const DEFAULT_REQUEST_TIMEOUT_MS = 45000;
 const UPLOAD_REQUEST_TIMEOUT_MS = 70000;
 const ANALYSIS_REQUEST_TIMEOUT_MS = 90000;
@@ -22,7 +21,6 @@ const AUTH_ERROR_PATTERNS = [
   "jsonwebtokenerror",
   "tokenexpirederror",
   "unauthorized",
-  "forbidden",
   "session expired",
   "session not found",
   "no token",
@@ -70,10 +68,10 @@ const getErrorText = (data) =>
     .map((value) => String(value).toLowerCase())
     .join(" ");
 
-const shouldRetryWithFreshToken = (response, data) => {
+const isAuthenticationFailure = (response, data) => {
   if (!response) return false;
 
-  if (AUTH_RETRY_STATUSES.has(response.status)) {
+  if (AUTH_FAILURE_STATUSES.has(response.status)) {
     return true;
   }
 
@@ -165,9 +163,18 @@ const rawApiRequest = async (path, options = {}, token) => {
 
 export const apiRequest = async (path, options = {}) => {
   const needsAuth = options.auth !== false;
-  let token = needsAuth
-    ? await getTokenForRequest({ reason: `api:${path}` })
-    : null;
+  let token = null;
+
+  if (needsAuth) {
+    try {
+      token = await getTokenForRequest({ reason: `api:${path}` });
+    } catch (error) {
+      if (error?.code === "SESSION_EXPIRED") {
+        await handleSessionExpired();
+      }
+      throw error;
+    }
+  }
   let response;
   let data;
 
@@ -185,27 +192,19 @@ export const apiRequest = async (path, options = {}) => {
     });
 
     markFixBeeWarmupStale();
-    if (needsAuth) {
-      await resetAuthSession({ reason: `network-retry:${path}` });
-      token = await getTokenForRequest({
-        forceRefresh: true,
-        reason: `network-retry:${path}`,
-      });
-    }
-
     await delay(NETWORK_RETRY_DELAY_MS);
     response = await rawApiRequest(path, options, token);
     data = await parseJsonSafely(response);
   }
 
-  if (needsAuth && shouldRetryWithFreshToken(response, data)) {
+  if (needsAuth && isAuthenticationFailure(response, data)) {
     // Guest / pre-auth requests (no token) can 401 — that is not a session expiry.
     // Redirecting here was killing Splash before its animation finished.
     const hadToken = Boolean(token);
 
     if (hadToken) {
       console.log(
-        "[FixBee][Auth] backend rejected token, refreshing and retrying request",
+        "[FixBee][Auth] backend rejected token, clearing session and redirecting to Login",
         {
           path,
           status: response.status,
@@ -214,26 +213,7 @@ export const apiRequest = async (path, options = {}) => {
       );
 
       markFixBeeWarmupStale();
-      await resetAuthSession({ reason: `auth-retry:${path}` });
-      token = await getTokenForRequest({
-        forceRefresh: true,
-        reason: `auth-retry:${path}`,
-      });
-      response = await rawApiRequest(path, options, token);
-      data = await parseJsonSafely(response);
-
-      // If it STILL fails auth after a fresh-token retry, the session is
-      // truly expired and unrecoverable — kick the user to Login.
-      if (shouldRetryWithFreshToken(response, data)) {
-        console.log(
-          "[FixBee][Auth] session expired and unrecoverable, redirecting to Login",
-          {
-            path,
-            status: response.status,
-          },
-        );
-        await handleSessionExpired();
-      }
+      await handleSessionExpired();
     }
   }
 

@@ -17,7 +17,13 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
-import { SvgUri } from "react-native-svg";
+import {
+  ClipPath,
+  Defs,
+  Image as SvgImage,
+  Path,
+  Svg,
+} from "react-native-svg";
 import { getProviderRouteParamsFromIssue } from "../utils/issueProviderRouteMapper";
 
 import RepairIcon from "../../assets/icons/Repair_Icon.svg";
@@ -49,6 +55,31 @@ const STEP_MARKER_FRONT_SIZE = {
 };
 const DIY_WARNING_TEXT =
   "Stop immediately if conditions worsen or feel unsafe.";
+const TOOL_PHOTO_PATH =
+  "M34.868 1.37203C38.0437 -0.457342 41.9563 -0.457343 45.132 1.37203L74.868 18.5016C78.0437 20.3309 80 23.7117 80 27.3705V61.6295C80 65.2883 78.0437 68.6691 74.868 70.4984L45.132 87.628C41.9563 89.4573 38.0437 89.4573 34.868 87.628L5.132 70.4984C1.95631 68.6691 0 65.2883 0 61.6295V27.3705C0 23.7117 1.95631 20.3309 5.132 18.5016L34.868 1.37203Z";
+
+const ToolPhoto = ({ uri, width, height }) => (
+  <Svg
+    width={width}
+    height={height}
+    viewBox="0 0 80 89"
+  >
+    <Defs>
+      <ClipPath id="tool-photo-clip">
+        <Path d={TOOL_PHOTO_PATH} />
+      </ClipPath>
+    </Defs>
+    <SvgImage
+      x={0}
+      y={0}
+      width={80}
+      height={89}
+      href={{ uri }}
+      preserveAspectRatio="xMidYMid slice"
+      clipPath="url(#tool-photo-clip)"
+    />
+  </Svg>
+);
 
 const getPhotoId = (analysisResult) => {
   return (
@@ -527,7 +558,7 @@ for (
                       fill={COLORS.lightHoney}
                     >
                       {tool.imageUrl ? (
-                        <SvgUri
+                        <ToolPhoto
                           width={24}
                           height={24}
                           uri={tool.imageUrl}
@@ -782,9 +813,9 @@ for (
               stroke="transparent"
             >
               {selectedTool?.imageUrl ? (
-                <SvgUri
-                  width={190}
-                  height={190}
+                <ToolPhoto
+                  width={300}
+                  height={340}
                   uri={selectedTool.imageUrl}
                 />
               ) : null}

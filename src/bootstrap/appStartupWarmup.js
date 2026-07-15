@@ -1,5 +1,5 @@
 import { resolveApiUrl } from "../api/resolveApiUrl";
-import { getTokenForRequest, resetAuthSession } from "../features/auth/services/authSessionService";
+import { getTokenForRequest } from "../features/auth/services/authSessionService";
 
 const WARMUP_TIMEOUT_MS = 12000;
 const WARMUP_RETRY_DELAY_MS = 850;
@@ -76,7 +76,6 @@ export const warmUpFixBeeSession = async ({ reason = "app-start", forceRefresh =
         reason,
         error: firstError?.message,
       });
-      await resetAuthSession({ reason: `startup-warmup-retry:${reason}` });
       await delay(WARMUP_RETRY_DELAY_MS);
 
       try {

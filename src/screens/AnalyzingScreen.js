@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import OnboardingIdentifying from "../components/Mascot/OnboardingIdentifying.svg";
+import AnimatedBeeSvg from "../components/AnimatedBeeSvg";
 import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
 import HexTile from "../components/HexTile/HexTile";
@@ -163,14 +163,15 @@ const AnalyzingScreen = ({ onCancel }) => {
       >
         <HeroHexagon width={354 * layoutScale}>
           <View style={styles.heroContent}>
-            <OnboardingIdentifying
-              width={134 * layoutScale}
+            <AnimatedBeeSvg
+              source={require("../assets/bee-animations/identifying.svganim")}
+              width={141 * layoutScale}
               height={225 * layoutScale}
               style={[
                 styles.mascot,
                 {
                   top: 28 * layoutScale,
-                  left: 110 * layoutScale,
+                  left: 106.5 * layoutScale,
                 },
               ]}
             />

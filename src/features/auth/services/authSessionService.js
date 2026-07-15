@@ -15,8 +15,6 @@ import {
   saveAuthUserProfile,
 } from "../storage/tokenStorage";
 
-const TOKEN_EXPIRY_BUFFER_SECONDS = 90;
-
 let loginPromise = null;
 
 const clean = (value) => String(value || "").trim();
@@ -44,22 +42,12 @@ const decodeJwtPayload = (token) => {
   }
 };
 
-const tokenNeedsRefresh = (token) => {
+export const isTokenExpired = (token) => {
   const payload = decodeJwtPayload(token);
 
   if (!payload?.exp) return false;
 
-  const expiresAtMs = Number(payload.exp) * 1000;
-  const refreshAtMs = Date.now() + TOKEN_EXPIRY_BUFFER_SECONDS * 1000;
-  const shouldRefresh = expiresAtMs <= refreshAtMs;
-
-  if (shouldRefresh) {
-    console.log("[FixBee][Auth] saved token is expired or close to expiry", {
-      expiresAt: new Date(expiresAtMs).toISOString(),
-    });
-  }
-
-  return shouldRefresh;
+  return Number(payload.exp) * 1000 <= Date.now();
 };
 
 export const getSavedToken = async () => getAuthToken();
@@ -132,6 +120,15 @@ export const getTokenForRequest = async ({
   if (!forceRefresh) {
     const savedToken = await getSavedToken();
     if (savedToken) {
+      if (isTokenExpired(savedToken)) {
+        console.log("[FixBee][Auth] expired token removed before request");
+        await clearAuthToken({ keepUserProfile: false });
+
+        const error = new Error("Your session has expired. Please log in again.");
+        error.code = "SESSION_EXPIRED";
+        throw error;
+      }
+
       return savedToken;
     }
   }

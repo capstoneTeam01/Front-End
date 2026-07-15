@@ -3,7 +3,11 @@ import { Animated, Easing, useWindowDimensions, View } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
 import COLORS from "../constants/colors";
-import { getSavedToken } from "../features/auth/services/authSessionService";
+import {
+  getSavedToken,
+  isTokenExpired,
+  logoutUser,
+} from "../features/auth/services/authSessionService";
 import styles from "./SplashScreenStyle";
 
 const ANIM_MS = 1400;
@@ -146,7 +150,12 @@ const SplashScreen = ({ navigation }) => {
     (async () => {
       try {
         const token = await getSavedToken();
-        routeName = token ? "Home" : "Welcome";
+        if (token && isTokenExpired(token)) {
+          await logoutUser();
+          routeName = "Welcome";
+        } else {
+          routeName = token ? "Home" : "Welcome";
+        }
       } catch (error) {
         console.log("[FixBee][Splash] token check failed", error?.message);
         routeName = "Welcome";

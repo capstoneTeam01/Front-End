@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Asset } from "expo-asset";
 import { WebView } from "react-native-webview";
 
-const AnimatedBeeSvg = ({ source, width, height }) => {
+const AnimatedBeeSvg = ({ source, width, height, style }) => {
   const [html, setHtml] = useState(null);
 
   useEffect(() => {
@@ -39,7 +39,10 @@ const AnimatedBeeSvg = ({ source, width, height }) => {
   }, [source]);
 
   return (
-    <View pointerEvents="none" style={{ width, height }}>
+    <View
+      pointerEvents="none"
+      style={[{ width, height }, style]}
+    >
       {html ? (
         <WebView
           originWhitelist={["*"]}
