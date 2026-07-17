@@ -32,7 +32,7 @@ const HomeTopBackground = ({ style, variant = "home" }) => {
         variant="polygon8"
         width={polygonWidth}
         height={polygonHeight}
-        fill={COLORS.warmCream}
+        fill={COLORS.lightHoney}
         stroke="transparent"
         style={{
           position: "absolute",
@@ -45,7 +45,7 @@ const HomeTopBackground = ({ style, variant = "home" }) => {
         variant="polygon8"
         width={polygonWidth}
         height={polygonHeight}
-        fill={COLORS.warmCream}
+        fill={COLORS.lightHoney}
         stroke="transparent"
         style={{
           position: "absolute",

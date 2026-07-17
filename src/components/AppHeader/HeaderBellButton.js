@@ -1,11 +1,11 @@
 import { Pressable, Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
+import NotificationIcon from "../../../assets/icons/Notification_Icon.svg";
 import COLORS from "../../constants/colors";
 import useUnreadCount from "../../hooks/useUnreadCount";
 import styles from "./HeaderBellButtonStyle";
 
-const HeaderBellButton = ({ onPress, size = 20, color = COLORS.secondary }) => {
+const HeaderBellButton = ({ onPress, size = 25, color = COLORS.secondary }) => {
   const unreadCount = useUnreadCount();
 
   if (!onPress) {
@@ -19,7 +19,7 @@ const HeaderBellButton = ({ onPress, size = 20, color = COLORS.secondary }) => {
       style={styles.button}
       accessibilityLabel="Open notifications"
     >
-      <Ionicons name="notifications-outline" size={size} color={color} />
+      <NotificationIcon width={size} height={size} />
 
       {unreadCount > 0 ? (
         <View style={styles.badge}>

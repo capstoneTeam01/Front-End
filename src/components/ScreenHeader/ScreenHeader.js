@@ -33,9 +33,7 @@ const ScreenHeader = ({
               </TouchableOpacity>
             ) : null}
             {title ? (
-              <Text style={styles.title}>
-                {formatTitle(title)}
-              </Text>
+              <Text style={styles.title}>{formatTitle(title)}</Text>
             ) : null}
           </>
         )}

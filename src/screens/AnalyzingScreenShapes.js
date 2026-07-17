@@ -20,7 +20,7 @@ const TopBackgroundPattern = ({ style }) => {
         variant="polygon8"
         width={polygonWidth}
         height={polygonHeight}
-        fill={COLORS.warmCream}
+        fill={COLORS.lightHoney}
         stroke="transparent"
         preserveAspectRatio="none"
         style={{
@@ -33,7 +33,7 @@ const TopBackgroundPattern = ({ style }) => {
         variant="polygon8"
         width={polygonWidth}
         height={polygonHeight}
-        fill={COLORS.warmCream}
+        fill={COLORS.lightHoney}
         stroke="transparent"
         preserveAspectRatio="none"
         style={{
