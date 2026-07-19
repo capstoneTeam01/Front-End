@@ -11,8 +11,8 @@ const styles = StyleSheet.create({
 
   sheet: {
     backgroundColor: COLORS.white,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 12,
     paddingBottom: 32,
@@ -28,33 +28,27 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    lineHeight: 28,
-    fontWeight: "400",
     color: COLORS.textPrimary,
     marginBottom: 8,
+    ...TYPE.sectionTitle,
   },
 
   subtitle: {
-    fontSize: TYPE.small.fontSize,
-    lineHeight: 18,
-    fontWeight: "400",
     color: COLORS.textSecondary,
     marginBottom: 16,
+    ...TYPE.small,
   },
 
   grid: {
     flexDirection: "row",
-    gap: 12,
+    gap: 16,
     alignSelf: "stretch",
   },
 
   footer: {
     marginTop: 16,
-    fontSize: TYPE.small.fontSize,
-    lineHeight: 18,
-    fontWeight: "400",
     color: COLORS.textSecondary,
+    ...TYPE.small,
   },
 });
 

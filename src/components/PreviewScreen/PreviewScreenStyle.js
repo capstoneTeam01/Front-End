@@ -1,8 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import COLORS from "../../constants/colors";
-import { HEADER_FOOTER } from "../../constants/typography";
-import { BUTTON_HEIGHT, RADIUS, SPACING } from "../../constants/layout";
+import { BUTTON_HEIGHT, RADIUS, SPACING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   container: {
@@ -50,7 +49,7 @@ const styles = StyleSheet.create({
   },
   retakeText: {
     color: COLORS.secondary,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
   confirmButton: {
     flex: 1,
@@ -65,7 +64,7 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     color: COLORS.secondary,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
 });
 

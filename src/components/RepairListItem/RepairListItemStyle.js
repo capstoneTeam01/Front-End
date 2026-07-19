@@ -38,18 +38,14 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: TYPE.small.fontSize,
-    lineHeight: 18,
-    fontWeight: "400",
     color: COLORS.honeyBrown,
     marginBottom: 2,
+    ...TYPE.small,
   },
 
   subtitle: {
-    fontSize: TYPE.small.fontSize,
-    lineHeight: 18,
-    fontWeight: "400",
     color: COLORS.mediumGrey,
+    ...TYPE.small,
   },
 });
 

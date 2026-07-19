@@ -137,42 +137,42 @@ const styles = StyleSheet.create({
     ...TYPE.button,
   },
   modalOverlay: {
-  flex: 1,
-  backgroundColor: "rgba(0,0,0,0.35)",
-  justifyContent: "flex-end",
-},
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.35)",
+    justifyContent: "flex-end",
+  },
 
-feedbackModal: {
-  backgroundColor: COLORS.white,
-  borderTopLeftRadius: 24,
-  borderTopRightRadius: 24,
-  padding: 24,
-},
+  feedbackModal: {
+    backgroundColor: COLORS.white,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    padding: 24,
+  },
 
-modalTitle: {
-  color: COLORS.textPrimary,
-  marginBottom: 16,
-  textAlign: "center",
-  ...TYPE.cardTitle,
-},
+  modalTitle: {
+    color: COLORS.textPrimary,
+    marginBottom: 16,
+    textAlign: "center",
+    ...TYPE.cardTitle,
+  },
 
-starRow: {
-  flexDirection: "row",
-  justifyContent: "center",
-  gap: 10,
-  marginBottom: 20,
-},
+  starRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 10,
+    marginBottom: 20,
+  },
 
-feedbackInput: {
-  minHeight: 90,
-  borderWidth: 1,
-  borderColor: COLORS.gray300,
-  borderRadius: RADIUS.field,
-  padding: 14,
-  marginBottom: 18,
-  color: COLORS.textPrimary,
-  ...TYPE.small,
-},
+  feedbackInput: {
+    minHeight: 90,
+    borderWidth: 1,
+    borderColor: COLORS.gray300,
+    borderRadius: RADIUS.field,
+    padding: 14,
+    marginBottom: 18,
+    color: COLORS.textPrimary,
+    ...TYPE.small,
+  },
 });
 
 export default styles;

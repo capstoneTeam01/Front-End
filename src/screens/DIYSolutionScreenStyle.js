@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, TYPE } from "../constants/layout";
-import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   safe: {
@@ -19,7 +18,7 @@ const styles = StyleSheet.create({
 
   title: {
     color: COLORS.textPrimary,
-    marginBottom: 12,
+    marginBottom: 10,
     ...TYPE.sectionTitle,
   },
 
@@ -31,14 +30,21 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     color: COLORS.textPrimary,
-    marginBottom: 16,
     ...TYPE.cardTitle,
+  },
+
+  toolsSectionTitle: {
+    marginBottom: 20,
+  },
+
+  stepsSectionTitle: {
+    marginBottom: 24,
   },
 
   toolCard: {
     borderWidth: 1,
     borderColor: COLORS.gray500,
-    borderRadius: RADIUS.big,
+    borderRadius: 24,
     backgroundColor: COLORS.white,
     marginBottom: 24,
     overflow: "hidden",
@@ -138,10 +144,8 @@ const styles = StyleSheet.create({
   },
 
   stepDesc: {
-    ...TYPE.caption,
-    fontSize: 13,
-    lineHeight: 20,
     color: COLORS.honeyBrown,
+    ...TYPE.small,
   },
 
   inactiveText: {
@@ -189,13 +193,13 @@ const styles = StyleSheet.create({
   helpTitle: {
     color: COLORS.textPrimary,
     marginBottom: 12,
-    ...TYPE.body,
+    ...TYPE.h3,
   },
 
   helpText: {
     color: COLORS.mediumGrey,
     textAlign: "center",
-    ...TYPE.caption,
+    ...TYPE.small,
   },
 
   footer: {
@@ -207,13 +211,13 @@ const styles = StyleSheet.create({
 
   footerRow: {
     flexDirection: "row",
-    gap: 12,
+    gap: 16,
   },
 
   footerBtn: {
     flex: 1,
-    height: 46,
-    borderRadius: 14,
+    height: BUTTON_HEIGHT,
+    borderRadius: RADIUS.field,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -233,7 +237,7 @@ const styles = StyleSheet.create({
 
   footerBtnText: {
     color: COLORS.secondary,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
 
   toolModalOverlay: {

@@ -162,7 +162,7 @@ setCompletedRepairs(completedScans);
   const renderRecentScans = () => {
     if (isLoading) {
       return (
-        <Text>
+        <Text style={styles.emptyText}>
           Loading recent scans...
         </Text>
       );
@@ -170,7 +170,7 @@ setCompletedRepairs(completedScans);
 
     if (errorMessage) {
       return (
-        <Text>
+        <Text style={styles.emptyText}>
           {errorMessage}
         </Text>
       );
@@ -178,7 +178,7 @@ setCompletedRepairs(completedScans);
 
     if (recentScans.length === 0) {
       return (
-        <Text>
+        <Text style={styles.emptyText}>
           No recent scans found.
         </Text>
       );
@@ -246,7 +246,7 @@ setCompletedRepairs(completedScans);
 
         <View style={styles.completedList}>
           {completedRepairs.length === 0 ? (
-            <Text style={styles.emptyText}>No Completed Repairs Found.</Text>
+            <Text style={styles.emptyText}>No completed repairs found.</Text>
           ) : (
             completedRepairs.map((item) => (
               <RepairListItem

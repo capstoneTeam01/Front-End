@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
   },
 
   actionItem: {
-    minHeight: 54,
+    minHeight: 56,
     justifyContent: "center",
-    paddingVertical: 12,
+    paddingVertical: SPACING.card,
     paddingHorizontal: SPACING.card,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.divider,

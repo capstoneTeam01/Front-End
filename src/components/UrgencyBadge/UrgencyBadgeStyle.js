@@ -26,9 +26,8 @@ const styles = StyleSheet.create({
   },
 
   badgeText: {
-    ...TYPE.caption,
     textAlign: "center",
-    lineHeight: 15,
+    ...TYPE.caption,
   },
 
   darkText: {

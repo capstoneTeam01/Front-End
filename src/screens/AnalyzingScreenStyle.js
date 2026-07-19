@@ -6,7 +6,6 @@ import {
   RADIUS,
   TYPE,
 } from "../constants/layout";
-import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   container: {
@@ -84,7 +83,6 @@ const styles = StyleSheet.create({
     flex: 1,
     ...TYPE.body,
     color: COLORS.honeyBrown,
-    lineHeight: 22,
   },
 
   activeDot: {
@@ -116,7 +114,7 @@ const styles = StyleSheet.create({
 
   cancelButtonText: {
     color: COLORS.secondary,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
 });
 

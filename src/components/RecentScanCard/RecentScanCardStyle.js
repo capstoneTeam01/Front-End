@@ -4,7 +4,7 @@ import { RADIUS, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   card: {
-    width: 176,
+    width: 170,
     borderRadius: RADIUS.big,
     backgroundColor: COLORS.white,
     borderWidth: 1,
@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingHorizontal: 14,
-    paddingVertical: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
   },
 
   title: {
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 
   date: {
     color: COLORS.mediumGrey,
-    marginBottom: 12,
+    marginBottom: 8,
     ...TYPE.small,
   },
 

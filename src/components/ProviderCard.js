@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import COLORS from "../constants/colors";
-import FONT from "../constants/typography";
+import { TYPE } from "../constants/layout";
 import ProviderHexAvatar from "./ProviderHexAvatar";
 import ProviderRating from "./ProviderRating";
 
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: COLORS.white,
     borderRadius: 12,
-    paddingVertical: 12,
+    paddingVertical: 20,
     paddingHorizontal: 20,
     marginBottom: 16,
     borderWidth: 1,
@@ -64,12 +64,9 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   name: {
-    fontFamily: FONT.regular,
     color: COLORS.secondary,
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "400",
     marginBottom: 4,
+    ...TYPE.cardTitle,
   },
   distance: {
     display: "none",

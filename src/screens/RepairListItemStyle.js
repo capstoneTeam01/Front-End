@@ -1,15 +1,16 @@
 import { StyleSheet } from "react-native";
-import { TYPE } from "../constants/layout";
+import COLORS from "../constants/colors";
+import { RADIUS, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   row: {
     minHeight: 104,
     borderWidth: 1,
-    borderColor: "#E2E2E2",
-    borderRadius: 20,
-    backgroundColor: "#FDFDFD",
-    paddingHorizontal: 18,
-    marginBottom: 16,
+    borderColor: COLORS.gray500,
+    borderRadius: RADIUS.big,
+    backgroundColor: COLORS.white,
+    paddingHorizontal: SPACING.card,
+    marginBottom: SPACING.card,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
 
   divider: {
     borderTopWidth: 1,
-    borderTopColor: "#E9E7E7",
+    borderTopColor: COLORS.gray300,
   },
 
   left: {
@@ -29,11 +30,11 @@ const styles = StyleSheet.create({
   iconChip: {
     width: 72,
     height: 72,
-    borderRadius: 18,
-    backgroundColor: "#F3F4F6",
+    borderRadius: RADIUS.medium,
+    backgroundColor: COLORS.surface,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 18,
+    marginRight: SPACING.card,
   },
 
   text: {
@@ -41,14 +42,14 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: "#0A0A0A",
-    marginBottom: 8,
-    ...TYPE.h3,
+    color: COLORS.textPrimary,
+    marginBottom: SPACING.sm,
+    ...TYPE.cardTitle,
   },
 
   subtitle: {
-    color: "#4A5565",
-    ...TYPE.body,
+    color: COLORS.textSecondary,
+    ...TYPE.small,
   },
 });
 

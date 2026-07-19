@@ -1,17 +1,18 @@
 import { StyleSheet } from "react-native";
 
 import COLORS from "../../constants/colors";
-import { HEADER_FOOTER } from "../../constants/typography";
 import {
   BUTTON_HEIGHT,
   RADIUS,
+  SPACING,
+  TYPE,
 } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   buttonRow: {
     width: "100%",
     flexDirection: "row",
-    gap: 12,
+    gap: SPACING.card,
   },
 
   button: {
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: COLORS.secondary,
     textAlign: "center",
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
 });
 

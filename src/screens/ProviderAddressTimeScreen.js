@@ -649,7 +649,7 @@ const styles = StyleSheet.create({
   },
   notesLabel: {
     marginTop: SPACING.section,
-    marginBottom: SPACING.card,
+    marginBottom: 12,
   },
   firstAddressInput: {
     marginBottom: 12,
@@ -691,7 +691,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 12,
+    gap: SPACING.sm,
     shadowColor: COLORS.black,
     shadowOpacity: 0.03,
     shadowRadius: 6,
@@ -704,7 +704,7 @@ const styles = StyleSheet.create({
   },
   segmentRow: {
     flexDirection: "row",
-    gap: 9,
+    gap: SPACING.sm,
     marginBottom: 0,
   },
   segment: {
@@ -750,13 +750,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: COLORS.white,
-    borderRadius: RADIUS.big,
+    borderRadius: 24,
     borderWidth: 1,
     borderColor: COLORS.providerLightGray,
-    paddingVertical: 18,
-    paddingHorizontal: SIDE_PADDING,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
     marginTop: SPACING.section,
-    gap: 18,
+    gap: SPACING.card,
   },
   infoText: {
     flex: 1,

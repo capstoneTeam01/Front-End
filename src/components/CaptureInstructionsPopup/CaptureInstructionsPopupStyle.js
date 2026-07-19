@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import { HEADER_FOOTER } from "../../constants/typography";
 import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
@@ -11,8 +10,8 @@ const styles = StyleSheet.create({
   },
   sheet: {
     backgroundColor: COLORS.white,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     paddingTop: 12,
   },
   handle: {
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
   tipsCard: {
     borderWidth: 1,
     borderColor: COLORS.divider,
-    borderRadius: RADIUS.big,
+    borderRadius: 24,
     overflow: "hidden",
   },
   tipRow: {
@@ -49,8 +48,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: SPACING.card,
-    paddingVertical: 12,
-    gap: 14,
+    paddingVertical: SPACING.card,
+    gap: 12,
   },
   tipDivider: {
     borderBottomWidth: 1,
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
   },
   scanButtonText: {
     color: COLORS.secondary,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
 });
 

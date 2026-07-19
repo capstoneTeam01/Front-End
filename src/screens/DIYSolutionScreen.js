@@ -37,7 +37,7 @@ import { updateRepairStatus } from "../api/updateRepairStatus";
 import { resolveApiUrl } from "../api/resolveApiUrl";
 import {
   capitalizeFirstLetter,
-  formatTitle,
+  formatTitleWithWordLimit,
 } from "../utils/textFormatters";
 
 const MAX_PENDING_CHECKS = 30;
@@ -503,7 +503,7 @@ for (
         <Text
           style={styles.title}
         >
-          {formatTitle(diyData.title) ||
+          {formatTitleWithWordLimit(diyData.title, 3) ||
             "Fix Instructions"}
         </Text>
 
@@ -518,7 +518,7 @@ for (
 
         <Text
           style={
-            styles.sectionTitle
+            [styles.sectionTitle, styles.toolsSectionTitle]
           }
         >
           Tools You May Need
@@ -588,7 +588,7 @@ for (
 
         <Text
           style={
-            styles.sectionTitle
+            [styles.sectionTitle, styles.stepsSectionTitle]
           }
         >
           Repair Steps
@@ -664,7 +664,7 @@ for (
                           styles.inactiveText,
                       ]}
                     >
-                      {formatTitle(item.title)}
+                      {formatTitleWithWordLimit(item.title, 3)}
                     </Text>
 
                     <Text

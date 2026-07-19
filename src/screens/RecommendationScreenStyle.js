@@ -22,17 +22,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     backgroundColor: COLORS.white,
-
-    // Prevents the fixed bottom buttons from covering
-    // the final Repair Estimate content.
     paddingBottom: 102,
   },
 
-  /*
-   * Issue Detected header (shared AppHeader shape).
-   * Floats over the hero image so the photo bleeds to the very
-   * top of the screen and shows through the cut bottom corners.
-   */
   headerContainer: {
     position: "absolute",
     top: 0,
@@ -41,13 +33,8 @@ const styles = StyleSheet.create({
     zIndex: 5,
   },
 
-  /*
-   * Uploaded image and issue summary
-   */
   heroContainer: {
     width: "100%",
-    // Starts at the very top of the screen (under the floating
-    // header), so the height includes the area behind the header.
     height: 520,
     position: "relative",
     backgroundColor: COLORS.charcoal,
@@ -86,20 +73,17 @@ const styles = StyleSheet.create({
   },
 
   issueTitle: {
+    ...TYPE.sectionTitle,
     color: COLORS.white,
-    marginBottom: 12,
+    marginBottom: SPACING.sm,
     textTransform: "capitalize",
-    ...TYPE.cardTitle,
   },
 
   issueDescription: {
+    ...TYPE.cardTitle,
     color: COLORS.white,
-    ...TYPE.small,
   },
 
-  /*
-   * Main screen content
-   */
   contentContainer: {
     position: "relative",
     backgroundColor: COLORS.white,
@@ -123,17 +107,12 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
 
-  /*
-   * Fixed bottom action area
-   * Matches the working Experts List structure.
-   */
   bottomActionContainer: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
     zIndex: 20,
-
   },
 
   bottomActionContent: {

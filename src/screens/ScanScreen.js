@@ -13,7 +13,7 @@ import AnalyzingScreen from "./AnalyzingScreen";
 import RecommendationScreen from "./RecommendationScreen";
 import EmergencyIssueScreen from "./EmergencyIssueScreen";
 import COLORS from "../constants/colors";
-import { SIDE_PADDING } from "../constants/layout";
+import { SIDE_PADDING, TYPE } from "../constants/layout";
 import { getProviderRouteParamsFromIssue } from "../utils/issueProviderRouteMapper";
 import {
   buildLocationRouteParams,
@@ -351,9 +351,9 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 8,
     marginHorizontal: SIDE_PADDING,
-    fontSize: 14,
     color: COLORS.textSecondary,
     textAlign: "center",
+    ...TYPE.small,
   },
 });
 

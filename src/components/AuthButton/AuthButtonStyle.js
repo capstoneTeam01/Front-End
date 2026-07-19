@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import { HEADER_FOOTER } from "../../constants/typography";
-import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING } from "../../constants/layout";
+import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   button: {
@@ -22,7 +21,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLORS.textPrimary,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
 });
 

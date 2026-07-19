@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
 
   centerSection: {
-    marginTop: 15,
+    marginTop: SPACING.card,
     marginBottom: SPACING.card,
     color: COLORS.honeyBrown,
     textAlign: "center",

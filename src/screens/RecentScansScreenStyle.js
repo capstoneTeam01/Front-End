@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import { SIDE_PADDING, RADIUS, TYPE } from "../constants/layout";
+import { SIDE_PADDING, RADIUS, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
   safe: {
@@ -12,14 +12,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 20,
-    gap: 18,
+    paddingTop: SPACING.card,
+    gap: SPACING.card,
   },
 
   filterPill: {
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 18,
+    paddingHorizontal: SPACING.card,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.medium,
   },
 
   filterPillActive: {
@@ -47,11 +47,11 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gray300,
     borderRadius: RADIUS.big,
     backgroundColor: COLORS.white,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
+    paddingHorizontal: SPACING.card,
+    paddingVertical: SPACING.card,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
+    marginBottom: SPACING.card,
   },
 
   iconBox: {
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   emptyText: {
     color: COLORS.textMuted,
     textAlign: "center",
-    paddingVertical: 24,
+    paddingVertical: SPACING.section,
     ...TYPE.body,
   },
 });

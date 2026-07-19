@@ -14,19 +14,19 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gray500,
     borderRadius: RADIUS.big,
     padding: SPACING.card,
-    marginBottom: 18,
+    marginBottom: SPACING.card,
   },
 
   issueTitle: {
     color: COLORS.textPrimary,
     marginBottom: SPACING.sm,
     textTransform: "capitalize",
-    ...TYPE.sectionTitle,
+    ...TYPE.cardTitle,
   },
 
   issueDescription: {
     color: COLORS.textSecondary,
-    marginBottom: 14,
+    marginBottom: SPACING.card,
     ...TYPE.body,
   },
 
@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.textPrimary,
     borderRadius: RADIUS.big,
     padding: SPACING.card,
-    marginBottom: 20,
+    marginBottom: SPACING.section,
   },
 
   urgencyBadgeContainer: {
-    marginBottom: 12,
+    marginBottom: SPACING.sm,
   },
 
   emergencyTitle: {
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...TYPE.sectionTitle,
     color: COLORS.textPrimary,
-    marginBottom: 10,
+    marginBottom: SPACING.sm,
   },
 
   riskCard: {
@@ -64,12 +64,12 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gray500,
     borderRadius: RADIUS.medium,
     overflow: "hidden",
-    marginBottom: 20,
+    marginBottom: SPACING.section,
   },
 
   riskText: {
     color: COLORS.textPrimary,
-    paddingVertical: 14,
+    paddingVertical: SPACING.card,
     paddingHorizontal: SPACING.card,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.divider,

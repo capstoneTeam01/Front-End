@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
-import { TYPE } from "../../constants/layout";
+import { SIDE_PADDING, TYPE } from "../../constants/layout";
 
 const styles = StyleSheet.create({
   row: {
@@ -8,10 +8,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 16,
+    paddingHorizontal: SIDE_PADDING,
   },
   label: {
-    fontSize: TYPE.body.fontSize,
     color: COLORS.textPrimary,
+    ...TYPE.body,
   },
 });
 
