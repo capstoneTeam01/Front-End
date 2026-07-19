@@ -45,9 +45,32 @@ const formatTitle = (value) => {
   );
 };
 
+const limitWords = (value, maxWords) => {
+  const text = cleanDisplayText(value);
+
+  if (!text || !Number.isFinite(maxWords) || maxWords <= 0) {
+    return text;
+  }
+
+  return text
+    .split(" ")
+    .slice(0, maxWords)
+    .join(" ");
+};
+
+const formatTitleWithWordLimit = (value, maxWords) => {
+  return formatTitle(limitWords(value, maxWords))
+    .replace(/\bDiy\b/g, "DIY")
+    .replace(/\bAi\b/g, "AI")
+    .replace(/\bId\b/g, "ID")
+    .replace(/\bApi\b/g, "API");
+};
+
 export {
   capitalizeFirstLetter,
   cleanDisplayText,
   formatDisplayLabel,
   formatTitle,
+  formatTitleWithWordLimit,
+  limitWords,
 };

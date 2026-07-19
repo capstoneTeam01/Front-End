@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 
   content: {
     alignItems: "center",
-    gap: 7,
+    gap: 8,
   },
 
   iconWrap: {
@@ -21,10 +21,8 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontSize: TYPE.small.fontSize,
-    lineHeight: 18,
-    fontWeight: "400",
     color: COLORS.textPrimary,
+    ...TYPE.small,
   },
 });
 

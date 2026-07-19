@@ -438,13 +438,13 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.textPrimary,
-    ...TYPE.cardTitle,
+    ...TYPE.sectionTitle,
   },
   subtitle: {
     color: COLORS.providerMidGray,
     marginTop: SPACING.sm,
     marginBottom: SPACING.card,
-    ...TYPE.caption,
+    ...TYPE.small,
   },
   mailCard: {
     backgroundColor: COLORS.white,
@@ -457,28 +457,28 @@ const styles = StyleSheet.create({
     color: COLORS.providerMidGray,
     marginTop: SPACING.card,
     marginBottom: 4,
-    ...TYPE.caption,
+    ...TYPE.small,
   },
   mailLink: {
     color: COLORS.honeyDark,
     marginBottom: 2,
-    ...TYPE.small,
+    ...TYPE.body,
   },
   subject: {
     color: COLORS.textPrimary,
     marginBottom: 4,
-    ...TYPE.small,
+    ...TYPE.body,
   },
   bodyText: {
     color: COLORS.textPrimary,
-    ...TYPE.small,
+    ...TYPE.body,
   },
   bodyInput: {
     minHeight: 250,
     color: COLORS.textPrimary,
     padding: 0,
     margin: 0,
-    ...TYPE.small,
+    ...TYPE.body,
   },
   imagesHeaderRow: {
     flexDirection: "row",
@@ -489,11 +489,11 @@ const styles = StyleSheet.create({
   },
   imagesTitle: {
     color: COLORS.textPrimary,
-    ...TYPE.small,
+    ...TYPE.cardTitle,
   },
   imagesHint: {
     color: COLORS.providerMidGray,
-    ...TYPE.caption,
+    ...TYPE.small,
   },
   imagesRow: {
     flexDirection: "row",
@@ -531,9 +531,9 @@ const styles = StyleSheet.create({
   },
   imageLabel: {
     color: COLORS.providerBrown,
-    marginTop: 5,
+    marginTop: SPACING.sm,
     textAlign: "center",
-    ...TYPE.caption,
+    ...TYPE.small,
   },
   addImageTile: {
     width: 62,

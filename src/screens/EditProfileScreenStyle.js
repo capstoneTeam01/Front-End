@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 import { SIDE_PADDING, RADIUS, TYPE } from "../constants/layout";
-import { HEADER_FOOTER } from "../constants/typography";
 
 const styles = StyleSheet.create({
   safe: {
@@ -105,14 +104,14 @@ const styles = StyleSheet.create({
   },
   cancelLabel: {
     color: COLORS.secondary,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
   saveBtn: {
     backgroundColor: COLORS.primary,
   },
   saveLabel: {
     color: COLORS.secondary,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
 });
 

@@ -1,8 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import COLORS from "../constants/colors";
-import { HEADER_FOOTER } from "../constants/typography";
-import { BUTTON_HEIGHT, RADIUS, SPACING } from "../constants/layout";
+import { BUTTON_HEIGHT, RADIUS, SPACING, TYPE } from "../constants/layout";
 import { formatTitle } from "../utils/textFormatters";
 
 const ProviderPlainButton = ({ title, onPress, disabled = false, variant = "primary", style }) => {
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: COLORS.providerBrown,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
   secondaryButtonText: {
     color: COLORS.providerBrown,

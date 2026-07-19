@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   estimateLabel: {
     color: COLORS.honeyBrown,
     textAlign: "center",
-    lineHeight: 14,
     marginBottom: 4,
     ...TYPE.caption,
   },
@@ -57,7 +56,6 @@ const styles = StyleSheet.create({
   estimateValue: {
     color: COLORS.secondary,
     textAlign: "center",
-    lineHeight: 16,
     textTransform: "capitalize",
     width: "100%",
     paddingHorizontal: 4,

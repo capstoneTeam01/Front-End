@@ -3,6 +3,8 @@ import COLORS from "../constants/colors";
 import {
   SIDE_PADDING,
   BOTTOM_NAV_HEIGHT,
+  RADIUS,
+  SPACING,
   TYPE,
 } from "../constants/layout";
 
@@ -51,8 +53,8 @@ const styles = StyleSheet.create({
   },
 
   menuCard: {
-    marginTop: 30,
-    borderRadius: 18,
+    marginTop: SPACING.large,
+    borderRadius: RADIUS.big,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.divider,
     backgroundColor: COLORS.white,

@@ -25,11 +25,6 @@ const styles = StyleSheet.create({
     paddingBottom: 102,
   },
 
-  /*
-   * Issue Detected header (shared AppHeader shape).
-   * Floats over the hero image so the photo bleeds to the very
-   * top of the screen and shows through the cut bottom corners.
-   */
   headerContainer: {
     position: "absolute",
     top: 0,
@@ -38,13 +33,8 @@ const styles = StyleSheet.create({
     zIndex: 5,
   },
 
-  /*
-   * Uploaded image and issue text
-   */
   heroContainer: {
     width: "100%",
-    // Starts at the very top of the screen (under the floating
-    // header), so the height includes the area behind the header.
     height: 520,
     position: "relative",
     backgroundColor: COLORS.charcoal,
@@ -83,20 +73,17 @@ const styles = StyleSheet.create({
   },
 
   issueTitle: {
+    ...TYPE.sectionTitle,
     color: COLORS.white,
-    marginBottom: 12,
+    marginBottom: SPACING.sm,
     textTransform: "capitalize",
-    ...TYPE.cardTitle,
   },
 
   issueDescription: {
+    ...TYPE.cardTitle,
     color: COLORS.white,
-    ...TYPE.small,
   },
 
-  /*
-   * Emergency action content
-   */
   contentContainer: {
     position: "relative",
     backgroundColor: COLORS.white,
@@ -120,9 +107,6 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
 
-  /*
-   * Fixed Find Experts panel
-   */
   bottomActionContainer: {
     position: "absolute",
     left: 0,

@@ -16,8 +16,8 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
     alignItems: "center",
     backgroundColor: COLORS.white,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
   },
   handle: {
     width: 40,

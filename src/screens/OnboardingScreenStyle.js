@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
-import { HEADER_FOOTER } from "../constants/typography";
 import { BUTTON_HEIGHT, FIELD_HEIGHT, RADIUS, SIDE_PADDING, SPACING, TYPE } from "../constants/layout";
 
 const styles = StyleSheet.create({
@@ -20,7 +19,7 @@ const styles = StyleSheet.create({
   },
   skipButtonLabel: {
     color: COLORS.secondary,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
   slide: {
     flex: 1,
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
   },
   nextButtonLabel: {
     color: COLORS.secondary,
-    ...HEADER_FOOTER.footerButton,
+    ...TYPE.button,
   },
 });
 

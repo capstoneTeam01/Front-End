@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
   },
   sheet: {
     backgroundColor: COLORS.white,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     paddingHorizontal: SIDE_PADDING,
     paddingTop: 12,
     paddingBottom: 32,
@@ -25,19 +25,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: TYPE.sectionTitle.fontSize,
-    lineHeight: 28,
-    fontWeight: "400",
     color: COLORS.textPrimary,
     marginBottom: 8,
+    ...TYPE.sectionTitle,
   },
   subtitle: {
-    fontSize: TYPE.small.fontSize,
-    lineHeight: 18,
-    fontWeight: "400",
     color: COLORS.textSecondary,
     textAlign: "center",
     marginBottom: 16,
+    ...TYPE.small,
   },
   cityList: {
     width: "100%",
