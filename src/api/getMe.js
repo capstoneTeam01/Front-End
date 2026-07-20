@@ -1,4 +1,5 @@
 import { apiGet } from "./apiClient";
+import { getTokenForRequest } from "../features/auth/services/authSessionService";
 
 const ME_ENDPOINTS = ["/api/users/me", "/api/auth/me", "/api/user/me"];
 
@@ -40,7 +41,13 @@ const extractLocation = (user) => {
 };
 
 const normalizeUserPayload = (data) => {
-  const user = data.user || data.currentUser || data.profile || data.data?.user || data.data || data;
+  const user =
+    data.user ||
+    data.currentUser ||
+    data.profile ||
+    data.data?.user ||
+    data.data ||
+    data;
 
   return {
     user,
@@ -50,6 +57,13 @@ const normalizeUserPayload = (data) => {
 };
 
 const getMe = async () => {
+  const token = await getTokenForRequest();
+  if (!token) {
+    const error = new Error("Not authenticated.");
+    error.code = "NO_TOKEN";
+    throw error;
+  }
+
   let lastError;
 
   for (const endpoint of ME_ENDPOINTS) {

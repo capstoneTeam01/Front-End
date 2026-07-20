@@ -72,10 +72,15 @@ export const loginWithCredentials = async (credentials = DEV_LOGIN) => {
   );
 };
 
-export const registerWithCredentials = async ({ name, email, password }) => {
+export const registerWithCredentials = async ({
+  name,
+  email,
+  phone,
+  password,
+}) => {
   return postAuth(
     REGISTER_ENDPOINT,
-    { name, email, password },
+    { name, email, phone, password },
     { logLabel: "register" },
   );
 };

@@ -66,9 +66,14 @@ export const loginUser = async (credentials) => {
   return persistAuthResult(result);
 };
 
-export const registerUser = async ({ name, email, password }) => {
+export const registerUser = async ({ name, email, phone, password }) => {
   console.log("[FixBee][Auth] user register", { email });
-  const result = await registerWithCredentials({ name, email, password });
+  const result = await registerWithCredentials({
+    name,
+    email,
+    phone,
+    password,
+  });
   return persistAuthResult(result);
 };
 
@@ -124,7 +129,9 @@ export const getTokenForRequest = async ({
         console.log("[FixBee][Auth] expired token removed before request");
         await clearAuthToken({ keepUserProfile: false });
 
-        const error = new Error("Your session has expired. Please log in again.");
+        const error = new Error(
+          "Your session has expired. Please log in again.",
+        );
         error.code = "SESSION_EXPIRED";
         throw error;
       }
