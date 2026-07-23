@@ -17,6 +17,10 @@ import PolygonAsset from "../components/PolygonAsset";
 import AnimatedBeeSvg from "../components/AnimatedBeeSvg";
 import COLORS from "../constants/colors";
 import { useLocation } from "../context/LocationContext";
+import IdentifyingAnimation from "../../assets/bee-animations/identifying.svg";
+import FoundSolutionAnimation from "../../assets/bee-animations/found-solution.svg";
+import OnTabletAnimation from "../../assets/bee-animations/on-tablet.svg";
+import AllDoneAnimation from "../../assets/bee-animations/all-done.svg";
 
 const FIGMA_FRAME_WIDTH = 402;
 const HERO_WIDTH = 354;
@@ -26,7 +30,7 @@ const SLIDES = [
     key: "spot",
     title: "Spot The Problem",
     body: "Take a photo of an issue and let FixBee identify what's wrong.",
-    animation: require("../assets/bee-animations/identifying.svganim"),
+    animation: IdentifyingAnimation,
     mascotWidth: 141,
     mascotHeight: 225,
   },
@@ -34,7 +38,7 @@ const SLIDES = [
     key: "solution",
     title: "Get Smart Solution",
     body: "Receive issue details, DIY guidance, and estimated repair costs instantly.",
-    animation: require("../assets/bee-animations/found-solution.svganim"),
+    animation: FoundSolutionAnimation,
     mascotWidth: 174,
     mascotHeight: 225,
   },
@@ -42,7 +46,7 @@ const SLIDES = [
     key: "trusted",
     title: "Find Trusted Help",
     body: "Connect with trusted professionals when the repair needs expert attention.",
-    animation: require("../assets/bee-animations/on-tablet.svganim"),
+    animation: OnTabletAnimation,
     mascotWidth: 160,
     mascotHeight: 225,
   },
@@ -51,7 +55,7 @@ const SLIDES = [
     title: "Select Your City",
     body: "Choose your city so we can match you with nearby professionals.",
     isCity: true,
-    animation: require("../assets/bee-animations/all-done.svganim"),
+    animation: AllDoneAnimation,
     mascotWidth: 161,
     mascotHeight: 225,
   },
