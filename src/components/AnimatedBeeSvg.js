@@ -10,9 +10,16 @@ const AnimatedBeeSvg = ({ source, width, height, style }) => {
     let mounted = true;
 
     const loadAnimation = async () => {
-      const [asset] = await Asset.loadAsync(source);
-      const response = await fetch(asset.localUri || asset.uri);
-      const svg = await response.text();
+      let svg =
+        typeof source === "string"
+          ? source
+          : source?.default;
+
+      if (!svg) {
+        const [asset] = await Asset.loadAsync(source);
+        const response = await fetch(asset.localUri || asset.uri);
+        svg = await response.text();
+      }
 
       if (mounted) {
         setHtml(`<!doctype html>
