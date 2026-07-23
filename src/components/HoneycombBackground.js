@@ -39,7 +39,7 @@ const HoneycombBackground = ({
             style={styles.loginRight}
           >
             <Path
-              d="M277 0 H402 V246 H365 L249 96 Q242 87 247 77 L277 0 Z"
+              d="M277 0 H402 V246 H379 Q365 246 356.44 234.93 L249 96 Q242 87 247 77 L277 0 Z"
               fill={COLORS.lightHoney}
               opacity={opacity}
             />
