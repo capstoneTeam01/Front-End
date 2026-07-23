@@ -6,6 +6,7 @@ import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import HoneycombBackground from "../components/HoneycombBackground";
 import PolygonAsset from "../components/PolygonAsset";
 import AnimatedBeeSvg from "../components/AnimatedBeeSvg";
+import AllDoneAnimation from "../../assets/bee-animations/all-done.svg";
 
 const FIGMA_FRAME_WIDTH = 402;
 const HERO_WIDTH = 354;
@@ -27,7 +28,7 @@ const WelcomeScreen = ({ navigation }) => {
           contentStyle={styles.heroContent}
         >
           <AnimatedBeeSvg
-            source={require("../assets/bee-animations/all-done.svganim")}
+            source={AllDoneAnimation}
             width={Math.round(MASCOT_WIDTH * scale)}
             height={Math.round(MASCOT_HEIGHT * scale)}
           />
