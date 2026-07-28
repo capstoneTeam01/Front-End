@@ -224,9 +224,16 @@ const EditProfileScreen = ({ navigation }) => {
                 activeOpacity={0.85}
                 disabled={saving}
               >
-                <Text style={styles.saveLabel}>
-                  {saving ? "Saving..." : "Save"}
-                </Text>
+                {saving ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={COLORS.secondary}
+                  />
+                ) : (
+                  <Text style={styles.saveLabel}>
+                    Save
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </AuthFooterTray>

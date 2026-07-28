@@ -418,9 +418,16 @@ const RepairStatusScreen = ({ navigation, route }) => {
                 style={styles.primaryButton}
                 onPress={handleMarkComplete}
               >
-                <Text style={styles.primaryButtonText}>
-                  {completing ? "Updating..." : "Mark Complete"}
-                </Text>
+                {completing ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={COLORS.secondary}
+                  />
+                ) : (
+                  <Text style={styles.primaryButtonText}>
+                    Mark Complete
+                  </Text>
+                )}
               </TouchableOpacity>
             )}
           </AuthFooterTray>
@@ -494,9 +501,16 @@ const RepairStatusScreen = ({ navigation, route }) => {
               onPress={handleSubmitFeedback}
               disabled={submittingFeedback}
             >
-              <Text style={styles.primaryButtonText}>
-                {submittingFeedback ? "Submitting..." : "Submit Feedback"}
-              </Text>
+              {submittingFeedback ? (
+                <ActivityIndicator
+                  size="small"
+                  color={COLORS.secondary}
+                />
+              ) : (
+                <Text style={styles.primaryButtonText}>
+                  Submit Feedback
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
