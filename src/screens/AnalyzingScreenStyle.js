@@ -32,9 +32,11 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
 
-  mascot: {
+  mascotSlot: {
     position: "absolute",
-    alignSelf: "center",
+    left: 0,
+    right: 0,
+    alignItems: "center",
   },
 
   heroTitle: {

@@ -280,12 +280,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 
-  modalIcon: {
-    width: 78,
-    height: 87,
+  modalAnimation: {
+    width: 96,
+    height: 134,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 24,
+    marginBottom: 16,
   },
 
   modalTitle: {
@@ -340,11 +340,6 @@ const styles = StyleSheet.create({
   stepCheckIcon: {
     fontSize: 16,
     color: COLORS.white,
-  },
-
-  modalCheckIcon: {
-    fontSize: 36,
-    color: COLORS.secondary,
   },
 
   loadingBox: {

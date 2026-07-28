@@ -36,8 +36,16 @@ const SignUpScreen = ({ navigation }) => {
     const fName = firstName.trim();
     const lName = lastName.trim();
     const mail = email.trim();
+    const phoneNo = phone.trim();
 
-    if (!fName || !lName || !mail || !password || !confirmPassword) {
+    if (
+      !fName ||
+      !lName ||
+      !mail ||
+      !phoneNo ||
+      !password ||
+      !confirmPassword
+    ) {
       Alert.alert(
         "Missing details",
         "Please fill in every field to create your account.",
@@ -65,9 +73,7 @@ const SignUpScreen = ({ navigation }) => {
 
     setSubmitting(true);
     try {
-      // FIXBEE-XXX: `phone` captured in state but not sent yet — wire into
-      // registerUser payload + backend Zod schema once backend adds the field.
-      await registerUser({ name, email: mail, password });
+      await registerUser({ name, email: mail, phone: phoneNo, password });
 
       navigation.reset({
         index: 0,

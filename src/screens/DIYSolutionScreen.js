@@ -39,6 +39,8 @@ import {
   capitalizeFirstLetter,
   formatTitleWithWordLimit,
 } from "../utils/textFormatters";
+import AllDoneAnimation from "../../assets/bee-animations/all-done.svg";
+import AnimatedBeeSvg from "../components/AnimatedBeeSvg";
 
 const MAX_PENDING_CHECKS = 30;
 const PENDING_CHECK_DELAY = 500;
@@ -52,6 +54,10 @@ const STEP_MARKER_BACK_SIZE = {
 const STEP_MARKER_FRONT_SIZE = {
   width: 40,
   height: 45,
+};
+const COMPLETION_BEE_SIZE = {
+  width: 96,
+  height: 134,
 };
 const DIY_WARNING_TEXT =
   "Stop immediately if conditions worsen or feel unsafe.";
@@ -847,29 +853,18 @@ for (
 
             <View
               style={
-                styles.modalIcon
+                styles.modalAnimation
               }
             >
-              <PolygonAsset
-                variant="polygon9"
-                width={78}
-                height={87}
-                fill={COLORS.lightHoney}
-              >
-                <Ionicons
-                  name="checkmark-sharp"
-                  size={
-                    styles
-                      .modalCheckIcon
-                      .fontSize
-                  }
-                  color={
-                    styles
-                      .modalCheckIcon
-                      .color
-                  }
-                />
-              </PolygonAsset>
+              <AnimatedBeeSvg
+                source={AllDoneAnimation}
+                width={
+                  COMPLETION_BEE_SIZE.width
+                }
+                height={
+                  COMPLETION_BEE_SIZE.height
+                }
+              />
             </View>
 
             <Text

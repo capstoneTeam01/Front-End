@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import IdentifyingAnimation from "../../assets/bee-animations/identifying.svg";
 import AnimatedBeeSvg from "../components/AnimatedBeeSvg";
 import AuthFooterTray from "../components/AuthFooterTray/AuthFooterTray";
 import HeroHexagon from "../components/HeroHexagon/HeroHexagon";
@@ -33,6 +34,11 @@ const FIGMA_FRAME_WIDTH = 402;
 const TOP_BACKGROUND_AREA_HEIGHT = 116;
 const ANALYSIS_HERO_HEIGHT = 400;
 const ANALYSIS_HERO_TO_STEPS_GAP = 16;
+const MASCOT_WIDTH = 141;
+const MASCOT_HEIGHT = 225;
+const MASCOT_TOP = 28;
+const MASCOT_OPTICAL_OFFSET_X = -6;
+const HERO_TITLE_TOP = 286;
 
 const AUTO_COMPLETED_STEP_COUNT =
   analysisSteps.length - 1;
@@ -163,23 +169,37 @@ const AnalyzingScreen = ({ onCancel }) => {
       >
         <HeroHexagon width={354 * layoutScale}>
           <View style={styles.heroContent}>
-            <AnimatedBeeSvg
-              source={require("../assets/bee-animations/identifying.svganim")}
-              width={141 * layoutScale}
-              height={225 * layoutScale}
+            <View
               style={[
-                styles.mascot,
+                styles.mascotSlot,
                 {
-                  top: 28 * layoutScale,
-                  left: 106.5 * layoutScale,
+                  top: MASCOT_TOP * layoutScale,
+                  height: MASCOT_HEIGHT * layoutScale,
+                  transform: [
+                    {
+                      translateX:
+                        MASCOT_OPTICAL_OFFSET_X *
+                        layoutScale,
+                    },
+                  ],
                 },
               ]}
-            />
+            >
+              <AnimatedBeeSvg
+                source={IdentifyingAnimation}
+                width={MASCOT_WIDTH * layoutScale}
+                height={MASCOT_HEIGHT * layoutScale}
+              />
+            </View>
 
             <Text
               style={[
                 styles.heroTitle,
-                { top: 286 * layoutScale },
+                {
+                  top:
+                    HERO_TITLE_TOP *
+                    layoutScale,
+                },
               ]}
             >
               Analyzing Issue..

@@ -1,12 +1,16 @@
 import React from "react";
 import { Platform, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import AllDoneAnimation from "../../assets/bee-animations/all-done.svg";
+import AnimatedBeeSvg from "../components/AnimatedBeeSvg";
 import ProviderPlainButton from "../components/ProviderPlainButton";
-import PolygonAsset from "../components/PolygonAsset";
 import COLORS from "../constants/colors";
 import { BUTTON_HEIGHT, RADIUS, SIDE_PADDING, TYPE } from "../constants/layout";
 
 const androidTopSpace = Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
+const COMPLETION_BEE_SIZE = {
+  width: 96,
+  height: 134,
+};
 
 const ProviderConfirmationScreen = ({ navigation, route }) => {
   const sent = route?.params?.quoteStatus === "email-sent";
@@ -18,18 +22,11 @@ const ProviderConfirmationScreen = ({ navigation, route }) => {
           <View style={styles.handle} />
 
           <View style={styles.successIconWrap}>
-            <PolygonAsset
-              variant="polygon9"
-              width={78}
-              height={87}
-              fill={COLORS.lightHoney}
-            >
-              <Ionicons
-                name="checkmark-sharp"
-                size={36}
-                color={COLORS.secondary}
-              />
-            </PolygonAsset>
+            <AnimatedBeeSvg
+              source={AllDoneAnimation}
+              width={COMPLETION_BEE_SIZE.width}
+              height={COMPLETION_BEE_SIZE.height}
+            />
           </View>
 
           <Text style={styles.title}>{sent ? "Email Sent" : "Request Prepared"}</Text>
@@ -93,11 +90,11 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   successIconWrap: {
-    width: 78,
-    height: 87,
+    width: 96,
+    height: 134,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 30,
+    marginBottom: 20,
   },
   title: {
     color: COLORS.textPrimary,
@@ -112,7 +109,7 @@ const styles = StyleSheet.create({
   },
   actionsSpacer: {
     flex: 1,
-    minHeight: 86,
+    minHeight: 49,
   },
   actions: {
     flexDirection: "row",
