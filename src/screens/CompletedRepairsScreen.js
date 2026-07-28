@@ -7,6 +7,12 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Svg, {
+  Defs,
+  LinearGradient,
+  Rect,
+  Stop,
+} from "react-native-svg";
 
 import AppHeader from "../components/AppHeader/AppHeader";
 import styles from "./RecentScansScreenStyle";
@@ -76,14 +82,41 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
           <Text style={styles.emptyText}>No completed repairs found.</Text>
         }
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card}>
-            <View style={styles.iconBox}>
+          <TouchableOpacity
+            style={[styles.card, styles.completedCard]}
+            onPress={() =>
+              navigation.navigate("RepairStatus", {
+                photoId: item.id,
+              })
+            }
+          >
+            <View style={[styles.iconBox, styles.completedImageBox]}>
               {item.imageUrl ? (
-                <Image
-                  source={{ uri: item.imageUrl }}
-                  style={styles.cardImage}
-                  resizeMode="cover"
-                />
+                <>
+                  <Image
+                    source={{ uri: item.imageUrl }}
+                    style={styles.cardImage}
+                    resizeMode="cover"
+                  />
+                  <Svg
+                    pointerEvents="none"
+                    style={styles.imageGradient}
+                    width="100%"
+                    height="100%"
+                  >
+                    <Defs>
+                      <LinearGradient id="completed-list-gradient" x1="0" y1="0" x2="0" y2="1">
+                        <Stop offset="0" stopColor="#666666" stopOpacity="0" />
+                        <Stop offset="1" stopColor="#FBB800" stopOpacity="0.2" />
+                      </LinearGradient>
+                    </Defs>
+                    <Rect
+                      width="100%"
+                      height="100%"
+                      fill="url(#completed-list-gradient)"
+                    />
+                  </Svg>
+                </>
               ) : (
                 <Ionicons
                   name="camera-outline"
@@ -100,8 +133,10 @@ const CompletedRepairsScreen = ({ navigation, route }) => {
               <Text style={styles.meta}>
                 <Text style={styles.categoryText}>
                   {formatDisplayLabel(
-                    item.analysis?.category ||
-                      "Repair"
+                    item.category ||
+                      item.analysis?.category ||
+                      item.analysis?.repairCategory ||
+                      "Plumbing"
                   )}
                 </Text>{" "}
                 • {item.date}

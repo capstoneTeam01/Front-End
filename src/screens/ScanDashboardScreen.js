@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
   ScrollView,
   FlatList,
+  Image,
   Alert,
   useWindowDimensions,
 } from "react-native";
@@ -110,7 +111,7 @@ const ScanDashboardScreen = ({ navigation }) => {
     };
   }, [setLocation]);
 
-  const loadPhotoHistory = async () => {
+  const loadPhotoHistory = useCallback(async () => {
     try {
       setIsLoading(true);
       setErrorMessage("");
@@ -145,6 +146,11 @@ const ScanDashboardScreen = ({ navigation }) => {
           title,
           date: formatScanDate(historyItem.createdAt),
           status,
+          category:
+            historyItem.analysis?.category ||
+            historyItem.analysis?.repairCategory ||
+            historyItem.category ||
+            "Plumbing",
           imageUrl: historyItem.imageUrl,
           analysis: historyItem.analysis,
 
@@ -153,6 +159,8 @@ const ScanDashboardScreen = ({ navigation }) => {
           repairCompletedAt: historyItem.repairCompletedAt || null,
           providerRequested: historyItem.providerRequested || false,
           providerAssigned: historyItem.providerAssigned || false,
+          repairFlow: historyItem.repairFlow || "none",
+          chosenProvider: historyItem.chosenProvider || null,
           repairFeedback: historyItem.repairFeedback || null,
         };
 
@@ -174,11 +182,32 @@ const ScanDashboardScreen = ({ navigation }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadPhotoHistory();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", loadPhotoHistory);
+    return unsubscribe;
+  }, [navigation, loadPhotoHistory]);
+
+  const openRepair = (item) => {
+    if (
+      item.repairStatus === "completed" ||
+      item.repairFlow === "expert" ||
+      item.providerRequested
+    ) {
+      navigation.navigate("RepairStatus", { photoId: item.id });
+      return;
+    }
+
+    navigation.navigate("DIYSolution", {
+      analysisResult: {
+        ...item.analysis,
+        photoId: item.id,
+      },
+      urgency: item.analysis?.urgency || "Low",
+    });
+  };
 
   const handleSelectCategory = (cat) => {
     setSelectedCategoryId(cat.id);
@@ -239,15 +268,7 @@ const ScanDashboardScreen = ({ navigation }) => {
         renderItem={({ item }) => (
           <RecentScanCard
             item={item}
-            onPress={() =>
-              navigation?.navigate("DIYSolution", {
-                analysisResult: {
-                  ...item.analysis,
-                  photoId: item.id,
-                },
-                urgency: item.analysis?.urgency || "Low",
-              })
-            }
+            onPress={() => openRepair(item)}
           />
         )}
       />
@@ -319,14 +340,24 @@ const ScanDashboardScreen = ({ navigation }) => {
                   key={item.id}
                   title={item.title}
                   subtitle={item.date}
+                  category={item.category}
+                  completedCard
                   icon={
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={24}
-                      color={COLORS.success || "green"}
-                    />
+                    item.imageUrl ? (
+                      <Image
+                        source={{ uri: item.imageUrl }}
+                        style={styles.completedThumbnail}
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={24}
+                        color={COLORS.riskLow}
+                      />
+                    )
                   }
-                  onPress={() => {}}
+                  onPress={() => openRepair(item)}
                 />
               ))
             )}

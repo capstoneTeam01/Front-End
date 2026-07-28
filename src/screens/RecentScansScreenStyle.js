@@ -54,6 +54,23 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.card,
   },
 
+  completedCard: {
+    width: "100%",
+    height: 98,
+    minHeight: 98,
+    padding: 16,
+    borderRadius: 24,
+    borderColor: COLORS.providerLightGray,
+    backgroundColor: COLORS.white,
+    gap: 10,
+  },
+
+  completedImageBox: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+  },
+
   iconBox: {
     width: 60,
     height: 60,
@@ -68,6 +85,10 @@ const styles = StyleSheet.create({
   cardImage: {
     width: "100%",
     height: "100%",
+  },
+
+  imageGradient: {
+    ...StyleSheet.absoluteFillObject,
   },
 
   cardContent: {

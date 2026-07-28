@@ -50,15 +50,11 @@ const styles = StyleSheet.create({
 
   badge: {
     alignSelf: "flex-start",
-    backgroundColor: COLORS.lightHoney,
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
   },
 
   badgeText: {
-    color: COLORS.secondary,
-    ...TYPE.caption,
+    color: COLORS.primary,
+    ...TYPE.small,
   },
 });
 
