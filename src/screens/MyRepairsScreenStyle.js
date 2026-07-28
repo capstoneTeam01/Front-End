@@ -49,6 +49,13 @@ const styles = StyleSheet.create({
     gap: SPACING.card,
   },
 
+  completedThumbnail: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+
   emptyText: {
     color: COLORS.textMuted,
     ...TYPE.body,

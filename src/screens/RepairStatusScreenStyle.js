@@ -15,9 +15,16 @@ const styles = StyleSheet.create({
   },
 
   scroll: {
-    paddingHorizontal: SIDE_PADDING,
-    paddingTop: 24,
-    paddingBottom: 120,
+    flexGrow: 1,
+    paddingBottom: 102,
+  },
+
+  headerContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 5,
   },
 
   loadingBox: {
@@ -30,6 +37,67 @@ const styles = StyleSheet.create({
     marginTop: 12,
     color: COLORS.textPrimary,
     ...TYPE.small,
+  },
+
+  hero: {
+    width: "100%",
+    height: 520,
+    backgroundColor: COLORS.charcoal,
+    position: "relative",
+    overflow: "hidden",
+  },
+
+  heroImage: {
+    ...StyleSheet.absoluteFillObject,
+    width: "100%",
+    height: "100%",
+  },
+
+  heroPlaceholder: {
+    ...StyleSheet.absoluteFillObject,
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: COLORS.surface,
+  },
+
+  heroOverlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
+  heroTextContainer: {
+    position: "absolute",
+    left: SIDE_PADDING,
+    right: SIDE_PADDING,
+    bottom: 50,
+    zIndex: 2,
+  },
+
+  heroTitle: {
+    color: COLORS.white,
+    marginBottom: 6,
+    ...TYPE.sectionTitle,
+  },
+
+  heroDescription: {
+    color: COLORS.white,
+    ...TYPE.cardTitle,
+  },
+
+  contentContainer: {
+    position: "relative",
+    backgroundColor: COLORS.white,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 36,
+    paddingBottom: 32,
+  },
+
+  riskBadgePosition: {
+    position: "absolute",
+    top: -46,
+    right: SIDE_PADDING,
+    zIndex: 5,
   },
 
   summaryCard: {
@@ -60,13 +128,49 @@ const styles = StyleSheet.create({
   },
 
   section: {
-    marginBottom: 24,
+    marginBottom: 28,
   },
 
   sectionTitle: {
     color: COLORS.textPrimary,
     marginBottom: 14,
     ...TYPE.cardTitle,
+  },
+
+  sectionHint: {
+    color: COLORS.textSecondary,
+    marginTop: -8,
+    marginBottom: 14,
+    ...TYPE.small,
+  },
+
+  detailList: {
+    borderWidth: 1,
+    borderColor: COLORS.gray300,
+    borderRadius: RADIUS.big,
+    overflow: "hidden",
+    backgroundColor: COLORS.white,
+  },
+
+  detailRow: {
+    minHeight: 52,
+    justifyContent: "center",
+    paddingHorizontal: 16,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: COLORS.gray300,
+  },
+
+  detailRowLast: {
+    borderBottomWidth: 0,
+  },
+
+  detailText: {
+    color: COLORS.textSecondary,
+    ...TYPE.small,
+  },
+
+  estimateSection: {
+    marginBottom: 32,
   },
 
   emptyText: {
@@ -119,6 +223,49 @@ const styles = StyleSheet.create({
     ...TYPE.small,
   },
 
+  chosenProviderCard: {
+    minHeight: 64,
+    borderWidth: 1,
+    borderColor: COLORS.gray300,
+    borderRadius: RADIUS.big,
+    backgroundColor: COLORS.white,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  providerInitial: {
+    width: 36,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: COLORS.lightHoney,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+
+  providerInitialText: {
+    color: COLORS.secondary,
+    ...TYPE.body,
+  },
+
+  feedbackLink: {
+    alignSelf: "flex-start",
+    paddingVertical: 14,
+  },
+
+  feedbackLinkText: {
+    color: COLORS.secondary,
+    textDecorationLine: "underline",
+    ...TYPE.small,
+  },
+
+  feedbackSubmittedText: {
+    color: COLORS.textSecondary,
+    marginTop: 12,
+    ...TYPE.small,
+  },
+
   primaryButton: {
     height: BUTTON_HEIGHT,
     borderRadius: RADIUS.field,
@@ -149,6 +296,32 @@ const styles = StyleSheet.create({
     padding: 24,
   },
 
+  confirmationModal: {
+    backgroundColor: COLORS.white,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    padding: 24,
+  },
+
+  modalMascot: {
+    alignSelf: "center",
+    marginBottom: 16,
+  },
+
+  confirmationTitle: {
+    color: COLORS.textPrimary,
+    textAlign: "center",
+    marginBottom: 12,
+    ...TYPE.screenTitle,
+  },
+
+  confirmationMessage: {
+    color: COLORS.textSecondary,
+    textAlign: "center",
+    marginBottom: 28,
+    ...TYPE.small,
+  },
+
   modalTitle: {
     color: COLORS.textPrimary,
     marginBottom: 16,
@@ -172,6 +345,18 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     color: COLORS.textPrimary,
     ...TYPE.small,
+  },
+
+  bottomActionContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 20,
+  },
+
+  bottomActionContent: {
+    width: "100%",
   },
 });
 

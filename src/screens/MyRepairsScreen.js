@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   View,
   FlatList,
+  Image,
   Text,
-  TouchableOpacity,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -19,25 +19,6 @@ import { getPhotoHistory } from "../api/getPhotoHistory";
 
 import COLORS from "../constants/colors";
 import styles from "./MyRepairsScreenStyle";
-
-
-const demoCompletedRepairs = [
-  {
-    id: "1",
-    title: "Pipe Leak",
-    subtitle: "2 days ago",
-  },
-  {
-    id: "2",
-    title: "Electrical Hazard",
-    subtitle: "4 days ago",
-  },
-  {
-    id: "3",
-    title: "Water Damage",
-    subtitle: "5 days ago",
-  },
-];
 
 
 const formatScanDate = (createdAt) => {
@@ -81,7 +62,7 @@ const MyRepairsScreen = ({ navigation }) => {
   const [completedRepairs, setCompletedRepairs] = useState([]);
 
 
-  const loadPhotoHistory = async () => {
+  const loadPhotoHistory = useCallback(async () => {
     try {
       setIsLoading(true);
       setErrorMessage("");
@@ -122,6 +103,11 @@ const MyRepairsScreen = ({ navigation }) => {
       title,
       date: formatScanDate(historyItem.createdAt),
       status,
+      category:
+        historyItem.analysis?.category ||
+        historyItem.analysis?.repairCategory ||
+        historyItem.category ||
+        "Plumbing",
       imageUrl: historyItem.imageUrl,
       analysis: historyItem.analysis,
 
@@ -130,7 +116,14 @@ const MyRepairsScreen = ({ navigation }) => {
       repairCompletedAt: historyItem.repairCompletedAt || null,
       providerRequested: historyItem.providerRequested || false,
       providerAssigned: historyItem.providerAssigned || false,
-      repairFeedback: historyItem.repairFeedback || null
+      repairFlow: historyItem.repairFlow || "none",
+      selectedProviders: historyItem.selectedProviders || [],
+      chosenProvider: historyItem.chosenProvider || null,
+      providerReplyStatus:
+        historyItem.providerReplyStatus || "not_requested",
+      feedbackSubmitted: historyItem.feedbackSubmitted || false,
+      feedbackRequestedAt: historyItem.feedbackRequestedAt || null,
+      repairFeedback: historyItem.repairFeedback || null,
     };
 
         formattedScans.push(formattedScan);
@@ -151,12 +144,33 @@ setCompletedRepairs(completedScans);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
 
   useEffect(() => {
     loadPhotoHistory();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", loadPhotoHistory);
+    return unsubscribe;
+  }, [navigation, loadPhotoHistory]);
+
+  const openRepair = (item) => {
+    if (
+      item.repairStatus === "completed" ||
+      item.repairFlow === "expert" ||
+      item.providerRequested
+    ) {
+      navigation.navigate("RepairStatus", { photoId: item.id });
+      return;
+    }
+
+    navigation.navigate("DIYSolution", {
+      analysisResult: {
+        ...item.analysis,
+        photoId: item.id,
+      },
+      urgency: item.analysis?.urgency || "Low",
+    });
+  };
 
 
   const renderRecentScans = () => {
@@ -193,17 +207,9 @@ setCompletedRepairs(completedScans);
         contentContainerStyle={styles.scanList}
         renderItem={({ item }) => (
           <RecentScanCard
-          item={item}
-          onPress={() =>
-              navigation?.navigate("DIYSolution", {
-                analysisResult: {
-                  ...item.analysis,
-                  photoId: item.id,
-
-              },
-                urgency: item.analysis?.urgency || "Low",
-            })
-        }/>
+            item={item}
+            onPress={() => openRepair(item)}
+          />
         )}
       />
     );
@@ -253,14 +259,24 @@ setCompletedRepairs(completedScans);
                 key={item.id}
                 title={item.title}
                 subtitle={item.date}
+                category={item.category}
+                completedCard
                 icon={
-                  <Ionicons
-                    name="checkmark-circle"
-                    size={24}
-                    color={COLORS.success || "green"}
-                  />
+                  item.imageUrl ? (
+                    <Image
+                      source={{ uri: item.imageUrl }}
+                      style={styles.completedThumbnail}
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={24}
+                      color={COLORS.riskLow}
+                    />
+                  )
                 }
-                onPress={() => {}}
+                onPress={() => openRepair(item)}
               />
             ))
           )}

@@ -55,7 +55,7 @@ const RecentScanCard = ({ item, onPress }) => {
 
         <View style={styles.badge}>
           <Text style={styles.badgeText}>
-            {formatDisplayLabel(item.status) || "Unknown"}
+            {formatDisplayLabel(item.category) || "Plumbing"}
           </Text>
         </View>
       </View>

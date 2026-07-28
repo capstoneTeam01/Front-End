@@ -12,6 +12,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 
+  completedCard: {
+    width: "100%",
+    height: 98,
+    padding: 16,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: COLORS.providerLightGray,
+    backgroundColor: COLORS.white,
+  },
+
+  completedImage: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    backgroundColor: COLORS.gray700,
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+
+  imageGradient: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
   divider: {
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: COLORS.divider,
@@ -38,8 +62,19 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: COLORS.honeyBrown,
+    color: COLORS.secondary,
     marginBottom: 2,
+    ...TYPE.small,
+  },
+
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+
+  category: {
+    color: COLORS.primary,
     ...TYPE.small,
   },
 

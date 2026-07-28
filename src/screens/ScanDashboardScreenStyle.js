@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 import {
   SIDE_PADDING,
+  RADIUS,
   TYPE,
   BOTTOM_NAV_HEIGHT,
   SPACING,
@@ -53,6 +54,13 @@ const styles = StyleSheet.create({
   completedList: {
     marginTop: SPACING.card,
     gap: SPACING.card,
+  },
+
+  completedThumbnail: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    overflow: "hidden",
   },
 
   stateText: {
