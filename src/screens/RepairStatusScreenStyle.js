@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    color: COLORS.textPrimary,
+    color: COLORS.secondary,
     marginBottom: 14,
     ...TYPE.cardTitle,
   },

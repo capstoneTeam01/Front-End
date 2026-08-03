@@ -159,7 +159,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (permission.status !== "granted") {
         Alert.alert(
-          "Gallery permission needed",
+          "Gallery Permission Needed",
           "Please allow photo library access to add another issue image.",
         );
         return;
@@ -206,7 +206,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         error?.message,
       );
       Alert.alert(
-        "Could not add image",
+        "Could Not Add Image",
         error?.message || "Please try selecting the image again.",
       );
     } finally {
@@ -224,7 +224,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
   const handleSendRequest = async () => {
     if (!providers.length) {
       Alert.alert(
-        "Provider missing",
+        "Provider Missing",
         "Selected providers could not be loaded from SQLite. Go back and select providers again.",
       );
       return;
@@ -232,7 +232,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
 
     if (!draft?.to) {
       Alert.alert(
-        "Provider email missing",
+        "Provider Email Missing",
         "None of the selected providers has an email address in the local provider cache.",
       );
       return;
@@ -240,7 +240,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
 
     if (!clean(draft?.photoId)) {
       Alert.alert(
-        "Issue report unavailable",
+        "Issue Report Unavailable",
         "The analyzed photo ID is missing, so the PDF report cannot be attached. Please restart from the issue photo.",
       );
       return;
@@ -253,7 +253,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
 
     if (!emailImages.length || hasUnsharedImage) {
       Alert.alert(
-        "Image upload incomplete",
+        "Image Upload Incomplete",
         "One or more issue photos are not ready to include in the email. Please remove them and add them again.",
       );
       return;
@@ -296,7 +296,7 @@ const ProviderQuoteRequestScreen = ({ navigation, route }) => {
         error?.message,
       );
       Alert.alert(
-        "Quote request failed",
+        "Quote Request Failed",
         error.message || "Could not send the quote request.",
       );
     } finally {

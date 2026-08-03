@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   ScrollView,
   View,
   FlatList,
@@ -175,11 +176,7 @@ setCompletedRepairs(completedScans);
 
   const renderRecentScans = () => {
     if (isLoading) {
-      return (
-        <Text style={styles.emptyText}>
-          Loading recent scans...
-        </Text>
-      );
+      return <ActivityIndicator size="large" color={COLORS.primary} />;
     }
 
     if (errorMessage) {

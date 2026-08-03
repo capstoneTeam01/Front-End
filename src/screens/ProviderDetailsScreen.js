@@ -97,8 +97,7 @@ const ProviderDetailsScreen = ({ navigation, route }) => {
 
       {loading ? (
         <View style={styles.centerState}>
-          <ActivityIndicator />
-          <Text style={styles.stateText}>Loading provider...</Text>
+          <ActivityIndicator size="large" color={COLORS.primary} />
         </View>
       ) : null}
 

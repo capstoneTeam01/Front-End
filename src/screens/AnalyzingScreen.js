@@ -22,10 +22,10 @@ import { TopBackgroundPattern } from "./AnalyzingScreenShapes";
 import styles from "./AnalyzingScreenStyle";
 
 const analysisSteps = [
-  "Detecting Issue..",
-  "Analyzing Damage..",
-  "Estimating Repair Cost..",
-  "Finding Repair Solutions..",
+  "Detecting Issue...",
+  "Analyzing Damage...",
+  "Estimating Repair Cost...",
+  "Finding Repair Solutions...",
 ];
 
 const STEP_DURATION_MS = 1250;
@@ -202,7 +202,7 @@ const AnalyzingScreen = ({ onCancel }) => {
                 },
               ]}
             >
-              Analyzing Issue..
+              Analyzing Issue...
             </Text>
           </View>
         </HeroHexagon>

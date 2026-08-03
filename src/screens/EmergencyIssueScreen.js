@@ -22,7 +22,7 @@ import COLORS from "../constants/colors";
 import styles from "./EmergencyIssueScreenStyle";
 import {
   capitalizeFirstLetter,
-  formatTitleWithWordLimit,
+  formatTitle,
 } from "../utils/textFormatters";
 
 const getImmediateActions = (userActions) => {
@@ -73,6 +73,8 @@ const EmergencyIssueScreen = ({
     null;
 
   const displayedIssue =
+    result.heroTitle ||
+    result.headline ||
     result.detectedIssue ||
     "Repair Issue Detected";
 
@@ -134,7 +136,7 @@ const EmergencyIssueScreen = ({
 
           <View style={styles.heroTextContainer}>
             <Text style={styles.issueTitle}>
-              {formatTitleWithWordLimit(displayedIssue, 4)}
+              {formatTitle(displayedIssue)}
             </Text>
 
             <Text style={styles.issueDescription}>

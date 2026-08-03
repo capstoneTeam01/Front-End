@@ -239,7 +239,7 @@ const ProviderListScreen = ({ navigation, route }) => {
   const handleNext = () => {
     if (!selectedProviders.length) {
       Alert.alert(
-        "Choose a provider",
+        "Choose a Provider",
         "Select at least one provider before continuing.",
       );
       return;
@@ -301,10 +301,7 @@ const ProviderListScreen = ({ navigation, route }) => {
       >
         {initialLoading ? (
           <View style={styles.centerState}>
-            <ActivityIndicator />
-            <Text style={styles.stateText}>
-              Loading providers from SQLite...
-            </Text>
+            <ActivityIndicator size="large" color={COLORS.primary} />
           </View>
         ) : null}
 

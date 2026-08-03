@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   View,
   Text,
   ScrollView,
@@ -225,7 +226,7 @@ const ScanDashboardScreen = ({ navigation }) => {
     } catch (error) {
       setLocation(previousLocation);
       Alert.alert(
-        "Couldn't update city",
+        "Couldn't Update City",
         error?.message || "Please try again."
       );
     }
@@ -247,7 +248,7 @@ const ScanDashboardScreen = ({ navigation }) => {
 
   const renderRecentScans = () => {
     if (isLoading) {
-      return <Text style={styles.stateText}>Loading recent scans...</Text>;
+      return <ActivityIndicator size="large" color={COLORS.primary} />;
     }
 
     if (errorMessage) {
@@ -295,7 +296,7 @@ const ScanDashboardScreen = ({ navigation }) => {
           <HeroHexagon width={354 * layoutScale}>
             <Text style={styles.heroTitle}>Start New Scan</Text>
             <Text style={styles.heroSubtitle}>
-              Capture a repair issue with Ai Guidance
+              Capture a repair issue with AI guidance.
             </Text>
           </HeroHexagon>
         </View>
@@ -333,7 +334,7 @@ const ScanDashboardScreen = ({ navigation }) => {
 
           <View style={styles.completedList}>
             {completedRepairs.length === 0 ? (
-              <Text style={styles.emptyText}>No Completed Repairs Found.</Text>
+              <Text style={styles.emptyText}>No completed repairs found.</Text>
             ) : (
               completedRepairs.map((item) => (
                 <RepairListItem

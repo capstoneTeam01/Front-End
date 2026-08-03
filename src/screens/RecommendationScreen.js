@@ -24,7 +24,7 @@ import COLORS from "../constants/colors";
 import styles from "./RecommendationScreenStyle";
 import {
   capitalizeFirstLetter,
-  formatTitleWithWordLimit,
+  formatTitle,
 } from "../utils/textFormatters";
 
 const clean = (value) => String(value || "").trim();
@@ -306,7 +306,7 @@ const RecommendationScreen = ({
 
           <View style={styles.heroTextContainer}>
             <Text style={styles.issueTitle}>
-              {formatTitleWithWordLimit(displayedIssue, 4)}
+              {formatTitle(displayedIssue)}
             </Text>
 
             <Text style={styles.issueDescription}>

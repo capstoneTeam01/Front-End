@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import AppHeader from "../components/AppHeader/AppHeader";
@@ -28,6 +35,8 @@ const formatScanDate = (createdAt) => {
 const formatHistoryItem = (historyItem) => ({
   id: historyItem.photoId,
   title:
+    historyItem.analysis?.heroTitle ||
+    historyItem.analysis?.headline ||
     historyItem.analysis?.detectedIssue ||
     historyItem.detectedObject ||
     "Repair Issue",
@@ -158,11 +167,13 @@ const RecentScansScreen = ({ navigation, route }) => {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>
-            {loading
-              ? "Loading recent scans..."
-              : errorMessage || "No recent scans found."}
-          </Text>
+          loading ? (
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          ) : (
+            <Text style={styles.emptyText}>
+              {errorMessage || "No recent scans found."}
+            </Text>
+          )
         }
         renderItem={({ item }) => (
           <TouchableOpacity

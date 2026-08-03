@@ -37,7 +37,7 @@ import { updateRepairStatus } from "../api/updateRepairStatus";
 import { resolveApiUrl } from "../api/resolveApiUrl";
 import {
   capitalizeFirstLetter,
-  formatTitleWithWordLimit,
+  formatTitle,
 } from "../utils/textFormatters";
 import AllDoneAnimation from "../../assets/bee-animations/all-done.svg";
 import AnimatedBeeSvg from "../components/AnimatedBeeSvg";
@@ -285,13 +285,6 @@ const DIYSolutionScreen = ({
   const [loading, setLoading] =
     useState(true);
 
-  const [
-    loadingMessage,
-    setLoadingMessage,
-  ] = useState(
-    "Loading DIY Instructions..."
-  );
-
   const [diyData, setDiyData] =
     useState(null);
 
@@ -301,7 +294,7 @@ const DIYSolutionScreen = ({
         setLoading(false);
 
         Alert.alert(
-          "DIY instructions unavailable",
+          "DIY Instructions Unavailable",
           "The scan ID is missing. Please return to the recommendation screen and try again.",
           [
             {
@@ -317,9 +310,6 @@ const DIYSolutionScreen = ({
 
       setLoading(true);
 
-      setLoadingMessage(
-        "Loading DIY Instructions..."
-      );
       try {
 for (
   let attempt = 1;
@@ -346,7 +336,7 @@ for (
     setLoading(false);
 
     Alert.alert(
-      "DIY instructions unavailable",
+      "DIY Instructions Unavailable",
       response?.message ||
         "DIY instructions were not generated for this scan.",
       [
@@ -367,8 +357,6 @@ for (
     );
   }
 
-  setLoadingMessage("Preparing DIY Instructions...");
-
   await wait(PENDING_CHECK_DELAY);
 }
 
@@ -384,7 +372,7 @@ for (
         setLoading(false);
 
         Alert.alert(
-          "DIY instructions unavailable",
+          "DIY Instructions Unavailable",
           error?.message ||
             "DIY instructions could not be loaded.",
           [
@@ -445,7 +433,7 @@ for (
     console.log("Repair status update error:", error);
 
     Alert.alert(
-      "Unable to update repair",
+      "Unable to Update Repair",
       error?.message ||
         "Repair was completed, but the status could not be updated."
     );
@@ -473,13 +461,6 @@ for (
             size="large"
           />
 
-          <Text
-            style={
-              styles.loadingText
-            }
-          >
-            {loadingMessage}
-          </Text>
         </View>
       </View>
     );
@@ -509,7 +490,7 @@ for (
         <Text
           style={styles.title}
         >
-          {formatTitleWithWordLimit(diyData.title, 3) ||
+          {formatTitle(diyData.title) ||
             "Fix Instructions"}
         </Text>
 
@@ -670,7 +651,7 @@ for (
                           styles.inactiveText,
                       ]}
                     >
-                      {formatTitleWithWordLimit(item.title, 3)}
+                      {formatTitle(item.title)}
                     </Text>
 
                     <Text

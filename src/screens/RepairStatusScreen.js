@@ -28,6 +28,10 @@ import {
 import CompletedRepairCheck from "../../assets/icons/Completed_Repair_Check.svg";
 import COLORS from "../constants/colors";
 import styles from "./RepairStatusScreenStyle";
+import {
+  capitalizeFirstLetter,
+  formatTitle,
+} from "../utils/textFormatters";
 
 const getProviderName = (provider) =>
   provider?.businessName ||
@@ -60,7 +64,7 @@ const RepairStatusScreen = ({ navigation, route }) => {
   const loadRepair = async () => {
     if (!photoId) {
       setLoading(false);
-      Alert.alert("Repair unavailable", "Repair scan ID is missing.", [
+      Alert.alert("Repair Unavailable", "Repair scan ID is missing.", [
         { text: "Go Back", onPress: () => navigation.goBack() },
       ]);
       return;
@@ -72,7 +76,7 @@ const RepairStatusScreen = ({ navigation, route }) => {
       setScan(response?.scan || null);
     } catch (error) {
       Alert.alert(
-        "Unable to load repair",
+        "Unable to Load Repair",
         error?.message || "Could not load repair details.",
       );
     } finally {
@@ -111,7 +115,7 @@ const RepairStatusScreen = ({ navigation, route }) => {
 
   const handleConfirmProvider = async () => {
     if (selectedProviderIndex === null) {
-      Alert.alert("Select provider", "Please select the provider you chose.");
+      Alert.alert("Select Provider", "Please select the provider you chose.");
       return;
     }
 
@@ -127,7 +131,7 @@ const RepairStatusScreen = ({ navigation, route }) => {
       setConfirmationVisible(true);
     } catch (error) {
       Alert.alert(
-        "Unable to save provider",
+        "Unable to Save Provider",
         error?.message || "Could not update the chosen provider.",
       );
     }
@@ -145,7 +149,7 @@ const RepairStatusScreen = ({ navigation, route }) => {
       setFeedbackVisible(true);
     } catch (error) {
       Alert.alert(
-        "Unable to complete repair",
+        "Unable to Complete Repair",
         error?.message || "Could not mark this repair as completed.",
       );
     } finally {
@@ -171,7 +175,7 @@ const RepairStatusScreen = ({ navigation, route }) => {
       setFeedbackSuccessVisible(true);
     } catch (error) {
       Alert.alert(
-        "Unable to submit feedback",
+        "Unable to Submit Feedback",
         error?.message || "Please try again.",
       );
     } finally {
@@ -196,8 +200,10 @@ const RepairStatusScreen = ({ navigation, route }) => {
             >
               <Text style={styles.detailText}>
                 {typeof item === "string"
-                  ? item
-                  : item?.title || item?.instruction || "Repair action"}
+                  ? capitalizeFirstLetter(item)
+                  : capitalizeFirstLetter(
+                      item?.title || item?.instruction || "Repair action",
+                    )}
               </Text>
             </View>
           ))}
@@ -211,8 +217,7 @@ const RepairStatusScreen = ({ navigation, route }) => {
       <View style={styles.safe}>
         <AppHeader title="Repair Status" onBack={() => navigation.goBack()} />
         <View style={styles.loadingBox}>
-          <ActivityIndicator size="large" />
-          <Text style={styles.loadingText}>Loading repair status...</Text>
+          <ActivityIndicator size="large" color={COLORS.primary} />
         </View>
       </View>
     );
@@ -243,14 +248,22 @@ const RepairStatusScreen = ({ navigation, route }) => {
           <RecommendationImageOverlay style={styles.heroOverlay} />
           <View style={styles.heroTextContainer}>
             <Text style={styles.heroTitle}>
-              {analysis.detectedIssue || scan?.detectedObject || "Repair Issue"}
+              {formatTitle(
+                analysis.heroTitle ||
+                  analysis.headline ||
+                  analysis.detectedIssue ||
+                  scan?.detectedObject ||
+                  "Repair Issue",
+              )}
             </Text>
             <Text style={styles.heroDescription}>
-              {analysis.description ||
-                analysis.summary ||
-                analysis.urgencyDescription ||
-                analysis.confidenceReason ||
-                "Review the detected issue and its recommended repair steps."}
+              {capitalizeFirstLetter(
+                analysis.description ||
+                  analysis.summary ||
+                  analysis.urgencyDescription ||
+                  analysis.confidenceReason ||
+                  "Review the detected issue and its recommended repair steps.",
+              )}
             </Text>
           </View>
         </View>
@@ -318,7 +331,7 @@ const RepairStatusScreen = ({ navigation, route }) => {
                 </TouchableOpacity>
               ) : scan?.feedbackSubmitted ? (
                 <Text style={styles.feedbackSubmittedText}>
-                  Feedback Submitted • {scan.repairFeedback?.rating || 5}/5
+                  Feedback submitted • {scan.repairFeedback?.rating || 5}/5
                 </Text>
               ) : null}
             </View>
@@ -381,7 +394,7 @@ const RepairStatusScreen = ({ navigation, route }) => {
                     color={COLORS.secondary}
                   />
                 </View>
-                <Text style={styles.providerName}>Completed With DIY</Text>
+                <Text style={styles.providerName}>Completed with DIY</Text>
               </View>
             </View>
           ) : null}
